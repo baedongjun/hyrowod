@@ -1,0 +1,83 @@
+.page {
+  padding-top: 64px;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+.wrap {
+  width: 100%;
+  max-width: 440px;
+}
+
+.logoWrap {
+  text-align: center;
+  margin-bottom: 40px;
+}
+.logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px;
+  letter-spacing: 4px;
+  color: var(--text);
+  display: block;
+}
+.logo span { color: var(--red); }
+.pageTitle {
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: 20px;
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 40px;
+}
+
+.form { display: flex; flex-direction: column; gap: 20px; }
+
+.field { display: flex; flex-direction: column; gap: 8px; }
+.label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.error {
+  font-size: 12px;
+  color: var(--red);
+  margin-top: 4px;
+}
+
+.submitBtn {
+  width: 100%;
+  padding: 14px;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.footer {
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 24px;
+}
+.footerLink {
+  color: var(--text);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1px;
+  transition: border-color 0.2s, color 0.2s;
+}
+.footerLink:hover { color: var(--red); border-color: var(--red); }
+
+@media (max-width: 768px) {
+  .card { padding: 28px 24px; }
+}

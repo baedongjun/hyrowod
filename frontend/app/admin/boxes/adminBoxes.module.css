@@ -1,0 +1,109 @@
+.pageTitle {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 40px;
+  letter-spacing: 2px;
+  color: var(--text);
+  margin-bottom: 28px;
+}
+
+/* Table */
+.tableWrap {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  overflow-x: auto;
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.thead {
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+.th {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.thCenter { text-align: center; }
+
+.tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
+.tr:last-child { border-bottom: none; }
+.tr:hover { background: rgba(255,255,255,0.02); }
+
+.td { padding: 14px 16px; color: var(--muted); }
+.tdName { color: var(--text); font-weight: 500; }
+.tdCenter { text-align: center; }
+
+.rating {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: 1px;
+  color: var(--text);
+}
+.star { color: #eab308; }
+
+/* Toggle Buttons */
+.toggleBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  transition: color 0.2s, background 0.2s, border-color 0.2s;
+  font-family: var(--font-body);
+}
+.toggleBtn:hover { color: var(--text); }
+
+.toggleVerified {
+  border-color: rgba(34, 197, 94, 0.4);
+  color: #22c55e;
+  background: rgba(34, 197, 94, 0.08);
+}
+.toggleVerified:hover { background: rgba(34, 197, 94, 0.15); }
+
+.togglePremium {
+  border-color: rgba(232, 34, 10, 0.4);
+  color: var(--red);
+  background: rgba(232, 34, 10, 0.08);
+}
+.togglePremium:hover { background: rgba(232, 34, 10, 0.15); }
+
+/* Skeleton */
+.skeletonCell {
+  height: 14px;
+  background: rgba(255,255,255,0.05);
+  animation: shimmer 1.4s infinite;
+}
+@keyframes shimmer {
+  0%,100% { opacity: 0.6; }
+  50%      { opacity: 0.2; }
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 20px;
+  border-top: 1px solid var(--border);
+}
+.pageInfo { font-size: 13px; color: var(--muted); }

@@ -1,0 +1,104 @@
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: transform 0.3s, border-color 0.3s;
+  text-decoration: none;
+  color: inherit;
+}
+.card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(232, 34, 10, 0.4);
+}
+
+/* Image */
+.imgWrap {
+  position: relative;
+  height: 180px;
+  overflow: hidden;
+  background: #111;
+}
+.img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s;
+}
+.card:hover .img { transform: scale(1.05); }
+
+.badges {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: flex;
+  gap: 6px;
+}
+
+.ratingBadge {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(4px);
+  padding: 4px 10px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 15px;
+  color: var(--text);
+  letter-spacing: 1px;
+}
+.star {
+  color: #eab308;
+  font-size: 12px;
+}
+.reviewCount {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* Body */
+.body { padding: 20px; flex: 1; display: flex; flex-direction: column; }
+
+.name {
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: 18px;
+  color: var(--text);
+  margin-bottom: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.2s;
+}
+.card:hover .name { color: var(--red); }
+
+.meta { display: flex; flex-direction: column; gap: 6px; }
+.metaItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.metaItem svg { flex-shrink: 0; margin-top: 1px; }
+.metaText {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.footer {
+  margin-top: auto;
+  padding-top: 14px;
+  margin-top: 14px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.feeLabel { font-size: 11px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+.feeValue { font-family: 'Bebas Neue', sans-serif; font-size: 18px; color: var(--text); letter-spacing: 1px; }

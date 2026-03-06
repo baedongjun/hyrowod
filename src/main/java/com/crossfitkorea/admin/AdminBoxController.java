@@ -1,0 +1,95 @@
+package com.crossfitkorea.admin;
+
+import com.crossfitkorea.common.ApiResponse;
+import com.crossfitkorea.domain.box.dto.BoxDto;
+import com.crossfitkorea.domain.box.entity.Box;
+import com.crossfitkorea.domain.box.repository.BoxRepository;
+import com.crossfitkorea.domain.competition.dto.CompetitionCreateRequest;
+import com.crossfitkorea.domain.competition.dto.CompetitionDto;
+import com.crossfitkorea.domain.competition.entity.CompetitionStatus;
+import com.crossfitkorea.domain.competition.service.CompetitionService;
+import com.crossfitkorea.domain.wod.dto.WodCreateRequest;
+import com.crossfitkorea.domain.wod.dto.WodDto;
+import com.crossfitkorea.domain.wod.service.WodService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/v1/admin")
+@RequiredArgsConstructor
+@Tag(name = "Admin", description = "어드민 API")
+public class AdminBoxController {
+
+    private final BoxRepository boxRepository;
+    private final CompetitionService competitionService;
+    private final WodService wodService;
+
+    @Operation(summary = "[어드민] 전체 박스 목록")
+    @GetMapping("/boxes")
+    public ResponseEntity<ApiResponse<Page<BoxDto>>> getAllBoxes(
+        @PageableDefault(size = 20) Pageable pageable
+    ) {
+        Page<BoxDto> boxes = boxRepository.findAll(pageable).map(BoxDto::from);
+        return ResponseEntity.ok(ApiResponse.success(boxes));
+    }
+
+    @Operation(summary = "[어드민] 박스 인증 처리")
+    @PatchMapping("/boxes/{id}/verify")
+    public ResponseEntity<ApiResponse<BoxDto>> verifyBox(
+        @PathVariable Long id,
+        @RequestParam boolean verified
+    ) {
+        Box box = boxRepository.findById(id)
+            .orElseThrow(() -> new com.crossfitkorea.common.exception.BusinessException(
+                com.crossfitkorea.common.exception.ErrorCode.BOX_NOT_FOUND));
+        box.setVerified(verified);
+        return ResponseEntity.ok(ApiResponse.success(BoxDto.from(boxRepository.save(box))));
+    }
+
+    @Operation(summary = "[어드민] 박스 프리미엄 설정")
+    @PatchMapping("/boxes/{id}/premium")
+    public ResponseEntity<ApiResponse<BoxDto>> setPremium(
+        @PathVariable Long id,
+        @RequestParam boolean premium
+    ) {
+        Box box = boxRepository.findById(id)
+            .orElseThrow(() -> new com.crossfitkorea.common.exception.BusinessException(
+                com.crossfitkorea.common.exception.ErrorCode.BOX_NOT_FOUND));
+        box.setPremium(premium);
+        return ResponseEntity.ok(ApiResponse.success(BoxDto.from(boxRepository.save(box))));
+    }
+
+    @Operation(summary = "[어드민] 대회 등록")
+    @PostMapping("/competitions")
+    public ResponseEntity<ApiResponse<CompetitionDto>> createCompetition(
+        @Valid @RequestBody CompetitionCreateRequest request
+    ) {
+        return ResponseEntity.ok(ApiResponse.success(competitionService.createCompetition(request)));
+    }
+
+    @Operation(summary = "[어드민] 대회 상태 변경")
+    @PatchMapping("/competitions/{id}/status")
+    public ResponseEntity<ApiResponse<CompetitionDto>> updateCompetitionStatus(
+        @PathVariable Long id,
+        @RequestParam CompetitionStatus status
+    ) {
+        return ResponseEntity.ok(ApiResponse.success(competitionService.updateStatus(id, status)));
+    }
+
+    @Operation(summary = "[어드민] 공통 WOD 등록")
+    @PostMapping("/wod")
+    public ResponseEntity<ApiResponse<WodDto>> createCommonWod(
+        @Valid @RequestBody WodCreateRequest request,
+        @org.springframework.security.core.annotation.AuthenticationPrincipal
+        org.springframework.security.core.userdetails.UserDetails userDetails
+    ) {
+        return ResponseEntity.ok(ApiResponse.success(wodService.createWod(null, request, userDetails.getUsername())));
+    }
+}

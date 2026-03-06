@@ -1,0 +1,346 @@
+/* =======================================
+   Hero
+   ======================================= */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding-top: 64px;
+}
+
+/* grid bg */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+
+.heroGlow {
+  position: absolute;
+  top: 20%;
+  left: -10%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(232,34,10,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.heroContent {
+  position: relative;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 80px;
+  width: 100%;
+}
+
+.heroEyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.heroDot {
+  width: 8px;
+  height: 8px;
+  background: var(--red);
+  animation: blink 2s infinite;
+}
+@keyframes blink {
+  0%,100% { opacity: 1; }
+  50%      { opacity: 0.2; }
+}
+.heroEyebrowText {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: var(--red);
+  text-transform: uppercase;
+}
+
+.heroTitle {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(80px, 13vw, 180px);
+  line-height: 0.88;
+  letter-spacing: -2px;
+  color: var(--text);
+}
+.heroTitleRed { color: var(--red); display: block; }
+
+.heroSub {
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: clamp(20px, 3vw, 36px);
+  color: var(--muted);
+  margin-top: 8px;
+  margin-bottom: 28px;
+  letter-spacing: 2px;
+}
+
+.heroDesc {
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.9;
+  max-width: 440px;
+  margin-bottom: 48px;
+}
+
+.heroCta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.heroCta .btn-primary  { padding: 18px 40px; font-size: 15px; }
+.heroCta .btn-secondary{ padding: 18px 40px; font-size: 15px; }
+
+/* big bg text */
+.heroBg {
+  position: absolute;
+  right: -40px;
+  bottom: -60px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(160px, 25vw, 360px);
+  color: rgba(255,255,255,0.015);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* =======================================
+   Stats
+   ======================================= */
+.stats {
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.statsGrid {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 80px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+.statItem {
+  padding: 40px 24px;
+  text-align: center;
+  border-right: 1px solid var(--border);
+}
+.statItem:last-child { border-right: none; }
+
+.statNum {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 56px;
+  color: var(--red);
+  line-height: 1;
+  letter-spacing: 2px;
+}
+.statLabel {
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+/* =======================================
+   Cities
+   ======================================= */
+.cities {
+  padding: 100px 0;
+}
+.citiesInner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 80px;
+}
+.citiesHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+.viewAll {
+  font-size: 13px;
+  color: var(--muted);
+  border-bottom: 1px solid var(--muted);
+  padding-bottom: 2px;
+  transition: color 0.2s, border-color 0.2s;
+}
+.viewAll:hover { color: var(--text); border-color: var(--text); }
+
+.cityGrid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+.cityCard {
+  background: var(--bg-card);
+  padding: 28px 12px;
+  text-align: center;
+  display: block;
+  transition: background 0.2s;
+}
+.cityCard:hover { background: var(--bg-card-2); }
+.cityCard:hover .cityName { color: var(--red); }
+
+.cityName {
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: 18px;
+  color: var(--text);
+  transition: color 0.2s;
+  margin-bottom: 6px;
+}
+.cityCount {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 13px;
+  color: var(--muted);
+  letter-spacing: 1px;
+}
+
+/* =======================================
+   Features
+   ======================================= */
+.features {
+  padding: 100px 0;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.featuresInner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 80px;
+}
+
+.featuresGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin-top: 56px;
+}
+.featureCard {
+  background: var(--bg-card);
+  padding: 40px 32px;
+  transition: background 0.2s;
+}
+.featureCard:hover { background: var(--bg-card-2); }
+
+.featureIcon {
+  width: 48px;
+  height: 48px;
+  background: rgba(232, 34, 10, 0.08);
+  border: 1px solid rgba(232, 34, 10, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  color: var(--red);
+}
+.featureTitle {
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: 20px;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+.featureDesc {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+/* =======================================
+   CTA
+   ======================================= */
+.cta {
+  position: relative;
+  padding: 120px 0;
+  overflow: hidden;
+  background: linear-gradient(160deg, #140000 0%, var(--bg) 60%);
+  border-top: 1px solid rgba(232, 34, 10, 0.15);
+}
+.cta::before {
+  content: 'KOREA';
+  position: absolute;
+  right: -20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(200px, 30vw, 400px);
+  color: rgba(232, 34, 10, 0.03);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
+.ctaInner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 80px;
+  text-align: center;
+  position: relative;
+}
+.ctaTitle {
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: clamp(36px, 4vw, 56px);
+  color: var(--text);
+  line-height: 1.2;
+  margin-bottom: 16px;
+}
+.ctaTitle span { color: var(--red); }
+.ctaDesc {
+  font-size: 16px;
+  color: var(--muted);
+  line-height: 1.9;
+  margin-bottom: 48px;
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.ctaButtons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* =======================================
+   Responsive
+   ======================================= */
+@media (max-width: 768px) {
+  .heroContent { padding: 60px 24px; }
+  .heroBg { display: none; }
+  .heroCta .btn-primary,
+  .heroCta .btn-secondary { width: 100%; }
+
+  .statsGrid {
+    padding: 0 24px;
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .statItem:nth-child(2) { border-right: none; }
+  .statItem:nth-child(3) { border-top: 1px solid var(--border); }
+  .statItem:nth-child(4) { border-top: 1px solid var(--border); border-right: none; }
+
+  .citiesInner { padding: 0 24px; }
+  .cities      { padding: 60px 0; }
+  .citiesHeader { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .cityGrid    { grid-template-columns: repeat(4, 1fr); }
+
+  .featuresInner { padding: 0 24px; }
+  .features      { padding: 60px 0; }
+  .featuresGrid  { grid-template-columns: repeat(2, 1fr); }
+
+  .cta::before { display: none; }
+  .cta         { padding: 60px 0; }
+  .ctaInner    { padding: 0 24px; }
+  .ctaButtons .btn-primary,
+  .ctaButtons .btn-secondary { width: 100%; }
+}

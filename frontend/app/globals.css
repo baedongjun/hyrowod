@@ -1,0 +1,249 @@
+/* ==============================================
+   CrossFit Korea — Global Design System
+   CLAUDE.md 기준 / 순수 CSS / 다크 전용
+   ============================================== */
+
+/* Design Tokens */
+:root {
+  --bg:         #0a0a0a;
+  --bg-card:    #1a1a1a;
+  --bg-card-2:  #2a2a2a;
+  --red:        #e8220a;
+  --orange:     #ff6b1a;
+  --text:       #f5f0e8;
+  --muted:      #888888;
+  --border:     rgba(255, 255, 255, 0.08);
+
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-title:   'Black Han Sans', sans-serif;
+  --font-body:    'Noto Sans KR', sans-serif;
+}
+
+/* Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a    { color: inherit; text-decoration: none; }
+button { cursor: pointer; font-family: var(--font-body); }
+img  { max-width: 100%; display: block; }
+input, textarea, select { font-family: var(--font-body); }
+
+/* Scrollbar */
+::-webkit-scrollbar       { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: #333; }
+::-webkit-scrollbar-thumb:hover { background: var(--red); }
+
+/* ==============================================
+   Buttons
+   ============================================== */
+.btn-primary {
+  display: inline-block;
+  background: var(--red);
+  color: var(--text);
+  border: none;
+  border-radius: 0;
+  padding: 15px 32px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+  text-align: center;
+  line-height: 1;
+}
+.btn-primary:hover   { background: #b01a07; }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-secondary {
+  display: inline-block;
+  background: transparent;
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0;
+  padding: 15px 32px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  text-align: center;
+  line-height: 1;
+}
+.btn-secondary:hover   { border-color: var(--text); }
+.btn-secondary:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  color: var(--muted);
+  border: none;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.btn-ghost:hover { color: var(--text); }
+
+/* ==============================================
+   Card
+   ============================================== */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 0;
+}
+.card-hover {
+  transition: transform 0.3s, border-color 0.3s;
+  cursor: pointer;
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  border-color: rgba(232, 34, 10, 0.4);
+}
+
+/* ==============================================
+   Badges
+   ============================================== */
+.badge {
+  display: inline-block;
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  border-radius: 0;
+  text-transform: uppercase;
+}
+.badge-premium  { background: rgba(255,107,26,0.12); border:1px solid rgba(255,107,26,0.3); color: var(--orange); }
+.badge-verified { background: rgba(34,197,94,0.12);  border:1px solid rgba(34,197,94,0.3);  color: #22c55e; }
+.badge-approved { background: rgba(34,197,94,0.12);  border:1px solid rgba(34,197,94,0.3);  color: #22c55e; }
+.badge-pending  { background: rgba(234,179,8,0.12);  border:1px solid rgba(234,179,8,0.3);  color: #eab308; }
+.badge-rejected { background: rgba(232,34,10,0.12);  border:1px solid rgba(232,34,10,0.3);  color: var(--red); }
+.badge-open     { background: rgba(34,197,94,0.12);  border:1px solid rgba(34,197,94,0.3);  color: #22c55e; }
+.badge-upcoming { background: rgba(99,102,241,0.12); border:1px solid rgba(99,102,241,0.3); color: #818cf8; }
+.badge-closed   { background: rgba(136,136,136,0.12);border:1px solid rgba(136,136,136,0.2);color: var(--muted); }
+.badge-completed{ background: rgba(136,136,136,0.08);border:1px solid rgba(136,136,136,0.15);color:#555; }
+.badge-amrap    { background: rgba(255,107,26,0.12); border:1px solid rgba(255,107,26,0.3); color: var(--orange); }
+.badge-fortime  { background: rgba(232,34,10,0.12);  border:1px solid rgba(232,34,10,0.3);  color: var(--red); }
+.badge-emom     { background: rgba(99,102,241,0.12); border:1px solid rgba(99,102,241,0.3); color: #818cf8; }
+.badge-strength { background: rgba(234,179,8,0.12);  border:1px solid rgba(234,179,8,0.3);  color: #eab308; }
+.badge-default  { background: rgba(136,136,136,0.12);border:1px solid rgba(136,136,136,0.2);color: var(--muted); }
+
+/* ==============================================
+   Section / Layout
+   ============================================== */
+.section { padding: 100px 80px; }
+.section-tag {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: var(--red);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.section-title {
+  font-family: var(--font-title);
+  font-size: clamp(36px, 4vw, 58px);
+  line-height: 1.1;
+  color: var(--text);
+}
+.section-title span { color: var(--red); }
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 80px;
+}
+
+/* ==============================================
+   Form / Input
+   ============================================== */
+.input-field {
+  width: 100%;
+  background: var(--bg-card-2);
+  border: 1px solid var(--border);
+  border-radius: 0;
+  color: var(--text);
+  padding: 14px 16px;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.input-field:focus         { border-color: var(--red); }
+.input-field::placeholder  { color: var(--muted); }
+.input-field:disabled      { opacity: 0.5; }
+
+select.input-field {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23888' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  padding-right: 40px;
+}
+
+.field-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.field-error {
+  font-size: 12px;
+  color: var(--red);
+  margin-top: 6px;
+}
+
+/* ==============================================
+   Scroll Fade-in (IntersectionObserver 연동)
+   ============================================== */
+.fade-in {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.fade-in:nth-child(2) { transition-delay: 0.08s; }
+.fade-in:nth-child(3) { transition-delay: 0.16s; }
+.fade-in:nth-child(4) { transition-delay: 0.24s; }
+.fade-in:nth-child(5) { transition-delay: 0.32s; }
+.fade-in:nth-child(6) { transition-delay: 0.40s; }
+.fade-in:nth-child(7) { transition-delay: 0.48s; }
+.fade-in:nth-child(8) { transition-delay: 0.56s; }
+
+/* ==============================================
+   Divider / Utility
+   ============================================== */
+.divider { border: none; border-top: 1px solid var(--border); }
+
+/* ==============================================
+   Responsive
+   ============================================== */
+@media (max-width: 768px) {
+  .section   { padding: 60px 24px; }
+  .container { padding: 0 24px; }
+}

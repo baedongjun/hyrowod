@@ -1,0 +1,377 @@
+.page { padding-top: 64px; min-height: 100vh; }
+
+/* Hero */
+.hero {
+  position: relative;
+  height: 360px;
+  background: var(--bg-card);
+  overflow: hidden;
+}
+.heroImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 60%);
+}
+.heroContent {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 32px 80px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+.heroBadges { display: flex; gap: 8px; margin-bottom: 12px; }
+.heroName {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 56px;
+  line-height: 1;
+  letter-spacing: 2px;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.heroMeta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: rgba(245,240,232,0.7);
+}
+.heroRating {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px;
+  color: #eab308;
+  letter-spacing: 1px;
+}
+.star { color: #eab308; }
+.heroNoImg {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 80px;
+  color: rgba(255,255,255,0.04);
+  letter-spacing: 8px;
+}
+
+/* Layout */
+.layout {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 80px;
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 32px;
+  padding-top: 32px;
+  padding-bottom: 64px;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 32px;
+}
+.tab {
+  padding: 12px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: var(--muted);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: color 0.2s;
+  font-family: var(--font-body);
+  margin-bottom: -1px;
+}
+.tab:hover { color: var(--text); }
+.tabActive { color: var(--text); border-bottom-color: var(--red); }
+
+/* Info Tab */
+.infoGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin-bottom: 24px;
+}
+.infoItem {
+  background: var(--bg-card);
+  padding: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.infoIcon { color: var(--muted); margin-top: 1px; flex-shrink: 0; }
+.infoLabel {
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+.infoValue {
+  font-size: 14px;
+  color: var(--text);
+}
+.infoLink { color: var(--red); text-decoration: none; }
+.infoLink:hover { text-decoration: underline; }
+
+.description {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 28px;
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.9;
+  white-space: pre-line;
+}
+
+/* Coaches Tab */
+.coachGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+.coachCard {
+  background: var(--bg-card);
+  padding: 24px;
+  display: flex;
+  gap: 16px;
+}
+.coachAvatar {
+  width: 64px;
+  height: 64px;
+  background: var(--bg-card-2);
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 24px;
+  color: var(--muted);
+}
+.coachImg { width: 100%; height: 100%; object-fit: cover; }
+.coachName {
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: 16px;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.coachExp { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+.coachBio { font-size: 13px; color: var(--muted); line-height: 1.7; }
+.certList { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+.cert {
+  font-size: 10px;
+  padding: 3px 8px;
+  background: rgba(232,34,10,0.08);
+  border: 1px solid rgba(232,34,10,0.2);
+  color: var(--red);
+  letter-spacing: 0.5px;
+}
+
+/* Schedule Tab */
+.scheduleDay { margin-bottom: 24px; }
+.scheduleDayName {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.scheduleList { display: flex; flex-direction: column; }
+.scheduleItem {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-top: none;
+}
+.scheduleItem:first-child { border-top: 1px solid var(--border); }
+.scheduleTime {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 17px;
+  letter-spacing: 1px;
+  color: var(--text);
+  min-width: 120px;
+}
+.scheduleClass { font-size: 14px; color: var(--text); flex: 1; }
+.scheduleCoach { font-size: 13px; color: var(--muted); }
+.scheduleCap {
+  font-size: 12px;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  padding: 2px 8px;
+}
+
+/* Reviews Tab */
+.reviewForm {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+.reviewFormTitle {
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: 16px;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+.ratingSelect {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.ratingStar {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--border);
+  transition: color 0.1s;
+  padding: 0;
+  line-height: 1;
+}
+.ratingStarOn { color: #eab308; }
+.reviewTextarea {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 12px 14px;
+  font-size: 14px;
+  font-family: var(--font-body);
+  resize: vertical;
+  min-height: 80px;
+  outline: none;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+.reviewTextarea:focus { border-color: var(--red); }
+.reviewTextarea::placeholder { color: var(--muted); }
+.reviewSubmitRow {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.reviewList { display: flex; flex-direction: column; }
+.reviewItem {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-top: none;
+  padding: 20px;
+}
+.reviewItem:first-child { border-top: 1px solid var(--border); }
+.reviewHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.reviewUser { font-size: 14px; font-weight: 600; color: var(--text); }
+.reviewDate { font-size: 12px; color: var(--muted); }
+.reviewStars {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 8px;
+  color: #eab308;
+  font-size: 13px;
+}
+.reviewContent { font-size: 14px; color: var(--muted); line-height: 1.8; }
+
+/* Sidebar */
+.sidebar { display: flex; flex-direction: column; gap: 16px; }
+.sideCard {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 24px;
+}
+.sideTitle {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+.feeValue {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 40px;
+  color: var(--text);
+  letter-spacing: 2px;
+  line-height: 1;
+}
+.feeUnit { font-size: 14px; color: var(--muted); margin-top: 4px; }
+
+.contactList { display: flex; flex-direction: column; gap: 12px; }
+.contactItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.contactIcon { color: var(--muted); flex-shrink: 0; }
+.contactLink { color: var(--red); text-decoration: none; }
+.contactLink:hover { text-decoration: underline; }
+
+.snsRow {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+.snsBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 12px;
+  text-decoration: none;
+  transition: color 0.2s, border-color 0.2s;
+  font-family: var(--font-body);
+}
+.snsBtn:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+
+/* Empty / Loading */
+.empty {
+  text-align: center;
+  padding: 60px 0;
+  color: var(--muted);
+}
+.emptyIcon { font-size: 40px; opacity: 0.15; margin-bottom: 12px; }
+
+.skeleton {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  animation: shimmer 1.4s infinite;
+}
+@keyframes shimmer { 0%,100%{opacity:.6} 50%{opacity:.3} }
+
+@media (max-width: 768px) {
+  .heroContent { padding: 24px; }
+  .heroName    { font-size: 36px; }
+  .layout      { grid-template-columns: 1fr; padding: 24px; }
+  .infoGrid    { grid-template-columns: 1fr; }
+  .coachGrid   { grid-template-columns: 1fr; }
+}

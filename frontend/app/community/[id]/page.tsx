@@ -1,0 +1,254 @@
+"use client";
+
+import { useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import Link from "next/link";
+import { communityApi } from "@/lib/api";
+import { Post, Comment } from "@/types";
+import { isLoggedIn } from "@/lib/auth";
+import { toast } from "react-toastify";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import "dayjs/locale/ko";
+import s from "./post.module.css";
+
+dayjs.extend(relativeTime);
+dayjs.locale("ko");
+
+const CATEGORY_LABEL: Record<string, string> = {
+  FREE: "자유게시판", QNA: "질문/답변", RECORD: "운동 기록", MARKET: "중고장터",
+};
+const CATEGORY_BADGE: Record<string, string> = {
+  FREE: "badge-default", QNA: "badge-upcoming", RECORD: "badge-open", MARKET: "badge-amrap",
+};
+
+function CommentItem({ comment, postId, onReplySuccess }: { comment: Comment; postId: number; onReplySuccess: () => void }) {
+  const [showReply, setShowReply] = useState(false);
+  const [replyText, setReplyText] = useState("");
+
+  const replyMutation = useMutation({
+    mutationFn: () => communityApi.createComment(postId, replyText, comment.id),
+    onSuccess: () => {
+      setReplyText("");
+      setShowReply(false);
+      onReplySuccess();
+    },
+    onError: () => toast.error("댓글 작성에 실패했습니다."),
+  });
+
+  return (
+    <div className={s.comment}>
+      <div className={s.commentHeader}>
+        <span className={s.commentUser}>{comment.userName}</span>
+        <span className={s.commentDate}>{dayjs(comment.createdAt).fromNow()}</span>
+      </div>
+      <p className={s.commentContent}>{comment.content}</p>
+      {isLoggedIn() && (
+        <button className={s.commentReplyBtn} onClick={() => setShowReply(!showReply)}>
+          답글
+        </button>
+      )}
+
+      {comment.replies?.length > 0 && (
+        <div className={s.replies}>
+          {comment.replies.map((reply) => (
+            <div key={reply.id} className={s.reply}>
+              <div className={s.commentHeader}>
+                <span className={s.commentUser}>{reply.userName}</span>
+                <span className={s.commentDate}>{dayjs(reply.createdAt).fromNow()}</span>
+              </div>
+              <p className={s.commentContent}>{reply.content}</p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {showReply && (
+        <div className={s.replyForm}>
+          <input
+            className={s.replyInput}
+            placeholder="답글을 입력하세요"
+            value={replyText}
+            onChange={(e) => setReplyText(e.target.value)}
+            onKeyDown={(e) => { if (e.key === "Enter" && replyText.trim()) replyMutation.mutate(); }}
+          />
+          <button
+            className="btn-primary"
+            disabled={!replyText.trim() || replyMutation.isPending}
+            onClick={() => replyMutation.mutate()}
+            style={{ padding: "8px 16px", fontSize: 13 }}
+          >
+            등록
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default function PostDetailPage() {
+  const { id } = useParams<{ id: string }>();
+  const postId = Number(id);
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const [commentText, setCommentText] = useState("");
+  const [liked, setLiked] = useState(false);
+
+  const { data: post, isLoading, refetch: refetchPost } = useQuery({
+    queryKey: ["post", postId],
+    queryFn: async () => (await communityApi.getPost(postId)).data.data as Post,
+  });
+
+  const { data: comments, refetch: refetchComments } = useQuery({
+    queryKey: ["post", postId, "comments"],
+    queryFn: async () => (await communityApi.getComments(postId)).data.data as Comment[],
+  });
+
+  const commentMutation = useMutation({
+    mutationFn: () => communityApi.createComment(postId, commentText),
+    onSuccess: () => {
+      setCommentText("");
+      refetchComments();
+    },
+    onError: () => toast.error("댓글 작성에 실패했습니다."),
+  });
+
+  const likeMutation = useMutation({
+    mutationFn: () => communityApi.likePost(postId),
+    onSuccess: () => {
+      setLiked(true);
+      refetchPost();
+    },
+    onError: () => toast.error("좋아요 처리에 실패했습니다."),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: () => communityApi.deletePost(postId),
+    onSuccess: () => {
+      toast.success("삭제되었습니다.");
+      router.push("/community");
+    },
+  });
+
+  if (isLoading) return <div className={s.loading}>로딩 중...</div>;
+  if (!post) return null;
+
+  return (
+    <div className={s.page}>
+      <div className={s.content}>
+        <Link href="/community" className={s.back}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <polyline points="15 18 9 12 15 6"/>
+          </svg>
+          커뮤니티 목록
+        </Link>
+
+        {/* Post */}
+        <div className={s.postCard}>
+          <div className={s.postHeader}>
+            <div className={s.postBadgeRow}>
+              <span className={`badge ${CATEGORY_BADGE[post.category] || "badge-default"}`}>
+                {CATEGORY_LABEL[post.category]}
+              </span>
+            </div>
+            <h1 className={s.postTitle}>{post.title}</h1>
+            <div className={s.postMeta}>
+              <div className={s.postMetaLeft}>
+                <span>{post.userName}</span>
+                <span>·</span>
+                <span>{dayjs(post.createdAt).fromNow()}</span>
+              </div>
+              <div className={s.postMetaStats}>
+                <span className={s.metaStat}>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                  </svg>
+                  {post.viewCount}
+                </span>
+                <span className={s.metaStat}>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                  </svg>
+                  {post.commentCount}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className={s.postBody}>{post.content}</div>
+
+          {post.imageUrls?.length > 0 && (
+            <div className={s.postImages}>
+              {post.imageUrls.map((url, i) => (
+                <img key={i} src={url} alt="" className={s.postImg} />
+              ))}
+            </div>
+          )}
+
+          <div className={s.postActions}>
+            <button
+              className={`${s.likeBtn} ${liked ? s.likeBtnActive : ""}`}
+              onClick={() => { if (isLoggedIn() && !liked) likeMutation.mutate(); }}
+              disabled={!isLoggedIn() || liked}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill={liked ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+              </svg>
+              좋아요 {post.likeCount}
+            </button>
+            <button
+              className="btn-secondary"
+              onClick={() => { if (confirm("삭제하시겠습니까?")) deleteMutation.mutate(); }}
+              style={{ padding: "8px 16px", fontSize: 13 }}
+            >
+              삭제
+            </button>
+          </div>
+        </div>
+
+        {/* Comments */}
+        <div className={s.commentsSection}>
+          <div className={s.commentsHeader}>
+            댓글 <span className={s.commentsCount}>{comments?.length || 0}</span>
+          </div>
+
+          {isLoggedIn() && (
+            <div className={s.commentForm}>
+              <input
+                className={s.commentInput}
+                placeholder="댓글을 입력하세요"
+                value={commentText}
+                onChange={(e) => setCommentText(e.target.value)}
+                onKeyDown={(e) => { if (e.key === "Enter" && commentText.trim()) commentMutation.mutate(); }}
+              />
+              <button
+                className="btn-primary"
+                disabled={!commentText.trim() || commentMutation.isPending}
+                onClick={() => commentMutation.mutate()}
+                style={{ padding: "10px 20px", fontSize: 13, whiteSpace: "nowrap" }}
+              >
+                등록
+              </button>
+            </div>
+          )}
+
+          <div className={s.commentList}>
+            {comments && comments.length > 0 ? (
+              comments.map((comment) => (
+                <CommentItem
+                  key={comment.id}
+                  comment={comment}
+                  postId={postId}
+                  onReplySuccess={refetchComments}
+                />
+              ))
+            ) : (
+              <div className={s.emptyComments}>첫 번째 댓글을 남겨보세요</div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

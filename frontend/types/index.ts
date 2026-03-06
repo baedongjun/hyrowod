@@ -1,0 +1,147 @@
+export interface ApiResponse<T> {
+  success: boolean;
+  message: string;
+  data: T;
+}
+
+export interface Page<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  number: number;
+  size: number;
+  first: boolean;
+  last: boolean;
+}
+
+export interface Box {
+  id: number;
+  name: string;
+  address: string;
+  city: string;
+  district: string;
+  latitude: number;
+  longitude: number;
+  phone: string;
+  website: string;
+  instagram: string;
+  youtube: string;
+  description: string;
+  monthlyFee: number;
+  openTime: string;
+  closeTime: string;
+  imageUrls: string[];
+  rating: number;
+  reviewCount: number;
+  verified: boolean;
+  premium: boolean;
+  ownerName: string;
+}
+
+export interface Coach {
+  id: number;
+  boxId: number;
+  name: string;
+  bio: string;
+  imageUrl: string;
+  certifications: string[];
+  experienceYears: number;
+}
+
+export interface Schedule {
+  id: number;
+  boxId: number;
+  dayOfWeek: string;
+  dayOfWeekKorean: string;
+  startTime: string;
+  endTime: string;
+  className: string;
+  maxCapacity: number;
+  coachName: string | null;
+}
+
+export interface Review {
+  id: number;
+  boxId: number;
+  rating: number;
+  content: string;
+  userName: string;
+  userProfileImageUrl: string | null;
+  createdAt: string;
+}
+
+export type WodType = "AMRAP" | "FOR_TIME" | "EMOM" | "TABATA" | "STRENGTH" | "SKILL" | "REST_DAY" | "CUSTOM";
+
+export interface Wod {
+  id: number;
+  boxId: number | null;
+  boxName: string;
+  wodDate: string;
+  title: string;
+  type: WodType;
+  content: string;
+  scoreType: string;
+  imageUrl: string | null;
+}
+
+export type CompetitionLevel = "BEGINNER" | "SCALED" | "INTERMEDIATE" | "RX" | "ELITE" | "ALL";
+export type CompetitionStatus = "UPCOMING" | "OPEN" | "CLOSED" | "COMPLETED";
+
+export interface Competition {
+  id: number;
+  name: string;
+  description: string;
+  startDate: string;
+  endDate: string | null;
+  location: string;
+  city: string;
+  registrationDeadline: string | null;
+  registrationUrl: string | null;
+  imageUrl: string | null;
+  organizer: string;
+  level: CompetitionLevel;
+  status: CompetitionStatus;
+  maxParticipants: number | null;
+  entryFee: number | null;
+}
+
+export type PostCategory = "FREE" | "QNA" | "RECORD" | "MARKET";
+
+export interface Post {
+  id: number;
+  title: string;
+  content: string;
+  category: PostCategory;
+  viewCount: number;
+  likeCount: number;
+  commentCount: number;
+  imageUrls: string[];
+  userName: string;
+  userProfileImageUrl: string | null;
+  createdAt: string;
+}
+
+export interface Comment {
+  id: number;
+  postId: number;
+  parentId: number | null;
+  content: string;
+  userName: string;
+  userProfileImageUrl: string | null;
+  createdAt: string;
+  replies: Comment[];
+}
+
+export interface User {
+  email: string;
+  name: string;
+  role: "ROLE_USER" | "ROLE_BOX_OWNER" | "ROLE_ADMIN";
+}
+
+export interface AuthResponse {
+  accessToken: string;
+  refreshToken: string;
+  email: string;
+  name: string;
+  role: string;
+}
