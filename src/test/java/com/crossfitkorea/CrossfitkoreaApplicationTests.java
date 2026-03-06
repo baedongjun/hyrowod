@@ -11,9 +11,18 @@ import org.springframework.test.context.TestPropertySource;
     "spring.datasource.username=sa",
     "spring.datasource.password=",
     "spring.jpa.hibernate.ddl-auto=create-drop",
+    "spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.H2Dialect",
     "spring.data.redis.host=localhost",
     "spring.data.redis.port=6379",
-    "jwt.secret=test-secret-key-must-be-at-least-256-bits-long-for-hs256"
+    "spring.data.redis.password=",
+    "spring.cache.type=none",
+    "jwt.secret=test-secret-key-must-be-at-least-256-bits-long-for-hs256",
+    "jwt.expiration=86400000",
+    "jwt.refresh-expiration=604800000",
+    "aws.access-key=test",
+    "aws.secret-key=test",
+    "aws.s3.bucket=test-bucket",
+    "aws.s3.region=ap-northeast-2"
 })
 class CrossfitkoreaApplicationTests {
 

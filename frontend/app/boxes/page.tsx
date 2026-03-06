@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams, useRouter } from "next/navigation";
 import { boxApi } from "@/lib/api";
@@ -11,7 +11,7 @@ import s from "./boxes.module.css";
 
 const CITIES = ["전체", "서울", "경기", "부산", "인천", "대구", "대전", "광주", "울산", "세종", "강원", "충북", "충남", "전북", "전남", "경북", "경남", "제주"];
 
-export default function BoxesPage() {
+function BoxesContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -156,5 +156,13 @@ export default function BoxesPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function BoxesPage() {
+  return (
+    <Suspense>
+      <BoxesContent />
+    </Suspense>
   );
 }
