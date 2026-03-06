@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { boxApi } from "@/lib/api";
 import { Box, Coach, Schedule, Review } from "@/types";
@@ -22,7 +22,6 @@ type Tab = typeof TABS[number];
 export default function BoxDetailPage() {
   const { id } = useParams<{ id: string }>();
   const boxId = Number(id);
-  const router = useRouter();
   const queryClient = useQueryClient();
 
   const [tab, setTab] = useState<Tab>("정보");

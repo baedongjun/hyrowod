@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import Link from "next/link";
 import { communityApi } from "@/lib/api";
 import { Post, Comment } from "@/types";
@@ -91,7 +91,6 @@ export default function PostDetailPage() {
   const { id } = useParams<{ id: string }>();
   const postId = Number(id);
   const router = useRouter();
-  const queryClient = useQueryClient();
   const [commentText, setCommentText] = useState("");
   const [liked, setLiked] = useState(false);
 

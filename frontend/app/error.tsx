@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
 
 export default function Error({
   error,
@@ -45,9 +46,9 @@ export default function Error({
         <button className="btn-primary" onClick={reset} style={{ padding: "12px 32px" }}>
           다시 시도
         </button>
-        <a href="/" className="btn-secondary" style={{ padding: "12px 32px" }}>
-          홈으로
-        </a>
+        <Link href="/" className="btn-secondary" style={{ padding: "12px 32px" }}>
+          홈
+        </Link>
       </div>
     </div>
   );

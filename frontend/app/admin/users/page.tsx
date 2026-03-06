@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { adminApi } from "@/lib/api";
 import { toast } from "react-toastify";
-import dayjs from "dayjs";
 import s from "./adminUsers.module.css";
 
 interface UserItem {

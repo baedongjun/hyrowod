@@ -2,7 +2,6 @@
 
 import { useEffect, useRef } from "react";
 import { Box } from "@/types";
-import Link from "next/link";
 
 interface BoxMapProps {
   boxes: Box[];
@@ -10,6 +9,7 @@ interface BoxMapProps {
 
 declare global {
   interface Window {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     kakao: any;
   }
 }

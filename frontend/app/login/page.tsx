@@ -32,8 +32,9 @@ export default function LoginPage() {
       saveAuth(res.data.data);
       toast.success("로그인되었습니다.");
       router.push("/");
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || "로그인에 실패했습니다.");
+    } catch (err: unknown) {
+      const e = err as { response?: { data?: { message?: string } } };
+      toast.error(e.response?.data?.message || "로그인에 실패했습니다.");
     }
   };
 

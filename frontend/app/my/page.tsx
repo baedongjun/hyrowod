@@ -38,7 +38,7 @@ export default function MyPage() {
     }
   }, [router]);
 
-  const { data: me, isLoading } = useQuery({
+  const { data: me } = useQuery({
     queryKey: ["me"],
     queryFn: async () => (await userApi.getMe()).data.data,
     enabled: isLoggedIn(),
