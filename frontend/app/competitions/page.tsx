@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { competitionApi } from "@/lib/api";
 import { Competition, CompetitionStatus } from "@/types";
@@ -41,8 +42,21 @@ const STATUS_FILTERS: { value: CompetitionStatus | "ALL"; label: string }[] = [
   { value: "COMPLETED", label: "종료" },
 ];
 
+const LEVEL_FILTERS: { value: string; label: string }[] = [
+  { value: "ALL", label: "전체" },
+  { value: "BEGINNER", label: "입문" },
+  { value: "SCALED", label: "스케일드" },
+  { value: "INTERMEDIATE", label: "중급" },
+  { value: "RX", label: "Rx" },
+  { value: "ELITE", label: "엘리트" },
+];
+
+const CITIES = ["전체", "서울", "경기", "부산", "인천", "대구", "대전", "광주", "제주"];
+
 export default function CompetitionsPage() {
   const [selectedStatus, setSelectedStatus] = useState<CompetitionStatus | "ALL">("ALL");
+  const [selectedLevel, setSelectedLevel] = useState("ALL");
+  const [selectedCity, setSelectedCity] = useState("전체");
 
   const { data, isLoading } = useQuery({
     queryKey: ["competitions", selectedStatus],
@@ -52,6 +66,13 @@ export default function CompetitionsPage() {
       });
       return res.data.data;
     },
+  });
+
+  // Client-side filter by level and city
+  const filtered = data?.content?.filter((comp: Competition) => {
+    const levelMatch = selectedLevel === "ALL" || comp.level === selectedLevel;
+    const cityMatch = selectedCity === "전체" || comp.city === selectedCity || comp.location?.includes(selectedCity);
+    return levelMatch && cityMatch;
   });
 
   return (
@@ -72,17 +93,52 @@ export default function CompetitionsPage() {
 
       {/* Content */}
       <div className={s.content}>
-        {/* Filter */}
-        <div className={s.filters}>
-          {STATUS_FILTERS.map((filter) => (
-            <button
-              key={filter.value}
-              onClick={() => setSelectedStatus(filter.value)}
-              className={`${s.pill} ${selectedStatus === filter.value ? s.pillActive : ""}`}
-            >
-              {filter.label}
-            </button>
-          ))}
+        {/* Status Filter */}
+        <div className={s.filterGroup}>
+          <span className={s.filterGroupLabel}>상태</span>
+          <div className={s.filters}>
+            {STATUS_FILTERS.map((filter) => (
+              <button
+                key={filter.value}
+                onClick={() => setSelectedStatus(filter.value)}
+                className={`${s.pill} ${selectedStatus === filter.value ? s.pillActive : ""}`}
+              >
+                {filter.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Level Filter */}
+        <div className={s.filterGroup}>
+          <span className={s.filterGroupLabel}>레벨</span>
+          <div className={s.filters}>
+            {LEVEL_FILTERS.map((filter) => (
+              <button
+                key={filter.value}
+                onClick={() => setSelectedLevel(filter.value)}
+                className={`${s.pill} ${selectedLevel === filter.value ? s.pillActive : ""}`}
+              >
+                {filter.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* City Filter */}
+        <div className={s.filterGroup} style={{ marginBottom: 32 }}>
+          <span className={s.filterGroupLabel}>지역</span>
+          <div className={s.filters}>
+            {CITIES.map((city) => (
+              <button
+                key={city}
+                onClick={() => setSelectedCity(city)}
+                className={`${s.pill} ${selectedCity === city ? s.pillActive : ""}`}
+              >
+                {city}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* List */}
@@ -92,15 +148,15 @@ export default function CompetitionsPage() {
               <div key={i} className={s.skeleton} />
             ))}
           </div>
-        ) : data?.content?.length === 0 ? (
+        ) : filtered?.length === 0 ? (
           <div className={s.empty}>
             <div className={s.emptyIcon}>🏆</div>
             <p>대회 일정이 없습니다</p>
           </div>
         ) : (
           <div className={s.list}>
-            {data?.content?.map((comp: Competition) => (
-              <div key={comp.id} className={s.item}>
+            {filtered?.map((comp: Competition) => (
+              <Link key={comp.id} href={`/competitions/${comp.id}`} className={s.item} style={{ textDecoration: "none", color: "inherit", display: "flex" }}>
                 {/* Date Badge */}
                 <div className={s.dateBadge}>
                   <p className={s.dateMonth}>{dayjs(comp.startDate).format("MMM")}</p>
@@ -161,7 +217,7 @@ export default function CompetitionsPage() {
                     </a>
                   </div>
                 )}
-              </div>
+              </Link>
             ))}
           </div>
         )}

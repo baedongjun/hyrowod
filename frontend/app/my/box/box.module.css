@@ -1,0 +1,268 @@
+.page { padding-top: 64px; min-height: 100vh; }
+
+.inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px 80px 80px;
+}
+
+.pageHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+.tag {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: var(--red);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.title {
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: 40px;
+  color: var(--text);
+}
+
+.loading {
+  padding: 80px;
+  text-align: center;
+  color: var(--muted);
+}
+
+.emptyState {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 80px;
+  text-align: center;
+}
+.emptyTitle {
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: 24px;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.emptyDesc { font-size: 14px; color: var(--muted); }
+
+/* Layout */
+.layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+/* Sidebar */
+.sidebar {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 16px;
+}
+.sidebarTitle {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 8px 8px 16px;
+}
+.boxTab {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  border-left: 2px solid transparent;
+  padding: 12px 8px;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.2s, background 0.2s;
+}
+.boxTab:hover { background: var(--bg-card-2); }
+.boxTabActive { border-left-color: var(--red) !important; background: var(--bg-card-2); }
+.boxTabName {
+  font-size: 14px;
+  color: var(--text);
+  font-weight: 500;
+  display: block;
+  margin-bottom: 6px;
+}
+.boxTabMeta { display: flex; gap: 4px; flex-wrap: wrap; }
+
+/* Main */
+.main { display: flex; flex-direction: column; gap: 20px; }
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 24px 28px;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.cardTitle {
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: 18px;
+  color: var(--text);
+}
+
+/* Box info */
+.boxName {
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: 24px;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.boxAddr { font-size: 13px; color: var(--muted); }
+.boxStats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+  margin: 16px 0;
+}
+.boxStat {
+  background: var(--bg);
+  padding: 16px;
+  text-align: center;
+}
+.boxStatNum {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 32px;
+  color: var(--red);
+  line-height: 1;
+}
+.boxStatLabel { font-size: 11px; color: var(--muted); margin-top: 4px; }
+.boxActions { display: flex; gap: 8px; }
+
+/* WOD form */
+.wodForm {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.wodFormGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.select {
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 10px 14px;
+  font-size: 14px;
+  font-family: var(--font-body);
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+  transition: border-color 0.2s;
+}
+.select:focus { border-color: var(--red); }
+.select option { background: var(--bg-card); }
+.textarea {
+  width: 100%;
+  min-height: 100px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 12px;
+  font-size: 14px;
+  font-family: var(--font-body);
+  line-height: 1.7;
+  outline: none;
+  resize: vertical;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+.textarea:focus { border-color: var(--red); }
+
+/* WOD display */
+.wodCard {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 20px;
+}
+.wodTypeBadge {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 3px 10px;
+}
+.wodDate { font-size: 12px; color: var(--muted); }
+.wodTitle {
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: 18px;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.wodContent { font-size: 14px; color: var(--muted); line-height: 1.8; white-space: pre-line; }
+
+/* Coach list */
+.coachList { display: flex; flex-direction: column; gap: 12px; }
+.coachItem { display: flex; align-items: center; gap: 12px; }
+.coachAvatar {
+  width: 40px;
+  height: 40px;
+  background: var(--bg-card-2);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-family: 'Bebas Neue', sans-serif;
+  color: var(--muted);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.coachAvatar img { width: 100%; height: 100%; object-fit: cover; }
+.coachName { font-size: 14px; font-weight: 500; color: var(--text); }
+.coachExp { font-size: 12px; color: var(--muted); }
+
+/* Schedule */
+.scheduleList { display: flex; flex-direction: column; gap: 8px; }
+.scheduleItem {
+  display: grid;
+  grid-template-columns: 48px 100px 1fr 60px;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.scheduleItem:last-child { border-bottom: none; }
+.scheduleDay { color: var(--red); font-weight: 700; }
+.scheduleTime { color: var(--muted); font-family: monospace; }
+.scheduleName { color: var(--text); }
+.scheduleCap { color: var(--muted); text-align: right; }
+.moreText { font-size: 12px; color: var(--muted); text-align: center; padding: 8px; }
+
+.emptyText { font-size: 14px; color: var(--muted); padding: 8px 0; }
+
+@media (max-width: 768px) {
+  .inner { padding: 24px; }
+  .pageHeader { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .layout { grid-template-columns: 1fr; }
+  .boxStats { grid-template-columns: repeat(2, 1fr); }
+  .wodFormGrid { grid-template-columns: 1fr; }
+  .scheduleItem { grid-template-columns: 48px 1fr; }
+  .scheduleTime, .scheduleCap { display: none; }
+}

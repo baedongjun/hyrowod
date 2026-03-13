@@ -25,6 +25,8 @@ export default function AdminCompetitionsPage() {
   const [form, setForm] = useState({
     name: "",
     description: "",
+    organizer: "",
+    imageUrl: "",
     startDate: dayjs().format("YYYY-MM-DD"),
     endDate: "",
     location: "",
@@ -52,10 +54,19 @@ export default function AdminCompetitionsPage() {
     }),
     onSuccess: () => {
       toast.success("대회가 등록되었습니다.");
-      setForm({ name:"", description:"", startDate:dayjs().format("YYYY-MM-DD"), endDate:"", location:"", city:"", registrationDeadline:"", registrationUrl:"", level:"ALL", entryFee:"", maxParticipants:"" });
+      setForm({ name:"", description:"", organizer:"", imageUrl:"", startDate:dayjs().format("YYYY-MM-DD"), endDate:"", location:"", city:"", registrationDeadline:"", registrationUrl:"", level:"ALL", entryFee:"", maxParticipants:"" });
       queryClient.invalidateQueries({ queryKey: ["competitions"] });
     },
     onError: () => toast.error("등록에 실패했습니다."),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => adminApi.deleteCompetition(id),
+    onSuccess: () => {
+      toast.success("대회가 삭제되었습니다.");
+      queryClient.invalidateQueries({ queryKey: ["competitions"] });
+    },
+    onError: () => toast.error("삭제에 실패했습니다."),
   });
 
   const statusMutation = useMutation({
@@ -90,6 +101,14 @@ export default function AdminCompetitionsPage() {
             <div className={s.field}>
               <label className={s.label}>대회명</label>
               <input type="text" className="input-field" placeholder="2026 CrossFit Korea Open" value={form.name} onChange={(e) => set("name", e.target.value)} />
+            </div>
+            <div className={s.field}>
+              <label className={s.label}>주최</label>
+              <input type="text" className="input-field" placeholder="CrossFit Korea" value={form.organizer} onChange={(e) => set("organizer", e.target.value)} />
+            </div>
+            <div className={s.field}>
+              <label className={s.label}>대표 이미지 URL (선택)</label>
+              <input type="url" className="input-field" placeholder="https://..." value={form.imageUrl} onChange={(e) => set("imageUrl", e.target.value)} />
             </div>
             <div className={s.row}>
               <div className={s.field}>
@@ -170,6 +189,17 @@ export default function AdminCompetitionsPage() {
                         <option key={st} value={st}>{STATUS_LABELS[st]}</option>
                       ))}
                     </select>
+                    <button
+                      className={s.deleteBtn}
+                      onClick={() => {
+                        if (window.confirm(`"${comp.name}" 대회를 삭제하시겠습니까?`)) {
+                          deleteMutation.mutate(comp.id);
+                        }
+                      }}
+                      disabled={deleteMutation.isPending}
+                    >
+                      삭제
+                    </button>
                   </div>
                 </div>
               ))

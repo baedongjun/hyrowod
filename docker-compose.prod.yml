@@ -25,10 +25,16 @@ services:
   # Spring Boot 백엔드
   # ──────────────────────────────────────────
   backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
     image: ${ECR_REGISTRY}/crossfitkorea-backend:${IMAGE_TAG:-latest}
     container_name: crossfitkorea-backend
+    ports:
+      - "8080:8080"
     environment:
       SPRING_PROFILES_ACTIVE: prod
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
       DB_HOST: postgres
       DB_PORT: 5432
       DB_NAME: ${DB_NAME}

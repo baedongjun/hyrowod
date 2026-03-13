@@ -92,4 +92,18 @@ public class AdminBoxController {
     ) {
         return ResponseEntity.ok(ApiResponse.success(wodService.createWod(null, request, userDetails.getUsername())));
     }
+
+    @Operation(summary = "[어드민] WOD 삭제")
+    @DeleteMapping("/wod/{id}")
+    public ResponseEntity<ApiResponse<Void>> deleteWod(@PathVariable Long id) {
+        wodService.deleteWod(id);
+        return ResponseEntity.ok(ApiResponse.success(null));
+    }
+
+    @Operation(summary = "[어드민] 대회 삭제")
+    @DeleteMapping("/competitions/{id}")
+    public ResponseEntity<ApiResponse<Void>> deleteCompetition(@PathVariable Long id) {
+        competitionService.deleteCompetition(id);
+        return ResponseEntity.ok(ApiResponse.success(null));
+    }
 }

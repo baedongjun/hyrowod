@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { useParams } from "next/navigation";
+import Link from "next/link";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { boxApi } from "@/lib/api";
-import { Box, Coach, Schedule, Review } from "@/types";
-import { isLoggedIn } from "@/lib/auth";
+import { Box, Coach, Schedule, Review, Page } from "@/types";
+import { isLoggedIn, getUser } from "@/lib/auth";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
 import s from "./box.module.css";
@@ -25,6 +26,21 @@ export default function BoxDetailPage() {
   const queryClient = useQueryClient();
 
   const [tab, setTab] = useState<Tab>("정보");
+  const [currentImgIdx, setCurrentImgIdx] = useState(0);
+  const currentUser = getUser();
+  const isOwner = currentUser?.role === "ROLE_ADMIN" ||
+    (currentUser?.role === "ROLE_BOX_OWNER");
+
+  // Coach form state
+  const [showCoachForm, setShowCoachForm] = useState(false);
+  const [coachForm, setCoachForm] = useState({ name: "", bio: "", experienceYears: "", certifications: "" });
+
+  // Schedule form state
+  const [showScheduleForm, setShowScheduleForm] = useState(false);
+  const [scheduleForm, setScheduleForm] = useState({
+    dayOfWeek: "MONDAY", startTime: "06:00", endTime: "07:00", className: "CrossFit", maxCapacity: "20",
+  });
+
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [reviewContent, setReviewContent] = useState("");
@@ -50,6 +66,63 @@ export default function BoxDetailPage() {
     queryKey: ["box", boxId, "reviews"],
     queryFn: async () => (await boxApi.getReviews(boxId)).data.data,
     enabled: tab === "후기",
+  });
+
+  const { data: relatedBoxes } = useQuery({
+    queryKey: ["boxes", "related", box?.city],
+    queryFn: async () => (await boxApi.search({ city: box!.city, size: 4 })).data.data as Page<Box>,
+    enabled: !!box?.city,
+  });
+
+  const addCoachMutation = useMutation({
+    mutationFn: () => boxApi.addCoach(boxId, {
+      name: coachForm.name,
+      bio: coachForm.bio || undefined,
+      experienceYears: coachForm.experienceYears ? parseInt(coachForm.experienceYears) : undefined,
+      certifications: coachForm.certifications ? coachForm.certifications.split(",").map((c) => c.trim()).filter(Boolean) : [],
+    }),
+    onSuccess: () => {
+      toast.success("코치가 추가되었습니다.");
+      setCoachForm({ name: "", bio: "", experienceYears: "", certifications: "" });
+      setShowCoachForm(false);
+      queryClient.invalidateQueries({ queryKey: ["box", boxId, "coaches"] });
+    },
+    onError: () => toast.error("코치 추가에 실패했습니다."),
+  });
+
+  const deleteCoachMutation = useMutation({
+    mutationFn: (coachId: number) => boxApi.deleteCoach(coachId),
+    onSuccess: () => {
+      toast.success("코치가 삭제되었습니다.");
+      queryClient.invalidateQueries({ queryKey: ["box", boxId, "coaches"] });
+    },
+    onError: () => toast.error("삭제에 실패했습니다."),
+  });
+
+  const addScheduleMutation = useMutation({
+    mutationFn: () => boxApi.addSchedule(boxId, {
+      dayOfWeek: scheduleForm.dayOfWeek,
+      startTime: scheduleForm.startTime,
+      endTime: scheduleForm.endTime,
+      className: scheduleForm.className,
+      maxCapacity: scheduleForm.maxCapacity ? parseInt(scheduleForm.maxCapacity) : undefined,
+    }),
+    onSuccess: () => {
+      toast.success("수업이 추가되었습니다.");
+      setScheduleForm({ dayOfWeek: "MONDAY", startTime: "06:00", endTime: "07:00", className: "CrossFit", maxCapacity: "20" });
+      setShowScheduleForm(false);
+      queryClient.invalidateQueries({ queryKey: ["box", boxId, "schedules"] });
+    },
+    onError: () => toast.error("수업 추가에 실패했습니다."),
+  });
+
+  const deleteScheduleMutation = useMutation({
+    mutationFn: (scId: number) => boxApi.deleteSchedule(scId),
+    onSuccess: () => {
+      toast.success("수업이 삭제되었습니다.");
+      queryClient.invalidateQueries({ queryKey: ["box", boxId, "schedules"] });
+    },
+    onError: () => toast.error("삭제에 실패했습니다."),
   });
 
   const reviewMutation = useMutation({
@@ -89,9 +162,38 @@ export default function BoxDetailPage() {
       {/* Hero */}
       <div className={s.hero}>
         {box.imageUrls?.[0] ? (
-          <img src={box.imageUrls[0]} alt={box.name} className={s.heroImg} />
+          <img src={box.imageUrls[currentImgIdx] || box.imageUrls[0]} alt={box.name} className={s.heroImg} />
         ) : (
           <div className={s.heroNoImg}>CROSSFIT</div>
+        )}
+        {box.imageUrls && box.imageUrls.length > 1 && (
+          <>
+            <button
+              className={`${s.imgNav} ${s.imgNavPrev}`}
+              onClick={() => setCurrentImgIdx((i) => (i - 1 + box.imageUrls.length) % box.imageUrls.length)}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <polyline points="15 18 9 12 15 6"/>
+              </svg>
+            </button>
+            <button
+              className={`${s.imgNav} ${s.imgNavNext}`}
+              onClick={() => setCurrentImgIdx((i) => (i + 1) % box.imageUrls.length)}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </button>
+            <div className={s.imgDots}>
+              {box.imageUrls.map((_, i) => (
+                <button
+                  key={i}
+                  className={`${s.imgDot} ${i === currentImgIdx ? s.imgDotActive : ""}`}
+                  onClick={() => setCurrentImgIdx(i)}
+                />
+              ))}
+            </div>
+          </>
         )}
         <div className={s.heroOverlay} />
         <div style={{ position: "absolute", inset: 0, maxWidth: 1280, margin: "0 auto" }}>
@@ -107,6 +209,12 @@ export default function BoxDetailPage() {
               <span>·</span>
               <span>{box.city} {box.district}</span>
             </div>
+            {(currentUser?.role === "ROLE_ADMIN" ||
+              (currentUser?.role === "ROLE_BOX_OWNER" && box.ownerName === currentUser?.name)) && (
+              <Link href={`/boxes/${boxId}/edit`} className={s.editBtn}>
+                정보 수정
+              </Link>
+            )}
           </div>
         </div>
       </div>
@@ -180,67 +288,147 @@ export default function BoxDetailPage() {
 
           {/* 코치 */}
           {tab === "코치" && (
-            coaches && coaches.length > 0 ? (
-              <div className={s.coachGrid}>
-                {coaches.map((coach) => (
-                  <div key={coach.id} className={s.coachCard}>
-                    <div className={s.coachAvatar}>
-                      {coach.imageUrl
-                        ? <img src={coach.imageUrl} alt={coach.name} className={s.coachImg} />
-                        : coach.name[0]
-                      }
+            <div>
+              {isOwner && (
+                <div className={s.ownerBar}>
+                  <button className="btn-primary" style={{ padding: "10px 20px", fontSize: 13 }} onClick={() => setShowCoachForm(!showCoachForm)}>
+                    {showCoachForm ? "취소" : "+ 코치 추가"}
+                  </button>
+                </div>
+              )}
+              {showCoachForm && (
+                <div className={s.addForm}>
+                  <div className={s.addFormGrid}>
+                    <div className={s.addField}>
+                      <label className={s.addLabel}>이름 *</label>
+                      <input className="input-field" placeholder="코치 이름" value={coachForm.name} onChange={(e) => setCoachForm((f) => ({ ...f, name: e.target.value }))} />
                     </div>
-                    <div>
-                      <p className={s.coachName}>{coach.name}</p>
-                      <p className={s.coachExp}>경력 {coach.experienceYears}년</p>
-                      {coach.bio && <p className={s.coachBio}>{coach.bio}</p>}
-                      {coach.certifications?.length > 0 && (
-                        <div className={s.certList}>
-                          {coach.certifications.map((c, i) => (
-                            <span key={i} className={s.cert}>{c}</span>
-                          ))}
-                        </div>
-                      )}
+                    <div className={s.addField}>
+                      <label className={s.addLabel}>경력 (년)</label>
+                      <input className="input-field" type="number" placeholder="5" value={coachForm.experienceYears} onChange={(e) => setCoachForm((f) => ({ ...f, experienceYears: e.target.value }))} />
                     </div>
                   </div>
-                ))}
-              </div>
-            ) : (
-              <div className={s.empty}>
-                <div className={s.emptyIcon}>👤</div>
-                <p>등록된 코치 정보가 없습니다</p>
-              </div>
-            )
+                  <div className={s.addField}>
+                    <label className={s.addLabel}>자기소개</label>
+                    <input className="input-field" placeholder="간단한 소개" value={coachForm.bio} onChange={(e) => setCoachForm((f) => ({ ...f, bio: e.target.value }))} />
+                  </div>
+                  <div className={s.addField}>
+                    <label className={s.addLabel}>자격증 (쉼표로 구분)</label>
+                    <input className="input-field" placeholder="CF-L1, CF-L2, Olympic Lifting" value={coachForm.certifications} onChange={(e) => setCoachForm((f) => ({ ...f, certifications: e.target.value }))} />
+                  </div>
+                  <button className="btn-primary" disabled={addCoachMutation.isPending || !coachForm.name} onClick={() => addCoachMutation.mutate()} style={{ padding: "10px 24px", fontSize: 13 }}>
+                    {addCoachMutation.isPending ? "추가 중..." : "추가"}
+                  </button>
+                </div>
+              )}
+              {coaches && coaches.length > 0 ? (
+                <div className={s.coachGrid}>
+                  {coaches.map((coach) => (
+                    <div key={coach.id} className={s.coachCard}>
+                      <div className={s.coachAvatar}>
+                        {coach.imageUrl
+                          ? <img src={coach.imageUrl} alt={coach.name} className={s.coachImg} />
+                          : coach.name[0]
+                        }
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <p className={s.coachName}>{coach.name}</p>
+                        <p className={s.coachExp}>경력 {coach.experienceYears}년</p>
+                        {coach.bio && <p className={s.coachBio}>{coach.bio}</p>}
+                        {coach.certifications?.length > 0 && (
+                          <div className={s.certList}>
+                            {coach.certifications.map((c, i) => (
+                              <span key={i} className={s.cert}>{c}</span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                      {isOwner && (
+                        <button className={s.deleteBtn} onClick={() => { if (window.confirm("코치를 삭제할까요?")) deleteCoachMutation.mutate(coach.id); }}>✕</button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className={s.empty}>
+                  <div className={s.emptyIcon}>👤</div>
+                  <p>등록된 코치 정보가 없습니다</p>
+                </div>
+              )}
+            </div>
           )}
 
           {/* 시간표 */}
           {tab === "시간표" && (
-            DAY_ORDER.some((d) => scheduleByDay[d]?.length > 0) ? (
-              <div>
-                {DAY_ORDER.filter((d) => scheduleByDay[d]?.length > 0).map((day) => (
-                  <div key={day} className={s.scheduleDay}>
-                    <p className={s.scheduleDayName}>{DAY_LABEL[day]}</p>
-                    <div className={s.scheduleList}>
-                      {scheduleByDay[day]
-                        .sort((a, b) => a.startTime.localeCompare(b.startTime))
-                        .map((sc) => (
-                          <div key={sc.id} className={s.scheduleItem}>
-                            <span className={s.scheduleTime}>{sc.startTime} – {sc.endTime}</span>
-                            <span className={s.scheduleClass}>{sc.className}</span>
-                            {sc.coachName && <span className={s.scheduleCoach}>{sc.coachName}</span>}
-                            {sc.maxCapacity && <span className={s.scheduleCap}>{sc.maxCapacity}명</span>}
-                          </div>
-                        ))}
+            <div>
+              {isOwner && (
+                <div className={s.ownerBar}>
+                  <button className="btn-primary" style={{ padding: "10px 20px", fontSize: 13 }} onClick={() => setShowScheduleForm(!showScheduleForm)}>
+                    {showScheduleForm ? "취소" : "+ 수업 추가"}
+                  </button>
+                </div>
+              )}
+              {showScheduleForm && (
+                <div className={s.addForm}>
+                  <div className={s.addFormGrid}>
+                    <div className={s.addField}>
+                      <label className={s.addLabel}>요일 *</label>
+                      <select className={s.addSelect} value={scheduleForm.dayOfWeek} onChange={(e) => setScheduleForm((f) => ({ ...f, dayOfWeek: e.target.value }))}>
+                        {Object.entries(DAY_LABEL).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+                      </select>
+                    </div>
+                    <div className={s.addField}>
+                      <label className={s.addLabel}>수업명 *</label>
+                      <input className="input-field" value={scheduleForm.className} onChange={(e) => setScheduleForm((f) => ({ ...f, className: e.target.value }))} />
+                    </div>
+                    <div className={s.addField}>
+                      <label className={s.addLabel}>시작</label>
+                      <input className="input-field" type="time" value={scheduleForm.startTime} onChange={(e) => setScheduleForm((f) => ({ ...f, startTime: e.target.value }))} />
+                    </div>
+                    <div className={s.addField}>
+                      <label className={s.addLabel}>종료</label>
+                      <input className="input-field" type="time" value={scheduleForm.endTime} onChange={(e) => setScheduleForm((f) => ({ ...f, endTime: e.target.value }))} />
+                    </div>
+                    <div className={s.addField}>
+                      <label className={s.addLabel}>최대 인원</label>
+                      <input className="input-field" type="number" placeholder="20" value={scheduleForm.maxCapacity} onChange={(e) => setScheduleForm((f) => ({ ...f, maxCapacity: e.target.value }))} />
                     </div>
                   </div>
-                ))}
-              </div>
-            ) : (
-              <div className={s.empty}>
-                <div className={s.emptyIcon}>📅</div>
-                <p>등록된 시간표가 없습니다</p>
-              </div>
-            )
+                  <button className="btn-primary" disabled={addScheduleMutation.isPending || !scheduleForm.className} onClick={() => addScheduleMutation.mutate()} style={{ padding: "10px 24px", fontSize: 13 }}>
+                    {addScheduleMutation.isPending ? "추가 중..." : "추가"}
+                  </button>
+                </div>
+              )}
+              {DAY_ORDER.some((d) => scheduleByDay[d]?.length > 0) ? (
+                <div>
+                  {DAY_ORDER.filter((d) => scheduleByDay[d]?.length > 0).map((day) => (
+                    <div key={day} className={s.scheduleDay}>
+                      <p className={s.scheduleDayName}>{DAY_LABEL[day]}</p>
+                      <div className={s.scheduleList}>
+                        {scheduleByDay[day]
+                          .sort((a, b) => a.startTime.localeCompare(b.startTime))
+                          .map((sc) => (
+                            <div key={sc.id} className={s.scheduleItem}>
+                              <span className={s.scheduleTime}>{sc.startTime} – {sc.endTime}</span>
+                              <span className={s.scheduleClass}>{sc.className}</span>
+                              {sc.coachName && <span className={s.scheduleCoach}>{sc.coachName}</span>}
+                              {sc.maxCapacity && <span className={s.scheduleCap}>{sc.maxCapacity}명</span>}
+                              {isOwner && (
+                                <button className={s.deleteBtn} onClick={() => { if (window.confirm("수업을 삭제할까요?")) deleteScheduleMutation.mutate(sc.id); }}>✕</button>
+                              )}
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className={s.empty}>
+                  <div className={s.emptyIcon}>📅</div>
+                  <p>등록된 시간표가 없습니다</p>
+                </div>
+              )}
+            </div>
           )}
 
           {/* 후기 */}
@@ -369,6 +557,32 @@ export default function BoxDetailPage() {
               <span style={{ fontSize: 13, color: "var(--muted)" }}>{box.address}</span>
             </div>
           </div>
+
+          {relatedBoxes && relatedBoxes.content.filter((b) => b.id !== boxId).length > 0 && (
+            <div className={s.sideCard}>
+              <p className={s.relatedTitle}>{box.city} 다른 박스</p>
+              <div className={s.relatedList}>
+                {relatedBoxes.content
+                  .filter((b) => b.id !== boxId)
+                  .slice(0, 3)
+                  .map((b) => (
+                    <Link key={b.id} href={`/boxes/${b.id}`} className={s.relatedItem}>
+                      <div className={s.relatedImg}>
+                        {b.imageUrls?.[0]
+                          ? <img src={b.imageUrls[0]} alt={b.name} />
+                          : <div className={s.relatedPlaceholder}>CF</div>
+                        }
+                      </div>
+                      <div>
+                        <p className={s.relatedName}>{b.name}</p>
+                        <p className={s.relatedMeta}>{b.district} · ★ {Number(b.rating || 0).toFixed(1)}</p>
+                      </div>
+                    </Link>
+                  ))
+                }
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

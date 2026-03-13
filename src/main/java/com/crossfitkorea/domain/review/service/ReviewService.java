@@ -35,6 +35,11 @@ public class ReviewService {
             .map(ReviewDto::from);
     }
 
+    public Page<ReviewDto> getMyReviews(String userEmail, Pageable pageable) {
+        return reviewRepository.findByUserEmailAndActiveTrueOrderByCreatedAtDesc(userEmail, pageable)
+            .map(ReviewDto::from);
+    }
+
     @Transactional
     public ReviewDto createReview(Long boxId, ReviewCreateRequest request, String userEmail) {
         Box box = boxService.findActiveBox(boxId);

@@ -45,6 +45,15 @@ export default function AdminWodPage() {
     onError: () => toast.error("등록에 실패했습니다."),
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => adminApi.deleteWod(id),
+    onSuccess: () => {
+      toast.success("WOD가 삭제되었습니다.");
+      queryClient.invalidateQueries({ queryKey: ["wod"] });
+    },
+    onError: () => toast.error("삭제에 실패했습니다."),
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.title.trim() || !form.content.trim()) {
@@ -115,6 +124,17 @@ export default function AdminWodPage() {
                     <p className={s.itemTitle}>{wod.title}</p>
                     <p className={s.itemSnippet}>{wod.content}</p>
                   </div>
+                  <button
+                    className={s.deleteBtn}
+                    onClick={() => {
+                      if (window.confirm(`"${wod.title}" WOD를 삭제하시겠습니까?`)) {
+                        deleteMutation.mutate(wod.id);
+                      }
+                    }}
+                    disabled={deleteMutation.isPending}
+                  >
+                    삭제
+                  </button>
                 </div>
               ))
             ) : (

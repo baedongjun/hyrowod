@@ -39,17 +39,26 @@ const CATEGORIES: { value: PostCategory | "ALL"; label: string }[] = [
 export default function CommunityPage() {
   const [selectedCategory, setSelectedCategory] = useState<PostCategory | "ALL">("ALL");
   const [page, setPage] = useState(0);
+  const [keyword, setKeyword] = useState("");
+  const [searchInput, setSearchInput] = useState("");
 
   const { data, isLoading } = useQuery({
-    queryKey: ["posts", selectedCategory, page],
+    queryKey: ["posts", selectedCategory, page, keyword],
     queryFn: async () => {
       const res = await communityApi.getPosts({
         category: selectedCategory === "ALL" ? undefined : selectedCategory,
+        keyword: keyword || undefined,
         page,
       });
       return res.data.data;
     },
   });
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    setKeyword(searchInput);
+    setPage(0);
+  };
 
   return (
     <div className={s.page}>
@@ -79,6 +88,29 @@ export default function CommunityPage() {
             </button>
           ))}
         </div>
+
+        {/* Search */}
+        <form onSubmit={handleSearch} className={s.searchBar}>
+          <div className={s.searchInputWrap}>
+            <svg className={s.searchIcon} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+            </svg>
+            <input
+              type="text"
+              className={s.searchInput}
+              placeholder="게시글 검색"
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+            />
+          </div>
+          {(keyword || searchInput) && (
+            <button
+              type="button"
+              className={s.searchClear}
+              onClick={() => { setSearchInput(""); setKeyword(""); setPage(0); }}
+            >✕</button>
+          )}
+        </form>
       </div>
 
       {/* Content */}

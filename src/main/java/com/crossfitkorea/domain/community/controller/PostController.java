@@ -29,13 +29,23 @@ public class PostController {
 
     private final PostService postService;
 
-    @Operation(summary = "게시글 목록 (카테고리 필터)")
+    @Operation(summary = "내 게시글 목록 (로그인 필요)")
+    @GetMapping("/posts/mine")
+    public ResponseEntity<ApiResponse<Page<PostDto>>> getMyPosts(
+        @PageableDefault(size = 15) Pageable pageable,
+        @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        return ResponseEntity.ok(ApiResponse.success(postService.getMyPosts(userDetails.getUsername(), pageable)));
+    }
+
+    @Operation(summary = "게시글 목록 (카테고리/키워드 필터)")
     @GetMapping("/posts")
     public ResponseEntity<ApiResponse<Page<PostDto>>> getPosts(
         @RequestParam(required = false) PostCategory category,
+        @RequestParam(required = false) String keyword,
         @PageableDefault(size = 15) Pageable pageable
     ) {
-        return ResponseEntity.ok(ApiResponse.success(postService.getPosts(category, pageable)));
+        return ResponseEntity.ok(ApiResponse.success(postService.getPosts(category, keyword, pageable)));
     }
 
     @Operation(summary = "게시글 상세 조회")

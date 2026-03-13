@@ -87,7 +87,20 @@
   font-size: 14px;
   color: var(--muted);
   padding: 0 8px;
+  text-decoration: none;
+  transition: color 0.2s;
 }
+.userName:hover { color: var(--text); }
+
+.ownerLink {
+  font-size: 13px;
+  color: var(--orange);
+  padding: 0 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+.ownerLink:hover { color: var(--text); }
 
 /* Mobile toggle */
 .menuBtn {

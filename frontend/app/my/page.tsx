@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { userApi, communityApi } from "@/lib/api";
+import { Review } from "@/types";
 import { isLoggedIn, getUser } from "@/lib/auth";
 import { Post } from "@/types";
 import { toast } from "react-toastify";
@@ -46,7 +47,13 @@ export default function MyPage() {
 
   const { data: myPosts } = useQuery({
     queryKey: ["posts", "mine"],
-    queryFn: async () => (await communityApi.getPosts({ page: 0 })).data.data,
+    queryFn: async () => (await communityApi.getMyPosts()).data.data,
+    enabled: isLoggedIn(),
+  });
+
+  const { data: myReviews } = useQuery({
+    queryKey: ["reviews", "mine"],
+    queryFn: async () => (await userApi.getMyReviews()).data.data,
     enabled: isLoggedIn(),
   });
 
@@ -132,6 +139,33 @@ export default function MyPage() {
           </div>
         </div>
 
+        {/* 빠른 링크 */}
+        <div className={s.linksCard}>
+          <p className={s.cardTitle}>바로가기</p>
+          <div className={s.linksList}>
+            <Link href="/my/password" className={s.linkItem}>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <rect x="3" y="11" width="18" height="11" rx="0" ry="0"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              비밀번호 변경
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginLeft: "auto" }}>
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </Link>
+            {(user?.role === "ROLE_BOX_OWNER" || user?.role === "ROLE_ADMIN") && (
+              <Link href="/my/box" className={s.linkItem}>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+                내 박스 관리
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginLeft: "auto" }}>
+                  <polyline points="9 18 15 12 9 6"/>
+                </svg>
+              </Link>
+            )}
+          </div>
+        </div>
+
         {/* 활동 통계 */}
         <div>
           <div className={s.statsCard}>
@@ -142,7 +176,7 @@ export default function MyPage() {
                 <p className={s.statLabel}>작성 게시글</p>
               </div>
               <div className={s.statItem}>
-                <p className={s.statNum}>0</p>
+                <p className={s.statNum}>{myReviews?.totalElements || 0}</p>
                 <p className={s.statLabel}>작성 후기</p>
               </div>
             </div>
@@ -166,6 +200,24 @@ export default function MyPage() {
             </div>
           ) : (
             <div className={s.empty}>아직 작성한 게시글이 없습니다</div>
+          )}
+        </div>
+
+        {/* 내 후기 */}
+        <div className={s.postsCard}>
+          <p className={s.postsHeader}>내가 쓴 후기</p>
+          {myReviews?.content?.length > 0 ? (
+            <div className={s.postList}>
+              {myReviews.content.slice(0, 10).map((review: Review) => (
+                <Link key={review.id} href={`/boxes/${review.boxId}`} className={s.postItem}>
+                  <span className={s.reviewStars}>{"★".repeat(review.rating)}{"☆".repeat(5 - review.rating)}</span>
+                  <span className={s.postTitle}>{review.content}</span>
+                  <span className={s.postDate}>{dayjs(review.createdAt).format("MM.DD")}</span>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div className={s.empty}>아직 작성한 후기가 없습니다</div>
           )}
         </div>
       </div>

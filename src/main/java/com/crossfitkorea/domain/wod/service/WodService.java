@@ -46,6 +46,14 @@ public class WodService {
     }
 
     @Transactional
+    public void deleteWod(Long id) {
+        Wod wod = wodRepository.findById(id)
+            .orElseThrow(() -> new com.crossfitkorea.common.exception.BusinessException(
+                com.crossfitkorea.common.exception.ErrorCode.WOD_NOT_FOUND));
+        wod.setActive(false);
+    }
+
+    @Transactional
     public WodDto createWod(Long boxId, WodCreateRequest request, String ownerEmail) {
         Box box = null;
         if (boxId != null) {

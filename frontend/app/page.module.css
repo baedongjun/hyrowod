@@ -149,6 +149,34 @@
 }
 
 /* =======================================
+   Premium Boxes
+   ======================================= */
+.premium {
+  padding: 100px 0;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.premiumInner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 80px;
+}
+.premiumHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+.premiumGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+
+/* =======================================
    Cities
    ======================================= */
 .cities {

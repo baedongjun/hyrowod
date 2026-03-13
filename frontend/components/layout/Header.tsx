@@ -19,10 +19,13 @@ export default function Header() {
   const [open,     setOpen]     = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const [userName, setUserName] = useState<string | null>(null);
+  const [userRole, setUserRole] = useState<string | null>(null);
 
   useEffect(() => {
     setLoggedIn(isLoggedIn());
-    setUserName(getUser()?.name ?? null);
+    const u = getUser();
+    setUserName(u?.name ?? null);
+    setUserRole(u?.role ?? null);
     setOpen(false);
   }, [pathname]);
 
@@ -55,6 +58,9 @@ export default function Header() {
           <div className={s.auth}>
             {loggedIn ? (
               <>
+                {(userRole === "ROLE_BOX_OWNER" || userRole === "ROLE_ADMIN") && (
+                  <Link href="/my/box" className={s.ownerLink}>내 박스</Link>
+                )}
                 <Link href="/my" className={s.userName}>{userName}</Link>
                 <button onClick={logout} className="btn-secondary" style={{ fontSize: 13, padding: "8px 16px" }}>로그아웃</button>
               </>

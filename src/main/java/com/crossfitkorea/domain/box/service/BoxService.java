@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -26,10 +27,16 @@ public class BoxService {
     private final UserService userService;
 
     public Page<BoxDto> searchBoxes(BoxSearchRequest request, Pageable pageable) {
+        BigDecimal minRating = request.getMinRating() != null
+            ? BigDecimal.valueOf(request.getMinRating()) : null;
         return boxRepository.searchBoxes(
             request.getCity(),
             request.getDistrict(),
             request.getKeyword(),
+            request.getVerified(),
+            request.getPremium(),
+            request.getMaxFee(),
+            minRating,
             pageable
         ).map(BoxDto::from);
     }
@@ -37,6 +44,10 @@ public class BoxService {
     public BoxDto getBox(Long id) {
         Box box = findActiveBox(id);
         return BoxDto.from(box);
+    }
+
+    public Page<BoxDto> getMyBoxes(String ownerEmail, Pageable pageable) {
+        return boxRepository.findByOwnerEmailAndActiveTrue(ownerEmail, pageable).map(BoxDto::from);
     }
 
     public List<BoxDto> getPremiumBoxes() {

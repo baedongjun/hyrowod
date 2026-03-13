@@ -1,0 +1,39 @@
+.catBadge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 3px 8px;
+  background: rgba(255,107,26,0.12);
+  border: 1px solid rgba(255,107,26,0.3);
+  color: #ff6b1a;
+}
+
+.postTitle {
+  display: block;
+  max-width: 280px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text);
+}
+
+.stats {
+  font-family: monospace;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.deleteBtn {
+  background: rgba(232, 34, 10, 0.12);
+  border: 1px solid rgba(232, 34, 10, 0.3);
+  color: #e8220a;
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: background 0.2s;
+}
+.deleteBtn:hover { background: rgba(232, 34, 10, 0.25); }
+.deleteBtn:disabled { opacity: 0.5; cursor: not-allowed; }

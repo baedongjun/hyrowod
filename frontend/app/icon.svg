@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Background -->
+  <rect width="32" height="32" fill="#e8220a"/>
+
+  <!-- Outer left plate -->
+  <rect x="2" y="9" width="5" height="14" fill="white"/>
+  <!-- Left collar -->
+  <rect x="7" y="12" width="3" height="8" fill="white"/>
+  <!-- Bar -->
+  <rect x="10" y="14" width="12" height="4" fill="white"/>
+  <!-- Right collar -->
+  <rect x="22" y="12" width="3" height="8" fill="white"/>
+  <!-- Outer right plate -->
+  <rect x="25" y="9" width="5" height="14" fill="white"/>
+</svg>

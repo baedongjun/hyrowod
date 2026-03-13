@@ -52,7 +52,7 @@ public class Box extends BaseEntity {
     private String openTime;    // "06:00"
     private String closeTime;   // "22:00"
 
-    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "box_images", joinColumns = @JoinColumn(name = "box_id"))
     @Column(name = "image_url")
     @Builder.Default

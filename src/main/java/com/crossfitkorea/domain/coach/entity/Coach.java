@@ -33,7 +33,7 @@ public class Coach extends BaseEntity {
 
     private String imageUrl;
 
-    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "coach_certifications", joinColumns = @JoinColumn(name = "coach_id"))
     @Column(name = "certification")
     @Builder.Default

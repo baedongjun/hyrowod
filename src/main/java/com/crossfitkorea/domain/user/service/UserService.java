@@ -78,6 +78,15 @@ public class UserService {
         return com.crossfitkorea.domain.user.dto.UserDto.from(user);
     }
 
+    @Transactional
+    public void changePassword(String email, com.crossfitkorea.domain.user.dto.PasswordChangeRequest request) {
+        User user = getUserByEmail(email);
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            throw new BusinessException(ErrorCode.INVALID_PASSWORD);
+        }
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+    }
+
     private AuthResponse buildAuthResponse(User user) {
         String accessToken = jwtTokenProvider.createAccessToken(user.getEmail(), user.getRole().name());
         String refreshToken = jwtTokenProvider.createRefreshToken(user.getEmail());

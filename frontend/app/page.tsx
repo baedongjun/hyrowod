@@ -1,4 +1,10 @@
+"use client";
+
 import Link from "next/link";
+import { useQuery } from "@tanstack/react-query";
+import { boxApi } from "@/lib/api";
+import { Box } from "@/types";
+import BoxCard from "@/components/box/BoxCard";
 import s from "./page.module.css";
 
 const CITIES = [
@@ -62,6 +68,11 @@ const STATS = [
 ];
 
 export default function HomePage() {
+  const { data: premiumBoxes } = useQuery({
+    queryKey: ["premium-boxes"],
+    queryFn: async () => (await boxApi.getPremium()).data.data as Box[],
+  });
+
   return (
     <>
       {/* Hero */}
@@ -101,6 +112,28 @@ export default function HomePage() {
           ))}
         </div>
       </div>
+
+      {/* Premium Boxes */}
+      {premiumBoxes && premiumBoxes.length > 0 && (
+        <section className={s.premium}>
+          <div className={s.premiumInner}>
+            <div className={s.premiumHeader}>
+              <div>
+                <p className="section-tag">FEATURED</p>
+                <h2 className="section-title">
+                  프리미엄<br /><span>박스</span>
+                </h2>
+              </div>
+              <Link href="/boxes?premium=true" className={s.viewAll}>전체 보기</Link>
+            </div>
+            <div className={s.premiumGrid}>
+              {premiumBoxes.slice(0, 3).map((box) => (
+                <BoxCard key={box.id} box={box} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Cities */}
       <section className={s.cities}>

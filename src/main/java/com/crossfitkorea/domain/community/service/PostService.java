@@ -29,7 +29,15 @@ public class PostService {
     private final CommentRepository commentRepository;
     private final UserService userService;
 
-    public Page<PostDto> getPosts(PostCategory category, Pageable pageable) {
+    public Page<PostDto> getMyPosts(String userEmail, Pageable pageable) {
+        return postRepository.findByUserEmailAndActiveTrueOrderByCreatedAtDesc(userEmail, pageable)
+            .map(PostDto::from);
+    }
+
+    public Page<PostDto> getPosts(PostCategory category, String keyword, Pageable pageable) {
+        if (keyword != null && !keyword.isBlank()) {
+            return postRepository.searchPosts(category, keyword, pageable).map(PostDto::from);
+        }
         if (category != null) {
             return postRepository.findByCategoryAndActiveTrueOrderByCreatedAtDesc(category, pageable)
                 .map(PostDto::from);
@@ -126,6 +134,20 @@ public class PostService {
         post.setCommentCount(post.getCommentCount() + 1);
 
         return CommentDto.from(comment);
+    }
+
+    @Transactional
+    public void adminDeletePost(Long id) {
+        Post post = postRepository.findById(id)
+            .orElseThrow(() -> new BusinessException(ErrorCode.POST_NOT_FOUND));
+        post.setActive(false);
+    }
+
+    @Transactional
+    public void adminDeleteComment(Long commentId) {
+        Comment comment = commentRepository.findById(commentId)
+            .orElseThrow(() -> new BusinessException(ErrorCode.COMMENT_NOT_FOUND));
+        comment.setActive(false);
     }
 
     @Transactional

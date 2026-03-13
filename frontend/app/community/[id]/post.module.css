@@ -31,11 +31,13 @@
 }
 .postBadgeRow { margin-bottom: 12px; }
 .postTitle {
-  font-family: 'Black Han Sans', sans-serif;
-  font-size: 26px;
+  font-family: var(--font-body);
+  font-size: 22px;
+  font-weight: 700;
   color: var(--text);
-  line-height: 1.3;
+  line-height: 1.4;
   margin-bottom: 16px;
+  letter-spacing: -0.3px;
 }
 .postMeta {
   display: flex;
@@ -51,8 +53,9 @@
 .postBody {
   padding: 28px;
   font-size: 15px;
-  color: var(--muted);
-  line-height: 2;
+  font-weight: 400;
+  color: rgba(245, 240, 232, 0.82);
+  line-height: 1.85;
   white-space: pre-line;
 }
 .postImages {
@@ -98,8 +101,9 @@
 .commentsHeader {
   padding: 20px 28px;
   border-bottom: 1px solid var(--border);
-  font-family: 'Black Han Sans', sans-serif;
-  font-size: 16px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
   color: var(--text);
 }
 .commentsCount { color: var(--red); }
@@ -132,10 +136,21 @@
   border-bottom: 1px solid var(--border);
 }
 .comment:last-child { border-bottom: none; }
-.commentHeader { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.commentHeader { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
 .commentUser { font-size: 13px; font-weight: 600; color: var(--text); }
-.commentDate { font-size: 11px; color: var(--muted); }
-.commentContent { font-size: 14px; color: var(--muted); line-height: 1.8; }
+.commentDate { font-size: 11px; color: var(--muted); flex: 1; }
+.commentDeleteBtn {
+  background: none;
+  border: none;
+  font-size: 11px;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 2px 6px;
+  font-family: var(--font-body);
+  transition: color 0.2s;
+}
+.commentDeleteBtn:hover { color: var(--red); }
+.commentContent { font-size: 14px; font-weight: 400; color: rgba(245, 240, 232, 0.75); line-height: 1.75; }
 .commentReplyBtn {
   background: none;
   border: none;

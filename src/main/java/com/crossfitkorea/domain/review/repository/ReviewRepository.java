@@ -21,4 +21,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     Double getAverageRatingByBoxId(@Param("boxId") Long boxId);
 
     long countByBoxIdAndActiveTrue(Long boxId);
+
+    Page<Review> findByUserEmailAndActiveTrueOrderByCreatedAtDesc(String email, Pageable pageable);
 }

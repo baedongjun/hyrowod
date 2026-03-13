@@ -44,7 +44,7 @@ public class Post extends BaseEntity {
     @Builder.Default
     private int commentCount = 0;
 
-    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "post_images", joinColumns = @JoinColumn(name = "post_id"))
     @Column(name = "image_url")
     @Builder.Default

@@ -4,9 +4,9 @@ import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import Link from "next/link";
-import { communityApi } from "@/lib/api";
+import { communityApi, adminApi } from "@/lib/api";
 import { Post, Comment } from "@/types";
-import { isLoggedIn } from "@/lib/auth";
+import { isLoggedIn, getUser } from "@/lib/auth";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -23,7 +23,13 @@ const CATEGORY_BADGE: Record<string, string> = {
   FREE: "badge-default", QNA: "badge-upcoming", RECORD: "badge-open", MARKET: "badge-amrap",
 };
 
-function CommentItem({ comment, postId, onReplySuccess }: { comment: Comment; postId: number; onReplySuccess: () => void }) {
+function CommentItem({ comment, postId, currentUser, onReplySuccess, onDeleteSuccess }: {
+  comment: Comment;
+  postId: number;
+  currentUser: { name: string; role: string } | null;
+  onReplySuccess: () => void;
+  onDeleteSuccess: () => void;
+}) {
   const [showReply, setShowReply] = useState(false);
   const [replyText, setReplyText] = useState("");
 
@@ -37,11 +43,32 @@ function CommentItem({ comment, postId, onReplySuccess }: { comment: Comment; po
     onError: () => toast.error("댓글 작성에 실패했습니다."),
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: () => currentUser?.role === "ROLE_ADMIN"
+      ? adminApi.deleteComment(comment.id)
+      : communityApi.deleteComment(comment.id),
+    onSuccess: () => {
+      toast.success("댓글이 삭제되었습니다.");
+      onDeleteSuccess();
+    },
+    onError: () => toast.error("삭제에 실패했습니다."),
+  });
+
+  const canDelete = currentUser && (currentUser.name === comment.userName || currentUser.role === "ROLE_ADMIN");
+
   return (
     <div className={s.comment}>
       <div className={s.commentHeader}>
         <span className={s.commentUser}>{comment.userName}</span>
         <span className={s.commentDate}>{dayjs(comment.createdAt).fromNow()}</span>
+        {canDelete && (
+          <button
+            className={s.commentDeleteBtn}
+            onClick={() => { if (confirm("댓글을 삭제하시겠습니까?")) deleteMutation.mutate(); }}
+          >
+            삭제
+          </button>
+        )}
       </div>
       <p className={s.commentContent}>{comment.content}</p>
       {isLoggedIn() && (
@@ -91,6 +118,7 @@ export default function PostDetailPage() {
   const { id } = useParams<{ id: string }>();
   const postId = Number(id);
   const router = useRouter();
+  const currentUser = getUser();
   const [commentText, setCommentText] = useState("");
   const [liked, setLiked] = useState(false);
 
@@ -196,13 +224,24 @@ export default function PostDetailPage() {
               </svg>
               좋아요 {post.likeCount}
             </button>
-            <button
-              className="btn-secondary"
-              onClick={() => { if (confirm("삭제하시겠습니까?")) deleteMutation.mutate(); }}
-              style={{ padding: "8px 16px", fontSize: 13 }}
-            >
-              삭제
-            </button>
+            {(currentUser?.name === post.userName || currentUser?.role === "ROLE_ADMIN") && (
+              <>
+                <Link
+                  href={`/community/${postId}/edit`}
+                  className="btn-secondary"
+                  style={{ padding: "8px 16px", fontSize: 13 }}
+                >
+                  수정
+                </Link>
+                <button
+                  className="btn-secondary"
+                  onClick={() => { if (confirm("삭제하시겠습니까?")) deleteMutation.mutate(); }}
+                  style={{ padding: "8px 16px", fontSize: 13, color: "var(--red)", borderColor: "rgba(232,34,10,0.3)" }}
+                >
+                  삭제
+                </button>
+              </>
+            )}
           </div>
         </div>
 
@@ -239,7 +278,9 @@ export default function PostDetailPage() {
                   key={comment.id}
                   comment={comment}
                   postId={postId}
+                  currentUser={currentUser}
                   onReplySuccess={refetchComments}
+                  onDeleteSuccess={refetchComments}
                 />
               ))
             ) : (

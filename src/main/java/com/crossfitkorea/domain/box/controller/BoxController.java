@@ -49,6 +49,16 @@ public class BoxController {
         return ResponseEntity.ok(ApiResponse.success(boxService.getPremiumBoxes()));
     }
 
+    @Operation(summary = "내 박스 목록 (박스 오너)")
+    @GetMapping("/my")
+    @PreAuthorize("hasAnyRole('BOX_OWNER', 'ADMIN')")
+    public ResponseEntity<ApiResponse<Page<BoxDto>>> getMyBoxes(
+        @PageableDefault(size = 20) Pageable pageable,
+        @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        return ResponseEntity.ok(ApiResponse.success(boxService.getMyBoxes(userDetails.getUsername(), pageable)));
+    }
+
     @Operation(summary = "박스 등록 (박스 오너/관리자)")
     @PostMapping
     @PreAuthorize("hasAnyRole('BOX_OWNER', 'ADMIN')")

@@ -1,0 +1,16 @@
+﻿× crossfitkorea.service - CrossFitKorea Docker Compose
+     Loaded: loaded (/etc/systemd/system/crossfitkorea.service; enabled; preset: enabled)
+     Active: failed (Result: exit-code) since Fri 2026-03-06 09:02:08 UTC; 3min 4s ago
+    Process: 126307 ExecStart=/usr/bin/docker compose -f docker-compose.prod.yml up -d (code=exited, status=1/FAILURE)
+   Main PID: 126307 (code=exited, status=1/FAILURE)
+        CPU: 121ms
+
+Mar 06 09:02:08 ip-172-31-12-212 systemd[1]: Starting crossfitkorea.service - CrossFitKorea Docker Compose...
+Mar 06 09:02:08 ip-172-31-12-212 docker[126320]: time="2026-03-06T09:02:08Z" level=warning msg="The \"ECR_REGISTRY\" variable is not set. Defaulting to a blank string."
+Mar 06 09:02:08 ip-172-31-12-212 docker[126320]: time="2026-03-06T09:02:08Z" level=warning msg="The \"IMAGE_TAG\" variable is not set. Defaulting to a blank string."
+Mar 06 09:02:08 ip-172-31-12-212 docker[126320]: time="2026-03-06T09:02:08Z" level=warning msg="The \"ECR_REGISTRY\" variable is not set. Defaulting to a blank string."
+Mar 06 09:02:08 ip-172-31-12-212 docker[126320]: time="2026-03-06T09:02:08Z" level=warning msg="The \"IMAGE_TAG\" variable is not set. Defaulting to a blank string."
+Mar 06 09:02:08 ip-172-31-12-212 docker[126320]: unable to get image '/crossfitkorea-frontend:': Error response from daemon: invalid reference format
+Mar 06 09:02:08 ip-172-31-12-212 systemd[1]: crossfitkorea.service: Main process exited, code=exited, status=1/FAILURE
+Mar 06 09:02:08 ip-172-31-12-212 systemd[1]: crossfitkorea.service: Failed with result 'exit-code'.
+Mar 06 09:02:08 ip-172-31-12-212 systemd[1]: Failed to start crossfitkorea.service - CrossFitKorea Docker Compose.

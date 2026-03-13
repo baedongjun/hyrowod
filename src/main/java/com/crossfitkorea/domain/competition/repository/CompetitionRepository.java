@@ -12,6 +12,8 @@ public interface CompetitionRepository extends JpaRepository<Competition, Long> 
 
     Page<Competition> findByActiveTrueOrderByStartDateAsc(Pageable pageable);
 
+    long countByActiveTrue();
+
     @Query("SELECT c FROM Competition c WHERE c.active = true " +
            "AND (:status IS NULL OR c.status = :status) " +
            "AND (:city IS NULL OR c.city = :city) " +

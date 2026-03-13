@@ -77,6 +77,28 @@
 }
 .submitBtn { width: 100%; padding: 12px; margin-top: 4px; }
 
+/* Quick Links */
+.linksCard {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 28px;
+  margin-bottom: 0;
+}
+.linksList { display: flex; flex-direction: column; }
+.linkItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+  text-decoration: none;
+  color: var(--muted);
+  font-size: 14px;
+  transition: color 0.2s;
+}
+.linkItem:last-child { border-bottom: none; }
+.linkItem:hover { color: var(--text); }
+
 /* Stats Card */
 .statsCard {
   background: var(--bg-card);
@@ -149,6 +171,7 @@
   text-overflow: ellipsis;
 }
 .postDate { font-size: 12px; color: var(--muted); flex-shrink: 0; }
+.reviewStars { font-size: 12px; color: #eab308; flex-shrink: 0; letter-spacing: 1px; }
 
 .empty {
   padding: 48px;
