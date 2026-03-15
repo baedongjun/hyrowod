@@ -38,6 +38,14 @@ export default function AdminCompetitionsPage() {
     maxParticipants: "",
   });
 
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editForm, setEditForm] = useState({
+    name: "", description: "", organizer: "", imageUrl: "",
+    startDate: "", endDate: "", location: "", city: "",
+    registrationDeadline: "", registrationUrl: "",
+    level: "ALL", entryFee: "", maxParticipants: "",
+  });
+
   const { data } = useQuery({
     queryKey: ["competitions", "ALL"],
     queryFn: async () => (await competitionApi.getAll()).data.data,
@@ -88,7 +96,44 @@ export default function AdminCompetitionsPage() {
     createMutation.mutate();
   };
 
+  const updateMutation = useMutation({
+    mutationFn: () => adminApi.updateCompetition(editingId!, {
+      ...editForm,
+      entryFee: editForm.entryFee ? Number(editForm.entryFee) : null,
+      maxParticipants: editForm.maxParticipants ? Number(editForm.maxParticipants) : null,
+      endDate: editForm.endDate || null,
+      registrationDeadline: editForm.registrationDeadline || null,
+      registrationUrl: editForm.registrationUrl || null,
+    }),
+    onSuccess: () => {
+      toast.success("대회가 수정되었습니다.");
+      setEditingId(null);
+      queryClient.invalidateQueries({ queryKey: ["competitions"] });
+    },
+    onError: () => toast.error("수정에 실패했습니다."),
+  });
+
+  const startEdit = (comp: Competition) => {
+    setEditingId(comp.id);
+    setEditForm({
+      name: comp.name || "",
+      description: comp.description || "",
+      organizer: comp.organizer || "",
+      imageUrl: comp.imageUrl || "",
+      startDate: comp.startDate || dayjs().format("YYYY-MM-DD"),
+      endDate: comp.endDate || "",
+      location: comp.location || "",
+      city: comp.city || "",
+      registrationDeadline: comp.registrationDeadline || "",
+      registrationUrl: comp.registrationUrl || "",
+      level: comp.level || "ALL",
+      entryFee: comp.entryFee ? String(comp.entryFee) : "",
+      maxParticipants: comp.maxParticipants ? String(comp.maxParticipants) : "",
+    });
+  };
+
   const set = (key: string, val: string) => setForm((f) => ({ ...f, [key]: val }));
+  const setEdit = (key: string, val: string) => setEditForm((f) => ({ ...f, [key]: val }));
 
   return (
     <div>
@@ -170,37 +215,110 @@ export default function AdminCompetitionsPage() {
           <div className={s.list}>
             {data?.content?.length > 0 ? (
               data.content.map((comp: Competition) => (
-                <div key={comp.id} className={s.item}>
-                  <div className={s.itemBody}>
-                    <span className={`badge ${STATUS_BADGE[comp.status]}`}>{STATUS_LABELS[comp.status]}</span>
-                    <p className={s.itemName}>{comp.name}</p>
-                    <p className={s.itemMeta}>
-                      {dayjs(comp.startDate).format("YYYY.MM.DD")}
-                      {comp.location && ` · ${comp.location}`}
-                    </p>
+                <div key={comp.id}>
+                  <div className={s.item}>
+                    <div className={s.itemBody}>
+                      <span className={`badge ${STATUS_BADGE[comp.status]}`}>{STATUS_LABELS[comp.status]}</span>
+                      <p className={s.itemName}>{comp.name}</p>
+                      <p className={s.itemMeta}>
+                        {dayjs(comp.startDate).format("YYYY.MM.DD")}
+                        {comp.location && ` · ${comp.location}`}
+                      </p>
+                    </div>
+                    <div className={s.itemActions}>
+                      <select
+                        className={s.statusSelect}
+                        value={comp.status}
+                        onChange={(e) => statusMutation.mutate({ id: comp.id, status: e.target.value })}
+                      >
+                        {STATUSES.map((st) => (
+                          <option key={st} value={st}>{STATUS_LABELS[st]}</option>
+                        ))}
+                      </select>
+                      <button
+                        className={s.editBtn}
+                        onClick={() => editingId === comp.id ? setEditingId(null) : startEdit(comp)}
+                      >
+                        {editingId === comp.id ? "닫기" : "수정"}
+                      </button>
+                      <button
+                        className={s.deleteBtn}
+                        onClick={() => {
+                          if (window.confirm(`"${comp.name}" 대회를 삭제하시겠습니까?`)) {
+                            deleteMutation.mutate(comp.id);
+                          }
+                        }}
+                        disabled={deleteMutation.isPending}
+                      >
+                        삭제
+                      </button>
+                    </div>
                   </div>
-                  <div className={s.itemActions}>
-                    <select
-                      className={s.statusSelect}
-                      value={comp.status}
-                      onChange={(e) => statusMutation.mutate({ id: comp.id, status: e.target.value })}
-                    >
-                      {STATUSES.map((st) => (
-                        <option key={st} value={st}>{STATUS_LABELS[st]}</option>
-                      ))}
-                    </select>
-                    <button
-                      className={s.deleteBtn}
-                      onClick={() => {
-                        if (window.confirm(`"${comp.name}" 대회를 삭제하시겠습니까?`)) {
-                          deleteMutation.mutate(comp.id);
-                        }
-                      }}
-                      disabled={deleteMutation.isPending}
-                    >
-                      삭제
-                    </button>
-                  </div>
+                  {editingId === comp.id && (
+                    <div className={s.editForm}>
+                      <div className={s.editRow}>
+                        <div className={s.field}>
+                          <label className={s.label}>대회명</label>
+                          <input type="text" className="input-field" value={editForm.name} onChange={(e) => setEdit("name", e.target.value)} />
+                        </div>
+                        <div className={s.field}>
+                          <label className={s.label}>주최</label>
+                          <input type="text" className="input-field" value={editForm.organizer} onChange={(e) => setEdit("organizer", e.target.value)} />
+                        </div>
+                      </div>
+                      <div className={s.editRow}>
+                        <div className={s.field}>
+                          <label className={s.label}>시작일</label>
+                          <input type="date" className="input-field" value={editForm.startDate} onChange={(e) => setEdit("startDate", e.target.value)} />
+                        </div>
+                        <div className={s.field}>
+                          <label className={s.label}>종료일</label>
+                          <input type="date" className="input-field" value={editForm.endDate} onChange={(e) => setEdit("endDate", e.target.value)} />
+                        </div>
+                        <div className={s.field}>
+                          <label className={s.label}>도시</label>
+                          <input type="text" className="input-field" value={editForm.city} onChange={(e) => setEdit("city", e.target.value)} />
+                        </div>
+                      </div>
+                      <div className={s.editRow}>
+                        <div className={s.field}>
+                          <label className={s.label}>장소</label>
+                          <input type="text" className="input-field" value={editForm.location} onChange={(e) => setEdit("location", e.target.value)} />
+                        </div>
+                        <div className={s.field}>
+                          <label className={s.label}>접수 마감일</label>
+                          <input type="date" className="input-field" value={editForm.registrationDeadline} onChange={(e) => setEdit("registrationDeadline", e.target.value)} />
+                        </div>
+                        <div className={s.field}>
+                          <label className={s.label}>접수 URL</label>
+                          <input type="url" className="input-field" value={editForm.registrationUrl} onChange={(e) => setEdit("registrationUrl", e.target.value)} />
+                        </div>
+                      </div>
+                      <div className={s.editRow}>
+                        <div className={s.field}>
+                          <label className={s.label}>참가비</label>
+                          <input type="number" className="input-field" value={editForm.entryFee} onChange={(e) => setEdit("entryFee", e.target.value)} />
+                        </div>
+                        <div className={s.field}>
+                          <label className={s.label}>최대 인원</label>
+                          <input type="number" className="input-field" value={editForm.maxParticipants} onChange={(e) => setEdit("maxParticipants", e.target.value)} />
+                        </div>
+                        <div className={s.field}>
+                          <label className={s.label}>레벨</label>
+                          <select className={s.select} value={editForm.level} onChange={(e) => setEdit("level", e.target.value)}>
+                            {LEVELS.map((l) => <option key={l} value={l}>{LEVEL_LABELS[l]}</option>)}
+                          </select>
+                        </div>
+                      </div>
+                      <textarea className={s.textarea} placeholder="설명" value={editForm.description} onChange={(e) => setEdit("description", e.target.value)} />
+                      <div className={s.editActions}>
+                        <button className="btn-secondary" style={{ padding: "8px 16px", fontSize: 13 }} onClick={() => setEditingId(null)}>취소</button>
+                        <button className="btn-primary" style={{ padding: "8px 20px", fontSize: 13 }} disabled={updateMutation.isPending} onClick={() => updateMutation.mutate()}>
+                          {updateMutation.isPending ? "저장 중..." : "저장"}
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               ))
             ) : (

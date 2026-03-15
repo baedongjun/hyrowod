@@ -145,3 +145,12 @@ export interface AuthResponse {
   name: string;
   role: string;
 }
+
+export interface WodRecord {
+  id: number;
+  wodDate: string;
+  score: string | null;
+  notes: string | null;
+  rx: boolean;
+  userName: string;
+}

@@ -87,6 +87,20 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
     }
 
+    public AuthResponse refreshToken(String refreshToken) {
+        if (!jwtTokenProvider.validateToken(refreshToken)) {
+            throw new BusinessException(ErrorCode.UNAUTHORIZED);
+        }
+        String email = jwtTokenProvider.getEmail(refreshToken);
+        User user = getUserByEmail(email);
+        if (!user.isActive()) {
+            throw new BusinessException(ErrorCode.USER_DEACTIVATED);
+        }
+        String newAccessToken = jwtTokenProvider.createAccessToken(user.getEmail(), user.getRole().name());
+        String newRefreshToken = jwtTokenProvider.createRefreshToken(user.getEmail());
+        return new AuthResponse(newAccessToken, newRefreshToken, user.getEmail(), user.getName(), user.getRole().name());
+    }
+
     private AuthResponse buildAuthResponse(User user) {
         String accessToken = jwtTokenProvider.createAccessToken(user.getEmail(), user.getRole().name());
         String refreshToken = jwtTokenProvider.createRefreshToken(user.getEmail());

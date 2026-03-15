@@ -8,6 +8,7 @@ import { boxApi } from "@/lib/api";
 import { Box, Coach, Schedule, Review, Page } from "@/types";
 import { isLoggedIn, getUser } from "@/lib/auth";
 import { toast } from "react-toastify";
+import { useEffect } from "react";
 import dayjs from "dayjs";
 import s from "./box.module.css";
 
@@ -44,6 +45,7 @@ export default function BoxDetailPage() {
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [reviewContent, setReviewContent] = useState("");
+  const [favorited, setFavorited] = useState(false);
 
   const { data: box, isLoading } = useQuery({
     queryKey: ["box", boxId],
@@ -66,6 +68,28 @@ export default function BoxDetailPage() {
     queryKey: ["box", boxId, "reviews"],
     queryFn: async () => (await boxApi.getReviews(boxId)).data.data,
     enabled: tab === "후기",
+  });
+
+  const { data: favoriteData } = useQuery({
+    queryKey: ["box", boxId, "favorite"],
+    queryFn: async () => (await boxApi.checkFavorite(boxId)).data.data as { favorited: boolean },
+    enabled: isLoggedIn(),
+  });
+
+  useEffect(() => {
+    if (favoriteData !== undefined) {
+      setFavorited(favoriteData.favorited);
+    }
+  }, [favoriteData]);
+
+  const favoriteMutation = useMutation({
+    mutationFn: () => boxApi.toggleFavorite(boxId),
+    onSuccess: (res) => {
+      const isFav = (res.data.data as { favorited: boolean }).favorited;
+      setFavorited(isFav);
+      toast.success(isFav ? "즐겨찾기에 추가되었습니다." : "즐겨찾기에서 해제되었습니다.");
+    },
+    onError: () => toast.error("처리에 실패했습니다."),
   });
 
   const { data: relatedBoxes } = useQuery({
@@ -209,12 +233,27 @@ export default function BoxDetailPage() {
               <span>·</span>
               <span>{box.city} {box.district}</span>
             </div>
-            {(currentUser?.role === "ROLE_ADMIN" ||
-              (currentUser?.role === "ROLE_BOX_OWNER" && box.ownerName === currentUser?.name)) && (
-              <Link href={`/boxes/${boxId}/edit`} className={s.editBtn}>
-                정보 수정
-              </Link>
-            )}
+            <div style={{ display: "flex", gap: 10, alignItems: "center", marginTop: 8 }}>
+              {isLoggedIn() && (
+                <button
+                  className={s.favBtn}
+                  onClick={() => favoriteMutation.mutate()}
+                  disabled={favoriteMutation.isPending}
+                  style={{ color: favorited ? "var(--red)" : "rgba(255,255,255,0.6)" }}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill={favorited ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                  </svg>
+                  {favorited ? "즐겨찾기 해제" : "즐겨찾기"}
+                </button>
+              )}
+              {(currentUser?.role === "ROLE_ADMIN" ||
+                (currentUser?.role === "ROLE_BOX_OWNER" && box.ownerName === currentUser?.name)) && (
+                <Link href={`/boxes/${boxId}/edit`} className={s.editBtn}>
+                  정보 수정
+                </Link>
+              )}
+            </div>
           </div>
         </div>
       </div>

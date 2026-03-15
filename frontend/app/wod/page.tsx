@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { wodApi } from "@/lib/api";
-import { Wod } from "@/types";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { wodApi, wodRecordApi } from "@/lib/api";
+import { Wod, WodRecord } from "@/types";
+import { isLoggedIn } from "@/lib/auth";
+import { toast } from "react-toastify";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import s from "./wod.module.css";
@@ -50,6 +52,11 @@ export default function WodPage() {
   const [viewMode, setViewMode] = useState<"list" | "calendar">("list");
   const [calMonth, setCalMonth] = useState(dayjs().startOf("month"));
   const [selectedWod, setSelectedWod] = useState<Wod | null>(null);
+  const [recordScore, setRecordScore] = useState("");
+  const [recordNotes, setRecordNotes] = useState("");
+  const [recordRx, setRecordRx] = useState(false);
+  const [showRecordForm, setShowRecordForm] = useState(false);
+  const queryClient = useQueryClient();
 
   const { data: todayWod, isLoading } = useQuery({
     queryKey: ["wod", "today"],
@@ -64,6 +71,34 @@ export default function WodPage() {
     queryFn: async () => {
       const res = await wodApi.getHistory(0, 90);
       return res.data.data;
+    },
+  });
+
+  const { data: todayRecord } = useQuery({
+    queryKey: ["wod", "record", "today"],
+    queryFn: async () => (await wodRecordApi.getTodayRecord()).data.data as WodRecord | null,
+    enabled: isLoggedIn(),
+  });
+
+  const recordMutation = useMutation({
+    mutationFn: () => wodRecordApi.saveRecord({
+      score: recordScore || undefined,
+      notes: recordNotes || undefined,
+      rx: recordRx,
+    }),
+    onSuccess: () => {
+      toast.success("기록이 저장되었습니다.");
+      setShowRecordForm(false);
+      queryClient.invalidateQueries({ queryKey: ["wod", "record"] });
+    },
+    onError: () => toast.error("기록 저장에 실패했습니다."),
+  });
+
+  const deleteRecordMutation = useMutation({
+    mutationFn: (id: number) => wodRecordApi.deleteRecord(id),
+    onSuccess: () => {
+      toast.success("기록이 삭제되었습니다.");
+      queryClient.invalidateQueries({ queryKey: ["wod", "record"] });
     },
   });
 
@@ -151,6 +186,118 @@ export default function WodPage() {
           <div className={s.wodEmpty}>
             <div className={s.wodEmptyIcon}>🔥</div>
             <p className={s.wodEmptyText}>오늘의 WOD가 아직 등록되지 않았습니다</p>
+          </div>
+        )}
+
+        {/* 내 기록 */}
+        {isLoggedIn() && todayWod && (
+          <div className={s.myRecord}>
+            <div className={s.myRecordHeader}>
+              <p className={s.myRecordTitle}>내 오늘 기록</p>
+              {!todayRecord && !showRecordForm && (
+                <button
+                  className="btn-primary"
+                  style={{ padding: "8px 18px", fontSize: 13 }}
+                  onClick={() => setShowRecordForm(true)}
+                >
+                  기록 입력
+                </button>
+              )}
+            </div>
+
+            {todayRecord && !showRecordForm ? (
+              <div className={s.recordDisplay}>
+                <div className={s.recordRow}>
+                  {todayRecord.score && (
+                    <div className={s.recordItem}>
+                      <span className={s.recordLabel}>점수</span>
+                      <span className={s.recordValue}>{todayRecord.score}</span>
+                    </div>
+                  )}
+                  <div className={s.recordItem}>
+                    <span className={s.recordLabel}>RX</span>
+                    <span className={s.recordValue} style={{ color: todayRecord.rx ? "var(--red)" : "var(--muted)" }}>
+                      {todayRecord.rx ? "RX" : "Scaled"}
+                    </span>
+                  </div>
+                </div>
+                {todayRecord.notes && (
+                  <p className={s.recordNotes}>{todayRecord.notes}</p>
+                )}
+                <div className={s.recordActions}>
+                  <button
+                    className="btn-secondary"
+                    style={{ padding: "6px 14px", fontSize: 12 }}
+                    onClick={() => {
+                      setRecordScore(todayRecord.score || "");
+                      setRecordNotes(todayRecord.notes || "");
+                      setRecordRx(todayRecord.rx);
+                      setShowRecordForm(true);
+                    }}
+                  >
+                    수정
+                  </button>
+                  <button
+                    className="btn-secondary"
+                    style={{ padding: "6px 14px", fontSize: 12, color: "var(--red)", borderColor: "rgba(232,34,10,0.3)" }}
+                    onClick={() => { if (confirm("기록을 삭제할까요?")) deleteRecordMutation.mutate(todayRecord.id); }}
+                  >
+                    삭제
+                  </button>
+                </div>
+              </div>
+            ) : showRecordForm ? (
+              <div className={s.recordForm}>
+                <div className={s.recordFormRow}>
+                  <div className={s.recordFormField}>
+                    <label className={s.recordFormLabel}>점수 / 시간</label>
+                    <input
+                      className="input-field"
+                      placeholder="예: 5:30, 150 reps, 100 kg"
+                      value={recordScore}
+                      onChange={(e) => setRecordScore(e.target.value)}
+                    />
+                  </div>
+                  <div className={s.recordFormField} style={{ minWidth: 80 }}>
+                    <label className={s.recordFormLabel}>RX 여부</label>
+                    <label className={s.rxToggle}>
+                      <input
+                        type="checkbox"
+                        checked={recordRx}
+                        onChange={(e) => setRecordRx(e.target.checked)}
+                      />
+                      <span className={s.rxToggleLabel}>{recordRx ? "RX" : "Scaled"}</span>
+                    </label>
+                  </div>
+                </div>
+                <div className={s.recordFormField}>
+                  <label className={s.recordFormLabel}>메모 (선택)</label>
+                  <textarea
+                    className={s.recordTextarea}
+                    placeholder="오늘 컨디션, 특이사항 등 자유롭게 기록"
+                    value={recordNotes}
+                    onChange={(e) => setRecordNotes(e.target.value)}
+                  />
+                </div>
+                <div className={s.recordFormActions}>
+                  <button
+                    className="btn-secondary"
+                    style={{ padding: "8px 16px", fontSize: 13 }}
+                    onClick={() => setShowRecordForm(false)}
+                  >
+                    취소
+                  </button>
+                  <button
+                    className="btn-primary"
+                    style={{ padding: "8px 20px", fontSize: 13 }}
+                    disabled={recordMutation.isPending}
+                    onClick={() => recordMutation.mutate()}
+                  >
+                    {recordMutation.isPending ? "저장 중..." : "저장"}
+                  </button>
+                </div>
+              </div>
+            ) : null}
           </div>
         )}
 

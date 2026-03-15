@@ -53,6 +53,28 @@ public class CompetitionService {
     }
 
     @Transactional
+    public CompetitionDto updateCompetition(Long id, CompetitionCreateRequest request) {
+        Competition competition = competitionRepository.findById(id)
+            .orElseThrow(() -> new BusinessException(ErrorCode.COMPETITION_NOT_FOUND));
+
+        competition.setName(request.getName());
+        competition.setDescription(request.getDescription());
+        competition.setStartDate(request.getStartDate());
+        competition.setEndDate(request.getEndDate());
+        competition.setLocation(request.getLocation());
+        competition.setCity(request.getCity());
+        competition.setRegistrationDeadline(request.getRegistrationDeadline());
+        competition.setRegistrationUrl(request.getRegistrationUrl());
+        competition.setImageUrl(request.getImageUrl());
+        competition.setOrganizer(request.getOrganizer());
+        competition.setLevel(request.getLevel());
+        competition.setMaxParticipants(request.getMaxParticipants());
+        competition.setEntryFee(request.getEntryFee());
+
+        return CompetitionDto.from(competition);
+    }
+
+    @Transactional
     public CompetitionDto updateStatus(Long id, CompetitionStatus status) {
         Competition competition = competitionRepository.findById(id)
             .orElseThrow(() -> new BusinessException(ErrorCode.COMPETITION_NOT_FOUND));

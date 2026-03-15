@@ -74,6 +74,15 @@ public class AdminBoxController {
         return ResponseEntity.ok(ApiResponse.success(competitionService.createCompetition(request)));
     }
 
+    @Operation(summary = "[어드민] 대회 수정")
+    @PutMapping("/competitions/{id}")
+    public ResponseEntity<ApiResponse<CompetitionDto>> updateCompetition(
+        @PathVariable Long id,
+        @Valid @RequestBody CompetitionCreateRequest request
+    ) {
+        return ResponseEntity.ok(ApiResponse.success(competitionService.updateCompetition(id, request)));
+    }
+
     @Operation(summary = "[어드민] 대회 상태 변경")
     @PatchMapping("/competitions/{id}/status")
     public ResponseEntity<ApiResponse<CompetitionDto>> updateCompetitionStatus(

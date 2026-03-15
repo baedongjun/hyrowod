@@ -53,6 +53,8 @@ public class SecurityConfig {
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 // Actuator
                 .requestMatchers("/actuator/health").permitAll()
+                // 파일 업로드 (로그인 필요)
+                .requestMatchers("/api/v1/upload/**").authenticated()
                 // 어드민 전용
                 .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                 // 나머지 인증 필요

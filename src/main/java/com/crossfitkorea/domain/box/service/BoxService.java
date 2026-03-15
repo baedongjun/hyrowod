@@ -74,6 +74,7 @@ public class BoxService {
             .monthlyFee(request.getMonthlyFee())
             .openTime(request.getOpenTime())
             .closeTime(request.getCloseTime())
+            .imageUrls(request.getImageUrls() != null ? request.getImageUrls() : new java.util.ArrayList<>())
             .owner(owner)
             .build();
 
@@ -81,9 +82,9 @@ public class BoxService {
     }
 
     @Transactional
-    public BoxDto updateBox(Long id, BoxCreateRequest request, String ownerEmail) {
+    public BoxDto updateBox(Long id, BoxCreateRequest request, String ownerEmail, boolean isAdmin) {
         Box box = findActiveBox(id);
-        validateOwner(box, ownerEmail);
+        validateOwner(box, ownerEmail, isAdmin);
 
         box.setName(request.getName());
         box.setAddress(request.getAddress());
@@ -99,14 +100,18 @@ public class BoxService {
         box.setMonthlyFee(request.getMonthlyFee());
         box.setOpenTime(request.getOpenTime());
         box.setCloseTime(request.getCloseTime());
+        if (request.getImageUrls() != null) {
+            box.getImageUrls().clear();
+            box.getImageUrls().addAll(request.getImageUrls());
+        }
 
         return BoxDto.from(box);
     }
 
     @Transactional
-    public void deleteBox(Long id, String ownerEmail) {
+    public void deleteBox(Long id, String ownerEmail, boolean isAdmin) {
         Box box = findActiveBox(id);
-        validateOwner(box, ownerEmail);
+        validateOwner(box, ownerEmail, isAdmin);
         box.setActive(false);
     }
 
@@ -119,7 +124,8 @@ public class BoxService {
         return box;
     }
 
-    private void validateOwner(Box box, String email) {
+    private void validateOwner(Box box, String email, boolean isAdmin) {
+        if (isAdmin) return;
         if (box.getOwner() == null || !box.getOwner().getEmail().equals(email)) {
             throw new BusinessException(ErrorCode.BOX_NOT_AUTHORIZED);
         }

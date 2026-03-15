@@ -31,4 +31,15 @@ public class AuthController {
     public ResponseEntity<ApiResponse<AuthResponse>> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(ApiResponse.success(userService.login(request)));
     }
+
+    @Operation(summary = "토큰 갱신 (Refresh Token)")
+    @PostMapping("/refresh")
+    public ResponseEntity<ApiResponse<AuthResponse>> refresh(@RequestBody java.util.Map<String, String> body) {
+        String refreshToken = body.get("refreshToken");
+        if (refreshToken == null || refreshToken.isBlank()) {
+            throw new com.crossfitkorea.common.exception.BusinessException(
+                com.crossfitkorea.common.exception.ErrorCode.UNAUTHORIZED);
+        }
+        return ResponseEntity.ok(ApiResponse.success(userService.refreshToken(refreshToken)));
+    }
 }

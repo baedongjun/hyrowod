@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -30,4 +32,5 @@ public class BoxCreateRequest {
     private Integer monthlyFee;
     private String openTime;
     private String closeTime;
+    private List<String> imageUrls = new ArrayList<>();
 }

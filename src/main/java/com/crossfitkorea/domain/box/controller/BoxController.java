@@ -4,6 +4,7 @@ import com.crossfitkorea.common.ApiResponse;
 import com.crossfitkorea.domain.box.dto.BoxCreateRequest;
 import com.crossfitkorea.domain.box.dto.BoxDto;
 import com.crossfitkorea.domain.box.dto.BoxSearchRequest;
+import com.crossfitkorea.domain.box.service.BoxFavoriteService;
 import com.crossfitkorea.domain.box.service.BoxService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,6 +20,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/boxes")
@@ -27,6 +29,7 @@ import java.util.List;
 public class BoxController {
 
     private final BoxService boxService;
+    private final BoxFavoriteService boxFavoriteService;
 
     @Operation(summary = "박스 검색 (지역/키워드 필터)")
     @GetMapping
@@ -77,7 +80,9 @@ public class BoxController {
         @Valid @RequestBody BoxCreateRequest request,
         @AuthenticationPrincipal UserDetails userDetails
     ) {
-        return ResponseEntity.ok(ApiResponse.success(boxService.updateBox(id, request, userDetails.getUsername())));
+        boolean isAdmin = userDetails.getAuthorities().stream()
+            .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        return ResponseEntity.ok(ApiResponse.success(boxService.updateBox(id, request, userDetails.getUsername(), isAdmin)));
     }
 
     @Operation(summary = "박스 삭제 (비활성화)")
@@ -87,7 +92,29 @@ public class BoxController {
         @PathVariable Long id,
         @AuthenticationPrincipal UserDetails userDetails
     ) {
-        boxService.deleteBox(id, userDetails.getUsername());
+        boolean isAdmin = userDetails.getAuthorities().stream()
+            .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        boxService.deleteBox(id, userDetails.getUsername(), isAdmin);
         return ResponseEntity.ok(ApiResponse.success(null));
+    }
+
+    @Operation(summary = "즐겨찾기 토글 (추가/해제)")
+    @PostMapping("/{id}/favorite")
+    public ResponseEntity<ApiResponse<Map<String, Boolean>>> toggleFavorite(
+        @PathVariable Long id,
+        @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        boolean favorited = boxFavoriteService.toggleFavorite(id, userDetails.getUsername());
+        return ResponseEntity.ok(ApiResponse.success(Map.of("favorited", favorited)));
+    }
+
+    @Operation(summary = "즐겨찾기 여부 확인")
+    @GetMapping("/{id}/favorite")
+    public ResponseEntity<ApiResponse<Map<String, Boolean>>> checkFavorite(
+        @PathVariable Long id,
+        @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        boolean favorited = boxFavoriteService.isFavorited(id, userDetails.getUsername());
+        return ResponseEntity.ok(ApiResponse.success(Map.of("favorited", favorited)));
     }
 }

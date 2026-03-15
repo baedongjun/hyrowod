@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { boxApi } from "@/lib/api";
+import { boxApi, uploadApi } from "@/lib/api";
 import { isLoggedIn } from "@/lib/auth";
 import { toast } from "react-toastify";
 import s from "../../create/create.module.css";
@@ -15,12 +15,15 @@ export default function BoxEditPage() {
   const router = useRouter();
   const params = useParams();
   const id = Number(params.id);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [form, setForm] = useState({
     name: "", address: "", city: "서울", district: "", phone: "",
     website: "", instagram: "", youtube: "", description: "",
     monthlyFee: "", openTime: "06:00", closeTime: "22:00",
   });
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [uploading, setUploading] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -49,15 +52,41 @@ export default function BoxEditPage() {
         openTime: box.openTime || "06:00",
         closeTime: box.closeTime || "22:00",
       });
+      setImageUrls(box.imageUrls || []);
       setLoaded(true);
     }
   }, [box, loaded]);
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+    if (imageUrls.length + files.length > 5) {
+      toast.error("이미지는 최대 5장까지 업로드할 수 있습니다.");
+      return;
+    }
+    setUploading(true);
+    try {
+      const res = await uploadApi.uploadImages(files, "boxes");
+      setImageUrls((prev) => [...prev, ...res.data.data]);
+      toast.success(`${files.length}장 업로드 완료`);
+    } catch {
+      toast.error("이미지 업로드에 실패했습니다.");
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
+  const removeImage = (idx: number) => {
+    setImageUrls((prev) => prev.filter((_, i) => i !== idx));
+  };
 
   const mutation = useMutation({
     mutationFn: () =>
       boxApi.update(id, {
         ...form,
         monthlyFee: form.monthlyFee ? parseInt(form.monthlyFee) : null,
+        imageUrls,
       }),
     onSuccess: () => {
       toast.success("박스 정보가 수정되었습니다.");
@@ -124,6 +153,51 @@ export default function BoxEditPage() {
             </div>
           </div>
 
+          {/* 박스 이미지 */}
+          <div className={s.section}>
+            <p className={s.sectionTitle}>박스 이미지 (최대 5장)</p>
+            <div className={s.imageUploadArea}>
+              {imageUrls.map((url, i) => (
+                <div key={i} className={s.imagePreview}>
+                  <img src={url} alt={`박스 이미지 ${i + 1}`} className={s.previewImg} />
+                  <button
+                    type="button"
+                    className={s.removeImgBtn}
+                    onClick={() => removeImage(i)}
+                  >✕</button>
+                </div>
+              ))}
+              {imageUrls.length < 5 && (
+                <button
+                  type="button"
+                  className={s.addImgBtn}
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={uploading}
+                >
+                  {uploading ? (
+                    <span className={s.uploadingText}>업로드 중...</span>
+                  ) : (
+                    <>
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                      </svg>
+                      <span>이미지 추가</span>
+                    </>
+                  )}
+                </button>
+              )}
+            </div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              multiple
+              style={{ display: "none" }}
+              onChange={handleImageUpload}
+            />
+            <p className={s.imageHint}>JPG, PNG, WebP · 최대 10MB · 최대 5장</p>
+          </div>
+
           <div className={s.section}>
             <p className={s.sectionTitle}>운영 정보</p>
             <div className={s.grid3}>
@@ -170,7 +244,7 @@ export default function BoxEditPage() {
 
           <div className={s.actions}>
             <Link href={`/boxes/${id}`} className="btn-secondary" style={{ padding: "15px 32px" }}>취소</Link>
-            <button type="submit" className="btn-primary" disabled={mutation.isPending}>
+            <button type="submit" className="btn-primary" disabled={mutation.isPending || uploading}>
               {mutation.isPending ? "저장 중..." : "수정 완료"}
             </button>
           </div>

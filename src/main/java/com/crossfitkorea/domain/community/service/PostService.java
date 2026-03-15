@@ -144,6 +144,16 @@ public class PostService {
     }
 
     @Transactional
+    public void deleteMyComment(Long commentId, String userEmail) {
+        Comment comment = commentRepository.findById(commentId)
+            .orElseThrow(() -> new BusinessException(ErrorCode.COMMENT_NOT_FOUND));
+        if (!comment.getUser().getEmail().equals(userEmail)) {
+            throw new BusinessException(ErrorCode.COMMENT_NOT_AUTHORIZED);
+        }
+        comment.setActive(false);
+    }
+
+    @Transactional
     public void adminDeleteComment(Long commentId) {
         Comment comment = commentRepository.findById(commentId)
             .orElseThrow(() -> new BusinessException(ErrorCode.COMMENT_NOT_FOUND));

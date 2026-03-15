@@ -26,18 +26,17 @@ public class WodService {
 
     public WodDto getTodayWod(Long boxId) {
         LocalDate today = LocalDate.now();
-        Wod wod;
 
         if (boxId != null) {
-            wod = wodRepository.findByBoxIdAndWodDateAndActiveTrue(boxId, today)
-                .orElseGet(() -> wodRepository.findByBoxIsNullAndWodDateAndActiveTrue(today)
-                    .orElseThrow(() -> new BusinessException(ErrorCode.WOD_NOT_FOUND)));
+            return wodRepository.findByBoxIdAndWodDateAndActiveTrue(boxId, today)
+                .or(() -> wodRepository.findByBoxIsNullAndWodDateAndActiveTrue(today))
+                .map(WodDto::from)
+                .orElse(null);
         } else {
-            wod = wodRepository.findByBoxIsNullAndWodDateAndActiveTrue(today)
-                .orElseThrow(() -> new BusinessException(ErrorCode.WOD_NOT_FOUND));
+            return wodRepository.findByBoxIsNullAndWodDateAndActiveTrue(today)
+                .map(WodDto::from)
+                .orElse(null);
         }
-
-        return WodDto.from(wod);
     }
 
     public Page<WodDto> getWodHistory(Pageable pageable) {

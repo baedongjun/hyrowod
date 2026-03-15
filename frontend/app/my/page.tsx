@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { userApi, communityApi } from "@/lib/api";
-import { Review } from "@/types";
+import { Review, Box } from "@/types";
 import { isLoggedIn, getUser } from "@/lib/auth";
 import { Post } from "@/types";
 import { toast } from "react-toastify";
@@ -54,6 +54,12 @@ export default function MyPage() {
   const { data: myReviews } = useQuery({
     queryKey: ["reviews", "mine"],
     queryFn: async () => (await userApi.getMyReviews()).data.data,
+    enabled: isLoggedIn(),
+  });
+
+  const { data: myFavorites } = useQuery({
+    queryKey: ["favorites", "mine"],
+    queryFn: async () => (await userApi.getMyFavorites()).data.data,
     enabled: isLoggedIn(),
   });
 
@@ -179,6 +185,10 @@ export default function MyPage() {
                 <p className={s.statNum}>{myReviews?.totalElements || 0}</p>
                 <p className={s.statLabel}>작성 후기</p>
               </div>
+              <div className={s.statItem}>
+                <p className={s.statNum}>{myFavorites?.totalElements || 0}</p>
+                <p className={s.statLabel}>즐겨찾기</p>
+              </div>
             </div>
           </div>
         </div>
@@ -218,6 +228,31 @@ export default function MyPage() {
             </div>
           ) : (
             <div className={s.empty}>아직 작성한 후기가 없습니다</div>
+          )}
+        </div>
+
+        {/* 즐겨찾기 */}
+        <div className={s.postsCard}>
+          <p className={s.postsHeader}>즐겨찾기 박스</p>
+          {myFavorites?.content?.length > 0 ? (
+            <div className={s.favoriteGrid}>
+              {myFavorites.content.slice(0, 6).map((box: Box) => (
+                <Link key={box.id} href={`/boxes/${box.id}`} className={s.favoriteItem}>
+                  <div className={s.favoriteImg}>
+                    {box.imageUrls?.[0]
+                      ? <img src={box.imageUrls[0]} alt={box.name} />
+                      : <div className={s.favoritePlaceholder}>CF</div>
+                    }
+                  </div>
+                  <div className={s.favoriteInfo}>
+                    <p className={s.favoriteName}>{box.name}</p>
+                    <p className={s.favoriteMeta}>{box.city} {box.district} · ★ {Number(box.rating || 0).toFixed(1)}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div className={s.empty}>즐겨찾기한 박스가 없습니다</div>
           )}
         </div>
       </div>

@@ -20,15 +20,70 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Response interceptor: 에러 처리
+// Response interceptor: 401 시 refresh token으로 자동 재발급
+let isRefreshing = false;
+let failedQueue: Array<{ resolve: (v: string) => void; reject: (e: unknown) => void }> = [];
+
+const processQueue = (error: unknown, token: string | null) => {
+  failedQueue.forEach(({ resolve, reject }) => {
+    if (token) resolve(token);
+    else reject(error);
+  });
+  failedQueue = [];
+};
+
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.response?.status === 401) {
-      if (typeof window !== "undefined") {
+    const originalRequest = error.config;
+    if (
+      error.response?.status === 401 &&
+      !originalRequest._retry &&
+      typeof window !== "undefined"
+    ) {
+      const refreshToken = localStorage.getItem("refreshToken");
+      if (!refreshToken) {
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
+        localStorage.removeItem("user");
         window.location.href = "/login";
+        return Promise.reject(error);
+      }
+
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        }).then((token) => {
+          originalRequest.headers.Authorization = `Bearer ${token}`;
+          return api(originalRequest);
+        });
+      }
+
+      originalRequest._retry = true;
+      isRefreshing = true;
+
+      try {
+        const res = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"}/api/v1/auth/refresh`,
+          { refreshToken }
+        );
+        const { accessToken, refreshToken: newRefresh, email, name, role } = res.data.data;
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("refreshToken", newRefresh);
+        localStorage.setItem("user", JSON.stringify({ email, name, role }));
+        api.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+        processQueue(null, accessToken);
+        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+        return api(originalRequest);
+      } catch (refreshError) {
+        processQueue(refreshError, null);
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("user");
+        window.location.href = "/login";
+        return Promise.reject(refreshError);
+      } finally {
+        isRefreshing = false;
       }
     }
     return Promise.reject(error);
@@ -44,6 +99,30 @@ export const authApi = {
 
   login: (data: { email: string; password: string }) =>
     api.post<ApiResponse<AuthResponse>>("/api/v1/auth/login", data),
+
+  refresh: (refreshToken: string) =>
+    api.post("/api/v1/auth/refresh", { refreshToken }),
+};
+
+// Upload API
+export const uploadApi = {
+  uploadImage: (file: File, folder = "general") => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("folder", folder);
+    return api.post<ApiResponse<string>>("/api/v1/upload/image", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+  },
+
+  uploadImages: (files: File[], folder = "general") => {
+    const formData = new FormData();
+    files.forEach((f) => formData.append("files", f));
+    formData.append("folder", folder);
+    return api.post<ApiResponse<string[]>>("/api/v1/upload/images", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+  },
 };
 
 // Box API
@@ -92,6 +171,12 @@ export const boxApi = {
 
   deleteSchedule: (scheduleId: number) =>
     api.delete(`/api/v1/schedules/${scheduleId}`),
+
+  toggleFavorite: (boxId: number) =>
+    api.post(`/api/v1/boxes/${boxId}/favorite`),
+
+  checkFavorite: (boxId: number) =>
+    api.get(`/api/v1/boxes/${boxId}/favorite`),
 };
 
 // WOD API
@@ -148,6 +233,24 @@ export const communityApi = {
     api.delete(`/api/v1/community/comments/${commentId}`),
 };
 
+// WOD Record API
+export const wodRecordApi = {
+  getMyRecords: (page = 0) =>
+    api.get("/api/v1/wod/records", { params: { page } }),
+
+  getRecentRecords: (days = 30) =>
+    api.get("/api/v1/wod/records/recent", { params: { days } }),
+
+  getTodayRecord: () =>
+    api.get("/api/v1/wod/records/today"),
+
+  saveRecord: (data: { wodDate?: string; score?: string; notes?: string; rx?: boolean }) =>
+    api.post("/api/v1/wod/records", data),
+
+  deleteRecord: (id: number) =>
+    api.delete(`/api/v1/wod/records/${id}`),
+};
+
 // User API
 export const userApi = {
   getMe: () =>
@@ -161,6 +264,9 @@ export const userApi = {
 
   getMyReviews: (page = 0) =>
     api.get("/api/v1/users/me/reviews", { params: { page } }),
+
+  getMyFavorites: (page = 0) =>
+    api.get("/api/v1/users/me/favorites", { params: { page } }),
 };
 
 // Admin API
@@ -209,4 +315,7 @@ export const adminApi = {
 
   deleteCompetition: (id: number) =>
     api.delete(`/api/v1/admin/competitions/${id}`),
+
+  updateCompetition: (id: number, data: object) =>
+    api.put(`/api/v1/admin/competitions/${id}`, data),
 };

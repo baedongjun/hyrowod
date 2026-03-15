@@ -95,6 +95,16 @@ public class PostController {
         return ResponseEntity.ok(ApiResponse.success(postService.likePost(id)));
     }
 
+    @Operation(summary = "댓글 삭제 (본인만)")
+    @DeleteMapping("/comments/{commentId}")
+    public ResponseEntity<ApiResponse<Void>> deleteMyComment(
+        @PathVariable Long commentId,
+        @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        postService.deleteMyComment(commentId, userDetails.getUsername());
+        return ResponseEntity.ok(ApiResponse.success(null));
+    }
+
     @Operation(summary = "댓글 작성")
     @PostMapping("/posts/{id}/comments")
     public ResponseEntity<ApiResponse<CommentDto>> createComment(

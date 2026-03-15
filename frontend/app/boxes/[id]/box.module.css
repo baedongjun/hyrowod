@@ -63,6 +63,20 @@
   transition: background 0.2s;
 }
 .editBtn:hover { background: rgba(255,255,255,0.25); }
+.favBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  font-family: var(--font-body);
+}
+.favBtn:hover { background: rgba(255,255,255,0.2); }
 .heroNoImg {
   height: 100%;
   display: flex;
