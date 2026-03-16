@@ -83,7 +83,6 @@ export default function BoxDetailMap({ name, address, latitude, longitude }: Box
           padding: "8px",
           fontSize: 12,
           color: "var(--muted)",
-          borderTop: "none",
           border: "1px solid var(--border)",
           borderTop: "none",
           background: "var(--bg-card-2)",
