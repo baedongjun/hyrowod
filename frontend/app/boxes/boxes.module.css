@@ -76,6 +76,14 @@
 }
 .suggestionItem:last-child { border-bottom: none; }
 .suggestionItem:hover { background: var(--bg-card-2); }
+.suggestionLabel {
+  padding: 8px 16px 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
 
 .viewToggle {
   display: flex;

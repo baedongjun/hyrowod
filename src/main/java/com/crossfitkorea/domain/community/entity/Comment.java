@@ -35,4 +35,13 @@ public class Comment extends BaseEntity {
 
     @Builder.Default
     private boolean active = true;
+
+    @Builder.Default
+    private int likeCount = 0;
+
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "comment_likes", joinColumns = @JoinColumn(name = "comment_id"))
+    @Column(name = "user_id")
+    @Builder.Default
+    private java.util.Set<Long> likedUserIds = new java.util.HashSet<>();
 }

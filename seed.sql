@@ -1,9 +1,5 @@
 -- 유저 생성 (BCrypt: password123)
 INSERT INTO users (email, password, name, phone, role, active, created_at, updated_at)
-VALUES ('admin@crossfitkorea.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lHHy', '관리자', '010-1234-5678', 'ROLE_ADMIN', true, NOW(), NOW())
-ON CONFLICT (email) DO NOTHING;
-
-INSERT INTO users (email, password, name, phone, role, active, created_at, updated_at)
 VALUES ('user1@crossfitkorea.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lHHy', '김민준', '010-2345-6789', 'ROLE_USER', true, NOW(), NOW())
 ON CONFLICT (email) DO NOTHING;
 

@@ -13,17 +13,33 @@ export const metadata: Metadata = {
     template: "%s | CrossFit Korea",
   },
   description: "전국 크로스핏 박스를 지도로 검색하고, 시간표와 후기, 코치 정보를 한눈에 확인하세요.",
-  keywords: ["크로스핏", "CrossFit", "크로스핏 박스", "WOD", "대회"],
+  keywords: ["크로스핏", "CrossFit", "크로스핏 박스", "WOD", "대회", "한국 크로스핏"],
+  metadataBase: new URL("https://crossfitkorea.com"),
   icons: {
     icon: "/icon.svg",
     apple: "/apple-icon.svg",
   },
   openGraph: {
-    title: "CrossFit Korea",
-    description: "한국 크로스핏 박스 지도 + 검색 플랫폼",
+    title: "CrossFit Korea | 한국 크로스핏 박스 검색 플랫폼",
+    description: "전국 크로스핏 박스를 지도로 검색하고, 시간표와 후기, 코치 정보를 한눈에 확인하세요.",
     siteName: "CrossFit Korea",
+    url: "https://crossfitkorea.com",
     locale: "ko_KR",
     type: "website",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "CrossFit Korea - 한국 크로스핏 박스 검색 플랫폼",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "CrossFit Korea | 한국 크로스핏 박스 검색 플랫폼",
+    description: "전국 크로스핏 박스를 지도로 검색하고, 시간표와 후기, 코치 정보를 한눈에 확인하세요.",
+    images: ["/og-image.png"],
   },
 };
 

@@ -2,9 +2,11 @@
 
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { competitionApi } from "@/lib/api";
 import { Competition } from "@/types";
+import { isLoggedIn } from "@/lib/auth";
+import { toast } from "react-toastify";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import s from "./competitionDetail.module.css";
@@ -23,10 +25,39 @@ const LEVEL_LABELS: Record<string, string> = {
 
 export default function CompetitionDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const qc = useQueryClient();
+  const loggedIn = isLoggedIn();
 
   const { data: comp, isLoading } = useQuery({
     queryKey: ["competition", id],
     queryFn: async () => (await competitionApi.getOne(Number(id))).data.data as Competition,
+  });
+
+  const { data: regStatus } = useQuery({
+    queryKey: ["competition", id, "registration"],
+    queryFn: async () => (await competitionApi.getRegistrationStatus(Number(id))).data.data as { registered: boolean; count: number },
+    enabled: !!id,
+  });
+
+  const registerMutation = useMutation({
+    mutationFn: () => competitionApi.register(Number(id)),
+    onSuccess: () => {
+      toast.success("참가 신청이 완료되었습니다!");
+      qc.invalidateQueries({ queryKey: ["competition", id, "registration"] });
+    },
+    onError: (err: unknown) => {
+      const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message;
+      toast.error(msg || "참가 신청에 실패했습니다.");
+    },
+  });
+
+  const cancelMutation = useMutation({
+    mutationFn: () => competitionApi.cancelRegistration(Number(id)),
+    onSuccess: () => {
+      toast.success("참가 신청이 취소되었습니다.");
+      qc.invalidateQueries({ queryKey: ["competition", id, "registration"] });
+    },
+    onError: () => toast.error("취소에 실패했습니다."),
   });
 
   if (isLoading) {
@@ -167,7 +198,13 @@ export default function CompetitionDetailPage() {
           {/* Registration */}
           <div className={s.regCard}>
             <p className={s.cardLabel}>참가 신청</p>
-            {comp.registrationUrl && isOpen ? (
+            {regStatus && (
+              <p className={s.regCount}>
+                현재 <strong>{regStatus.count}</strong>명 신청
+                {comp.maxParticipants && ` / ${comp.maxParticipants}명`}
+              </p>
+            )}
+            {isOpen ? (
               <>
                 <p className={s.regDesc}>지금 바로 참가 신청하세요!</p>
                 {comp.registrationDeadline && (
@@ -175,19 +212,40 @@ export default function CompetitionDetailPage() {
                     마감: {dayjs(comp.registrationDeadline).format("MM.DD HH:mm")}
                   </p>
                 )}
-                <a
-                  href={comp.registrationUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-primary"
-                  style={{ display: "block", textAlign: "center", padding: 16, marginTop: 16 }}
-                >
-                  접수하기
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginLeft: 6, verticalAlign: "middle" }}>
-                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-                    <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
-                  </svg>
-                </a>
+                {loggedIn ? (
+                  regStatus?.registered ? (
+                    <button
+                      className="btn-secondary"
+                      style={{ width: "100%", padding: 14, marginTop: 12 }}
+                      onClick={() => { if (window.confirm("참가 신청을 취소하시겠습니까?")) cancelMutation.mutate(); }}
+                      disabled={cancelMutation.isPending}
+                    >
+                      신청 취소
+                    </button>
+                  ) : (
+                    <button
+                      className="btn-primary"
+                      style={{ width: "100%", padding: 14, marginTop: 12 }}
+                      onClick={() => registerMutation.mutate()}
+                      disabled={registerMutation.isPending || (comp.maxParticipants != null && (regStatus?.count ?? 0) >= comp.maxParticipants)}
+                    >
+                      {registerMutation.isPending ? "신청 중..." : "참가 신청"}
+                    </button>
+                  )
+                ) : (
+                  <Link
+                    href="/login"
+                    className="btn-primary"
+                    style={{ display: "block", textAlign: "center", padding: 14, marginTop: 12 }}
+                  >
+                    로그인 후 신청
+                  </Link>
+                )}
+                {comp.registrationUrl && (
+                  <a href={comp.registrationUrl} target="_blank" rel="noopener noreferrer" className={s.extLink}>
+                    외부 접수 사이트 →
+                  </a>
+                )}
               </>
             ) : (
               <div className={s.regClosed}>

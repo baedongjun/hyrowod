@@ -123,6 +123,10 @@
 .sidebar { display: flex; flex-direction: column; gap: 16px; }
 
 .regCard {}
+.regCount { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+.regCount strong { color: var(--text); font-family: 'Bebas Neue', sans-serif; font-size: 18px; }
+.extLink { display: block; text-align: center; margin-top: 10px; font-size: 12px; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+.extLink:hover { color: var(--text); }
 .regDesc { font-size: 14px; color: var(--muted); margin-bottom: 8px; }
 .regDeadline {
   font-size: 12px;

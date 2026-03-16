@@ -2,9 +2,17 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { clearAuth, getUser, isLoggedIn } from "@/lib/auth";
+import { notificationApi } from "@/lib/api";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import "dayjs/locale/ko";
 import s from "./Header.module.css";
+
+dayjs.extend(relativeTime);
+dayjs.locale("ko");
 
 const NAV_ITEMS = [
   { href: "/boxes",        label: "박스 찾기" },
@@ -14,12 +22,15 @@ const NAV_ITEMS = [
 ];
 
 export default function Header() {
-  const pathname = usePathname();
-  const router   = useRouter();
-  const [open,     setOpen]     = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [userName, setUserName] = useState<string | null>(null);
-  const [userRole, setUserRole] = useState<string | null>(null);
+  const pathname    = usePathname();
+  const router      = useRouter();
+  const qc          = useQueryClient();
+  const [open,      setOpen]      = useState(false);
+  const [loggedIn,  setLoggedIn]  = useState(false);
+  const [userName,  setUserName]  = useState<string | null>(null);
+  const [userRole,  setUserRole]  = useState<string | null>(null);
+  const [showNotif, setShowNotif] = useState(false);
+  const bellRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setLoggedIn(isLoggedIn());
@@ -27,7 +38,49 @@ export default function Header() {
     setUserName(u?.name ?? null);
     setUserRole(u?.role ?? null);
     setOpen(false);
+    setShowNotif(false);
   }, [pathname]);
+
+  // 외부 클릭 시 알림 닫기
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (bellRef.current && !bellRef.current.contains(e.target as Node)) {
+        setShowNotif(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  const { data: countData } = useQuery({
+    queryKey: ["notifications", "count"],
+    queryFn: async () => (await notificationApi.getUnreadCount()).data.data as { count: number },
+    enabled: loggedIn,
+    refetchInterval: 30000,  // 30초마다 폴링
+  });
+
+  const { data: notifications } = useQuery({
+    queryKey: ["notifications"],
+    queryFn: async () => (await notificationApi.getAll()).data.data as Notification[],
+    enabled: loggedIn && showNotif,
+  });
+
+  const markAllMutation = useMutation({
+    mutationFn: () => notificationApi.markAllAsRead(),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["notifications"] });
+    },
+  });
+
+  const markOneMutation = useMutation({
+    mutationFn: (id: number) => notificationApi.markAsRead(id),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["notifications"] });
+      qc.invalidateQueries({ queryKey: ["notifications", "count"] });
+    },
+  });
+
+  const unreadCount = countData?.count ?? 0;
 
   const logout = () => {
     clearAuth();
@@ -64,6 +117,60 @@ export default function Header() {
                 {(userRole === "ROLE_BOX_OWNER" || userRole === "ROLE_ADMIN") && (
                   <Link href="/my/box" className={s.ownerLink}>내 박스</Link>
                 )}
+
+                {/* 알림 벨 */}
+                <div className={s.bellWrap} ref={bellRef}>
+                  <button
+                    className={s.bellBtn}
+                    onClick={() => setShowNotif((v) => !v)}
+                    aria-label="알림"
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                      <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                    </svg>
+                    {unreadCount > 0 && (
+                      <span className={s.bellBadge}>{unreadCount > 9 ? "9+" : unreadCount}</span>
+                    )}
+                  </button>
+
+                  {showNotif && (
+                    <div className={s.notifDropdown}>
+                      <div className={s.notifHeader}>
+                        <span className={s.notifTitle}>알림</span>
+                        {unreadCount > 0 && (
+                          <button
+                            className={s.notifReadAll}
+                            onClick={() => markAllMutation.mutate()}
+                          >
+                            모두 읽음
+                          </button>
+                        )}
+                      </div>
+                      <div className={s.notifList}>
+                        {!notifications || (notifications as unknown as Notif[]).length === 0 ? (
+                          <div className={s.notifEmpty}>새 알림이 없습니다</div>
+                        ) : (
+                          (notifications as unknown as Notif[]).map((n) => (
+                            <div
+                              key={n.id}
+                              className={`${s.notifItem} ${!n.read ? s.notifItemUnread : ""}`}
+                              onClick={() => {
+                                if (!n.read) markOneMutation.mutate(n.id);
+                                if (n.link) router.push(n.link);
+                                setShowNotif(false);
+                              }}
+                            >
+                              <p className={s.notifMsg}>{n.message}</p>
+                              <p className={s.notifTime}>{dayjs(n.createdAt).fromNow()}</p>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
                 <Link href="/my" className={s.userName}>{userName}</Link>
                 <button onClick={logout} className="btn-secondary" style={{ fontSize: 13, padding: "8px 16px" }}>로그아웃</button>
               </>
@@ -128,4 +235,14 @@ export default function Header() {
       </div>
     </>
   );
+}
+
+// 타입 정의
+interface Notif {
+  id: number;
+  type: string;
+  message: string;
+  link?: string;
+  read: boolean;
+  createdAt: string;
 }

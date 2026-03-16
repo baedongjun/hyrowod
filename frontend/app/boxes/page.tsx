@@ -24,6 +24,25 @@ function BoxesContent() {
   const [showFilters, setShowFilters] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const searchWrapRef = useRef<HTMLDivElement>(null);
+
+  // 최근 검색어
+  const RECENT_KEY = "box_recent_searches";
+  const getRecentSearches = (): string[] => {
+    try { return JSON.parse(localStorage.getItem(RECENT_KEY) || "[]"); } catch { return []; }
+  };
+  const [recentSearches, setRecentSearches] = useState<string[]>([]);
+  useEffect(() => { setRecentSearches(getRecentSearches()); }, []);
+  const saveRecentSearch = (q: string) => {
+    if (!q.trim()) return;
+    const updated = [q, ...getRecentSearches().filter((s) => s !== q)].slice(0, 5);
+    localStorage.setItem(RECENT_KEY, JSON.stringify(updated));
+    setRecentSearches(updated);
+  };
+  const removeRecentSearch = (q: string) => {
+    const updated = getRecentSearches().filter((s) => s !== q);
+    localStorage.setItem(RECENT_KEY, JSON.stringify(updated));
+    setRecentSearches(updated);
+  };
   const [verifiedOnly, setVerifiedOnly] = useState(searchParams.get("verified") === "true");
   const [premiumOnly, setPremiumOnly] = useState(searchParams.get("premium") === "true");
   const [maxFee, setMaxFee] = useState(searchParams.get("maxFee") || "");
@@ -129,8 +148,35 @@ function BoxesContent() {
               onFocus={() => setShowSuggestions(true)}
               className={s.searchInput}
             />
-            {showSuggestions && suggestions.length > 0 && (
+            {showSuggestions && (suggestions.length > 0 || (!keyword && recentSearches.length > 0)) && (
               <div className={s.suggestions}>
+                {!keyword && recentSearches.length > 0 && (
+                  <>
+                    <div className={s.suggestionLabel}>최근 검색어</div>
+                    {recentSearches.map((q) => (
+                      <button
+                        key={q}
+                        className={s.suggestionItem}
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          setKeyword(q);
+                          setDebouncedKeyword(q);
+                          setShowSuggestions(false);
+                          syncUrl({ q });
+                        }}
+                      >
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ flexShrink: 0, color: "var(--muted)" }}>
+                          <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.4"/>
+                        </svg>
+                        <span>{q}</span>
+                        <span
+                          style={{ marginLeft: "auto", fontSize: 11, color: "var(--muted)", padding: "0 4px" }}
+                          onMouseDown={(e) => { e.stopPropagation(); removeRecentSearch(q); }}
+                        >✕</span>
+                      </button>
+                    ))}
+                  </>
+                )}
                 {suggestions.map((box) => (
                   <button
                     key={box.id}
@@ -140,6 +186,7 @@ function BoxesContent() {
                       setKeyword(box.name);
                       setDebouncedKeyword(box.name);
                       setShowSuggestions(false);
+                      saveRecentSearch(box.name);
                       syncUrl({ q: box.name });
                     }}
                   >

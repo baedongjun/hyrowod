@@ -131,6 +131,7 @@ export interface Comment {
   userProfileImageUrl: string | null;
   createdAt: string;
   replies: Comment[];
+  likeCount?: number;
 }
 
 export interface User {

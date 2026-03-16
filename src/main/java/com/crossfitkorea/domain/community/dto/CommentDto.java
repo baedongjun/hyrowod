@@ -19,6 +19,7 @@ public class CommentDto {
     private String userProfileImageUrl;
     private LocalDateTime createdAt;
     private List<CommentDto> replies;
+    private int likeCount;
 
     public static CommentDto from(Comment comment) {
         return CommentDto.builder()
@@ -29,6 +30,7 @@ public class CommentDto {
             .userName(comment.getUser().getName())
             .userProfileImageUrl(comment.getUser().getProfileImageUrl())
             .createdAt(comment.getCreatedAt())
+            .likeCount(comment.getLikeCount())
             .build();
     }
 }

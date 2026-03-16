@@ -10,6 +10,8 @@ import com.crossfitkorea.domain.community.entity.Post;
 import com.crossfitkorea.domain.community.entity.PostCategory;
 import com.crossfitkorea.domain.community.repository.CommentRepository;
 import com.crossfitkorea.domain.community.repository.PostRepository;
+import com.crossfitkorea.domain.notification.entity.NotificationType;
+import com.crossfitkorea.domain.notification.service.NotificationService;
 import com.crossfitkorea.domain.user.entity.User;
 import com.crossfitkorea.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final UserService userService;
+    private final NotificationService notificationService;
 
     public Page<PostDto> getMyPosts(String userEmail, Pageable pageable) {
         return postRepository.findByUserEmailAndActiveTrueOrderByCreatedAtDesc(userEmail, pageable)
@@ -138,6 +141,25 @@ public class PostService {
         commentRepository.save(comment);
         post.setCommentCount(post.getCommentCount() + 1);
 
+        // 알림: 게시글 작성자에게 (본인 댓글 제외)
+        if (!post.getUser().getEmail().equals(userEmail)) {
+            notificationService.createNotification(
+                post.getUser(),
+                NotificationType.COMMENT,
+                user.getName() + "님이 회원님의 게시글에 댓글을 달았습니다.",
+                "/community/" + post.getId()
+            );
+        }
+        // 알림: 대댓글인 경우 부모 댓글 작성자에게
+        if (parent != null && !parent.getUser().getEmail().equals(userEmail)) {
+            notificationService.createNotification(
+                parent.getUser(),
+                NotificationType.REPLY,
+                user.getName() + "님이 회원님의 댓글에 답글을 달았습니다.",
+                "/community/" + post.getId()
+            );
+        }
+
         return CommentDto.from(comment);
     }
 
@@ -207,6 +229,21 @@ public class PostService {
             }
         }
         return PostDto.from(post);
+    }
+
+    @Transactional
+    public CommentDto likeComment(Long commentId, String userEmail) {
+        Comment comment = commentRepository.findById(commentId)
+            .orElseThrow(() -> new BusinessException(ErrorCode.COMMENT_NOT_FOUND));
+        User user = userService.getUserByEmail(userEmail);
+        if (comment.getLikedUserIds().contains(user.getId())) {
+            comment.getLikedUserIds().remove(user.getId());
+            comment.setLikeCount(Math.max(0, comment.getLikeCount() - 1));
+        } else {
+            comment.getLikedUserIds().add(user.getId());
+            comment.setLikeCount(comment.getLikeCount() + 1);
+        }
+        return CommentDto.from(comment);
     }
 
     private Post findActivePost(Long id) {

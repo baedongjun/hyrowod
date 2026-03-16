@@ -219,6 +219,22 @@
 }
 .editCommentCancel:hover { color: var(--text); }
 .commentContent { font-size: 14px; font-weight: 400; color: rgba(245, 240, 232, 0.75); line-height: 1.75; }
+.commentLikeBtn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 12px;
+  cursor: pointer;
+  padding: 2px 0;
+  transition: color 0.2s;
+  font-family: var(--font-body);
+}
+.commentLikeBtn:hover { color: var(--red); }
+.commentLikeBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+
 .commentReplyBtn {
   background: none;
   border: none;
@@ -226,7 +242,6 @@
   color: var(--muted);
   cursor: pointer;
   padding: 4px 0;
-  margin-top: 4px;
   font-family: var(--font-body);
   transition: color 0.2s;
 }

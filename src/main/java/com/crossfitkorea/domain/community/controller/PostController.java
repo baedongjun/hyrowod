@@ -136,6 +136,15 @@ public class PostController {
         return ResponseEntity.ok(ApiResponse.success(postService.reportPost(id, userDetails.getUsername())));
     }
 
+    @Operation(summary = "댓글 좋아요 토글")
+    @PostMapping("/comments/{commentId}/like")
+    public ResponseEntity<ApiResponse<CommentDto>> likeComment(
+        @PathVariable Long commentId,
+        @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        return ResponseEntity.ok(ApiResponse.success(postService.likeComment(commentId, userDetails.getUsername())));
+    }
+
     @Operation(summary = "댓글 작성")
     @PostMapping("/posts/{id}/comments")
     public ResponseEntity<ApiResponse<CommentDto>> createComment(

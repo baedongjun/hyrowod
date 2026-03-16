@@ -126,6 +126,9 @@ export const uploadApi = {
       headers: { "Content-Type": "multipart/form-data" },
     });
   },
+
+  getPresignedUrl: (filename: string) =>
+    api.get("/api/v1/upload/presigned", { params: { filename } }),
 };
 
 // Box API
@@ -204,6 +207,30 @@ export const competitionApi = {
 
   getOne: (id: number) =>
     api.get(`/api/v1/competitions/${id}`),
+
+  getRegistrationStatus: (id: number) =>
+    api.get(`/api/v1/competitions/${id}/registration-status`),
+
+  register: (id: number) =>
+    api.post(`/api/v1/competitions/${id}/register`),
+
+  cancelRegistration: (id: number) =>
+    api.delete(`/api/v1/competitions/${id}/register`),
+};
+
+// Notification API
+export const notificationApi = {
+  getAll: () =>
+    api.get("/api/v1/notifications"),
+
+  getUnreadCount: () =>
+    api.get("/api/v1/notifications/count"),
+
+  markAsRead: (id: number) =>
+    api.patch(`/api/v1/notifications/${id}/read`),
+
+  markAllAsRead: () =>
+    api.patch("/api/v1/notifications/read-all"),
 };
 
 // Community API
@@ -246,6 +273,9 @@ export const communityApi = {
 
   reportPost: (id: number) =>
     api.post(`/api/v1/community/posts/${id}/report`),
+
+  likeComment: (commentId: number) =>
+    api.post(`/api/v1/community/comments/${commentId}/like`),
 };
 
 // Leaderboard API

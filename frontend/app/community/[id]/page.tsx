@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import Link from "next/link";
-import { communityApi, adminApi } from "@/lib/api";
+import { communityApi, adminApi, notificationApi as _notif } from "@/lib/api";
 import { Post, Comment } from "@/types";
 import { isLoggedIn, getUser } from "@/lib/auth";
 import { toast } from "react-toastify";
@@ -66,6 +66,15 @@ function CommentItem({ comment, postId, currentUser, onReplySuccess, onDeleteSuc
     onError: () => toast.error("삭제에 실패했습니다."),
   });
 
+  const [likeCount, setLikeCount] = useState(comment.likeCount ?? 0);
+  const likeMutation = useMutation({
+    mutationFn: () => communityApi.likeComment(comment.id),
+    onSuccess: (res) => {
+      setLikeCount(res.data.data.likeCount ?? likeCount);
+    },
+    onError: () => toast.error("좋아요에 실패했습니다."),
+  });
+
   const isMyComment = currentUser && currentUser.name === comment.userName;
   const canDelete = currentUser && (isMyComment || currentUser.role === "ROLE_ADMIN");
 
@@ -102,11 +111,19 @@ function CommentItem({ comment, postId, currentUser, onReplySuccess, onDeleteSuc
       ) : (
         <p className={s.commentContent}>{comment.content}</p>
       )}
-      {isLoggedIn() && (
-        <button className={s.commentReplyBtn} onClick={() => setShowReply(!showReply)}>
-          답글
+      <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 6 }}>
+        <button className={s.commentLikeBtn} onClick={() => isLoggedIn() && likeMutation.mutate()} disabled={likeMutation.isPending}>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+          {likeCount > 0 && <span>{likeCount}</span>}
         </button>
-      )}
+        {isLoggedIn() && (
+          <button className={s.commentReplyBtn} onClick={() => setShowReply(!showReply)}>
+            답글
+          </button>
+        )}
+      </div>
 
       {comment.replies?.length > 0 && (
         <div className={s.replies}>

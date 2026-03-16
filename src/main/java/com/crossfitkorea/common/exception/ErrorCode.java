@@ -43,7 +43,16 @@ public enum ErrorCode {
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "게시글을 찾을 수 없습니다."),
     POST_NOT_AUTHORIZED(HttpStatus.FORBIDDEN, "게시글 수정/삭제 권한이 없습니다."),
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "댓글을 찾을 수 없습니다."),
-    COMMENT_NOT_AUTHORIZED(HttpStatus.FORBIDDEN, "댓글 수정/삭제 권한이 없습니다.");
+    COMMENT_NOT_AUTHORIZED(HttpStatus.FORBIDDEN, "댓글 수정/삭제 권한이 없습니다."),
+
+    // Common
+    COMMON_NOT_FOUND(HttpStatus.NOT_FOUND, "리소스를 찾을 수 없습니다."),
+    COMMON_FORBIDDEN(HttpStatus.FORBIDDEN, "접근 권한이 없습니다."),
+
+    // Competition Registration
+    COMPETITION_ALREADY_REGISTERED(HttpStatus.CONFLICT, "이미 참가 신청한 대회입니다."),
+    COMPETITION_FULL(HttpStatus.BAD_REQUEST, "참가 인원이 마감되었습니다."),
+    COMPETITION_REGISTRATION_NOT_FOUND(HttpStatus.NOT_FOUND, "참가 신청 내역을 찾을 수 없습니다.");
 
     private final HttpStatus status;
     private final String message;
