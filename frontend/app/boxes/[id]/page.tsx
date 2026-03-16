@@ -176,9 +176,9 @@ export default function BoxDetailPage() {
 
   const handleShare = () => {
     if (typeof navigator !== "undefined" && "share" in navigator) {
-      navigator.share({ title: box?.name, text: `${box?.name} - ${box?.city} ${box?.district}`, url: window.location.href }).catch(() => {});
+      (navigator as Navigator).share({ title: box?.name, text: `${box?.name} - ${box?.city} ${box?.district}`, url: window.location.href }).catch(() => {});
     } else {
-      navigator.clipboard?.writeText(window.location.href);
+      (navigator as Navigator).clipboard?.writeText(window.location.href);
       toast.success("링크가 복사되었습니다.");
     }
   };

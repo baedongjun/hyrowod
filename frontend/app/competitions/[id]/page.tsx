@@ -71,9 +71,9 @@ export default function CompetitionDetailPage() {
             className={s.shareBtn}
             onClick={() => {
               if (typeof navigator !== "undefined" && "share" in navigator) {
-                navigator.share({ title: comp.name, text: `${comp.name} — ${comp.city || ""}`, url: window.location.href }).catch(() => {});
+                (navigator as Navigator).share({ title: comp.name, text: `${comp.name} — ${comp.city || ""}`, url: window.location.href }).catch(() => {});
               } else {
-                navigator.clipboard?.writeText(window.location.href);
+                (navigator as Navigator).clipboard?.writeText(window.location.href);
               }
             }}
           >
