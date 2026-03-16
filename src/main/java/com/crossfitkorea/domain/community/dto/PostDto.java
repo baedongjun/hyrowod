@@ -23,6 +23,7 @@ public class PostDto {
     private String userName;
     private String userProfileImageUrl;
     private LocalDateTime createdAt;
+    private boolean pinned;
 
     public static PostDto from(Post post) {
         return PostDto.builder()
@@ -37,6 +38,7 @@ public class PostDto {
             .userName(post.getUser().getName())
             .userProfileImageUrl(post.getUser().getProfileImageUrl())
             .createdAt(post.getCreatedAt())
+            .pinned(post.isPinned())
             .build();
     }
 }

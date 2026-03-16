@@ -43,6 +43,20 @@ export default function CompetitionDetailPage() {
   const isOpen = comp.status === "OPEN";
   const deadlinePassed = comp.registrationDeadline && dayjs().isAfter(dayjs(comp.registrationDeadline));
 
+  const buildGoogleCalendarUrl = () => {
+    const fmt = (d: string) => dayjs(d).format("YYYYMMDDTHHmmss");
+    const start = fmt(comp.startDate + "T09:00:00");
+    const end = fmt((comp.endDate || comp.startDate) + "T18:00:00");
+    const params = new URLSearchParams({
+      action: "TEMPLATE",
+      text: comp.name,
+      dates: `${start}/${end}`,
+      details: comp.description || "",
+      location: comp.location || "",
+    });
+    return `https://calendar.google.com/calendar/render?${params.toString()}`;
+  };
+
   return (
     <div className={s.page}>
       {/* Hero */}
@@ -194,6 +208,19 @@ export default function CompetitionDetailPage() {
             <p className={s.cardLabel}>참가 레벨</p>
             <p className={s.levelBig}>{LEVEL_LABELS[comp.level] || comp.level}</p>
           </div>
+
+          {/* Google Calendar */}
+          <a
+            href={buildGoogleCalendarUrl()}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={s.calendarBtn}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <rect x="3" y="4" width="18" height="18"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            Google 캘린더에 추가
+          </a>
 
           {/* Share */}
           {typeof navigator !== "undefined" && "share" in navigator && (

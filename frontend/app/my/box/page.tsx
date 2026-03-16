@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { boxApi, wodApi } from "@/lib/api";
 import { isLoggedIn, getUser } from "@/lib/auth";
-import { Box } from "@/types";
+import { Box, Review } from "@/types";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
 import s from "./box.module.css";
@@ -55,6 +55,12 @@ export default function MyBoxPage() {
   const { data: schedules } = useQuery({
     queryKey: ["schedules", boxId],
     queryFn: async () => (await boxApi.getSchedules(boxId!)).data.data,
+    enabled: !!boxId,
+  });
+
+  const { data: reviewsData } = useQuery({
+    queryKey: ["box-reviews", boxId],
+    queryFn: async () => (await boxApi.getReviews(boxId!, 0)).data.data,
     enabled: !!boxId,
   });
 
@@ -278,6 +284,56 @@ export default function MyBoxPage() {
                   ) : (
                     <p className={s.emptyText}>등록된 코치가 없습니다.</p>
                   )}
+                </div>
+
+                {/* 리뷰 통계 */}
+                <div className={s.card}>
+                  <div className={s.cardHeader}>
+                    <h3 className={s.cardTitle}>리뷰 통계</h3>
+                    <div className={s.reviewAvg}>
+                      <span className={s.reviewAvgNum}>{selectedBox.rating?.toFixed(1) || "—"}</span>
+                      <span className={s.reviewAvgStar}>★</span>
+                      <span className={s.reviewAvgCount}>({selectedBox.reviewCount || 0})</span>
+                    </div>
+                  </div>
+                  {(() => {
+                    const reviews: Review[] = reviewsData?.content || [];
+                    const dist = [5, 4, 3, 2, 1].map((star) => ({
+                      star,
+                      count: reviews.filter((r) => Math.round(r.rating) === star).length,
+                    }));
+                    const max = Math.max(...dist.map((d) => d.count), 1);
+                    return (
+                      <>
+                        <div className={s.ratingDist}>
+                          {dist.map(({ star, count }) => (
+                            <div key={star} className={s.ratingRow}>
+                              <span className={s.ratingStar}>{star}★</span>
+                              <div className={s.ratingBar}>
+                                <div className={s.ratingBarFill} style={{ width: `${(count / max) * 100}%` }} />
+                              </div>
+                              <span className={s.ratingCount}>{count}</span>
+                            </div>
+                          ))}
+                        </div>
+                        {reviews.length > 0 && (
+                          <div className={s.recentReviews}>
+                            <p className={s.recentReviewsTitle}>최근 리뷰</p>
+                            {reviews.slice(0, 3).map((r) => (
+                              <div key={r.id} className={s.reviewItem}>
+                                <div className={s.reviewTop}>
+                                  <span className={s.reviewUser}>{r.userName}</span>
+                                  <span className={s.reviewRating}>{"★".repeat(r.rating)}{"☆".repeat(5 - r.rating)}</span>
+                                </div>
+                                <p className={s.reviewContent}>{r.content}</p>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                        {reviews.length === 0 && <p className={s.emptyText}>아직 리뷰가 없습니다.</p>}
+                      </>
+                    );
+                  })()}
                 </div>
 
                 {/* 수업 시간표 */}

@@ -98,6 +98,25 @@
 }
 .linkItem:last-child { border-bottom: none; }
 .linkItem:hover { color: var(--text); }
+.withdrawBtn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 0;
+  border: none;
+  border-top: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  font-size: 14px;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: color 0.2s;
+  width: 100%;
+  text-align: left;
+  margin-top: 4px;
+}
+.withdrawBtn:hover { color: #e8220a; }
+.withdrawBtn:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* Stats Card */
 .statsCard {

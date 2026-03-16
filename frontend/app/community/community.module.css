@@ -162,6 +162,8 @@
 .postItem:first-child { border-top: 1px solid var(--border); }
 .postItem:hover { background: var(--bg-card-2); }
 .postItem:hover .postTitle { color: var(--red); }
+.postItemPinned { background: rgba(234,179,8,0.04); }
+.pinnedMark { color: #eab308; font-size: 13px; }
 
 .postMain { flex: 1; min-width: 0; }
 .postTitle {

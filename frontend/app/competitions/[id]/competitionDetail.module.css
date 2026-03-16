@@ -158,6 +158,22 @@
 }
 .shareBtn:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
 
+.calendarBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 14px;
+  font-size: 13px;
+  font-family: var(--font-body);
+  text-decoration: none;
+  transition: color 0.2s, border-color 0.2s;
+}
+.calendarBtn:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+
 @media (max-width: 768px) {
   .heroContent { left: 24px; right: 24px; bottom: 24px; }
   .content { grid-template-columns: 1fr; padding: 24px; }

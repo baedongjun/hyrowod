@@ -47,7 +47,7 @@ public class PostService {
             return postRepository.findByCategoryAndActiveTrueOrderByCreatedAtDesc(category, pageable)
                 .map(PostDto::from);
         }
-        return postRepository.findByActiveTrueOrderByCreatedAtDesc(pageable).map(PostDto::from);
+        return postRepository.findByActiveTrueOrderByPinnedDescCreatedAtDesc(pageable).map(PostDto::from);
     }
 
     @Transactional
@@ -149,6 +149,17 @@ public class PostService {
     }
 
     @Transactional
+    public CommentDto updateMyComment(Long commentId, String content, String userEmail) {
+        Comment comment = commentRepository.findById(commentId)
+            .orElseThrow(() -> new BusinessException(ErrorCode.COMMENT_NOT_FOUND));
+        if (!comment.getUser().getEmail().equals(userEmail)) {
+            throw new BusinessException(ErrorCode.COMMENT_NOT_AUTHORIZED);
+        }
+        comment.setContent(content);
+        return CommentDto.from(comment);
+    }
+
+    @Transactional
     public void deleteMyComment(Long commentId, String userEmail) {
         Comment comment = commentRepository.findById(commentId)
             .orElseThrow(() -> new BusinessException(ErrorCode.COMMENT_NOT_FOUND));
@@ -166,9 +177,20 @@ public class PostService {
     }
 
     @Transactional
-    public PostDto likePost(Long id) {
+    public PostDto likePost(Long id, String userEmail) {
         Post post = findActivePost(id);
-        post.setLikeCount(post.getLikeCount() + 1);
+        if (userEmail == null) {
+            post.setLikeCount(post.getLikeCount() + 1);
+            return PostDto.from(post);
+        }
+        User user = userService.getUserByEmail(userEmail);
+        if (post.getLikedUserIds().contains(user.getId())) {
+            post.getLikedUserIds().remove(user.getId());
+            post.setLikeCount(Math.max(0, post.getLikeCount() - 1));
+        } else {
+            post.getLikedUserIds().add(user.getId());
+            post.setLikeCount(post.getLikeCount() + 1);
+        }
         return PostDto.from(post);
     }
 

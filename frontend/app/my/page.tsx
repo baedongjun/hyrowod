@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { userApi, communityApi, uploadApi } from "@/lib/api";
+import { clearAuth } from "@/lib/auth";
 import { Review, Box } from "@/types";
 import { isLoggedIn, getUser } from "@/lib/auth";
 import { Post } from "@/types";
@@ -95,6 +96,16 @@ export default function MyPage() {
       if (avatarInputRef.current) avatarInputRef.current.value = "";
     }
   };
+
+  const deleteAccountMutation = useMutation({
+    mutationFn: () => userApi.deleteMyAccount(),
+    onSuccess: () => {
+      clearAuth();
+      router.replace("/");
+      toast.success("회원 탈퇴가 완료되었습니다.");
+    },
+    onError: () => toast.error("탈퇴 처리 중 오류가 발생했습니다."),
+  });
 
   const updateMutation = useMutation({
     mutationFn: () => userApi.updateMe({ name, phone }),
@@ -206,6 +217,20 @@ export default function MyPage() {
                 </svg>
               </Link>
             )}
+            <button
+              className={s.withdrawBtn}
+              onClick={() => {
+                if (window.confirm("정말 탈퇴하시겠습니까?\n탈퇴 시 모든 데이터가 비활성화됩니다.")) {
+                  deleteAccountMutation.mutate();
+                }
+              }}
+              disabled={deleteAccountMutation.isPending}
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+              </svg>
+              회원 탈퇴
+            </button>
           </div>
         </div>
 

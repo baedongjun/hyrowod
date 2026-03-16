@@ -87,6 +87,15 @@ public class UserController {
             boxFavoriteService.getMyFavorites(userDetails.getUsername(), pageable)));
     }
 
+    @Operation(summary = "회원 탈퇴")
+    @DeleteMapping("/me")
+    public ResponseEntity<ApiResponse<Void>> deleteMyAccount(
+        @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        userService.deleteMyAccount(userDetails.getUsername());
+        return ResponseEntity.ok(ApiResponse.success(null));
+    }
+
     @Operation(summary = "내 댓글 목록")
     @GetMapping("/me/comments")
     public ResponseEntity<ApiResponse<Page<Map<String, Object>>>> getMyComments(

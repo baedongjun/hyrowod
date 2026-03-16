@@ -95,10 +95,26 @@ public class PostController {
         return ResponseEntity.ok(ApiResponse.success(postService.getComments(id)));
     }
 
-    @Operation(summary = "게시글 좋아요")
+    @Operation(summary = "게시글 좋아요 토글")
     @PostMapping("/posts/{id}/like")
-    public ResponseEntity<ApiResponse<PostDto>> likePost(@PathVariable Long id) {
-        return ResponseEntity.ok(ApiResponse.success(postService.likePost(id)));
+    public ResponseEntity<ApiResponse<PostDto>> likePost(
+        @PathVariable Long id,
+        @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        String email = userDetails != null ? userDetails.getUsername() : null;
+        return ResponseEntity.ok(ApiResponse.success(postService.likePost(id, email)));
+    }
+
+    @Operation(summary = "댓글 수정 (본인만)")
+    @PutMapping("/comments/{commentId}")
+    public ResponseEntity<ApiResponse<CommentDto>> updateMyComment(
+        @PathVariable Long commentId,
+        @RequestBody Map<String, String> body,
+        @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        return ResponseEntity.ok(ApiResponse.success(
+            postService.updateMyComment(commentId, body.get("content"), userDetails.getUsername())
+        ));
     }
 
     @Operation(summary = "댓글 삭제 (본인만)")

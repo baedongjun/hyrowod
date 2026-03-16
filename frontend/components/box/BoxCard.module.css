@@ -36,6 +36,26 @@
   gap: 6px;
 }
 
+.favoriteBtn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(4px);
+  border: none;
+  color: rgba(255,255,255,0.7);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: color 0.2s, background 0.2s;
+  z-index: 2;
+}
+.favoriteBtn:hover { color: #e8220a; background: rgba(0,0,0,0.8); }
+.favoriteBtnActive { color: #e8220a !important; }
+
 .ratingBadge {
   position: absolute;
   bottom: 12px;

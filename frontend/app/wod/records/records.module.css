@@ -180,6 +180,21 @@
   text-overflow: ellipsis;
 }
 
+.itemActions { display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; }
+
+.editBtn {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+.editBtn:hover { color: var(--text); }
+
 .deleteBtn {
   background: transparent;
   border: none;
@@ -194,6 +209,59 @@
 }
 .deleteBtn:hover { color: #e8220a; }
 .deleteBtn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Inline Edit Form */
+.editForm {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.editRxLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text);
+  cursor: pointer;
+}
+.editInput {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 8px 12px;
+  font-size: 13px;
+  font-family: var(--font-body);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.editInput:focus { border-color: var(--red); }
+.editInput::placeholder { color: var(--muted); }
+.editActions { display: flex; gap: 8px; }
+.editSaveBtn {
+  background: var(--red);
+  border: none;
+  color: var(--text);
+  padding: 7px 16px;
+  font-size: 13px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.editSaveBtn:hover { background: #b01a07; }
+.editSaveBtn:disabled { opacity: 0.6; cursor: not-allowed; }
+.editCancelBtn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 7px 16px;
+  font-size: 13px;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+.editCancelBtn:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
 
 .empty {
   display: flex;
@@ -296,6 +364,100 @@
   color: var(--muted);
   letter-spacing: 0.5px;
   min-width: 0;
+}
+
+/* View Toggle */
+.viewToggle { display: flex; gap: 1px; background: var(--border); border: 1px solid var(--border); }
+.viewBtn {
+  background: var(--bg-card);
+  border: none;
+  color: var(--muted);
+  padding: 8px 16px;
+  font-size: 12px;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: color 0.2s, background 0.2s;
+}
+.viewBtn:hover { color: var(--text); }
+.viewBtnActive { background: var(--red); color: var(--text) !important; }
+
+/* Calendar */
+.calendar {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+.calNav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.calNavBtn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+  width: 32px;
+  height: 32px;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s;
+}
+.calNavBtn:hover { border-color: var(--red); color: var(--red); }
+.calMonthLabel {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+.calGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  background: var(--border);
+}
+.calDayHeader {
+  background: var(--bg);
+  padding: 8px 0;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+.calCell {
+  background: var(--bg-card);
+  min-height: 72px;
+  padding: 8px;
+  position: relative;
+}
+.calCellHasRecord { background: rgba(232, 34, 10, 0.06); }
+.calCellToday { outline: 1px solid var(--red); }
+.calDate {
+  font-size: 13px;
+  color: var(--muted);
+  display: block;
+  margin-bottom: 4px;
+}
+.calCellHasRecord .calDate { color: var(--text); font-weight: 600; }
+.calRecordDot { display: flex; flex-direction: column; gap: 2px; }
+.calRx {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--red);
+  letter-spacing: 0.5px;
+}
+.calScore {
+  font-size: 11px;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 @media (max-width: 768px) {

@@ -37,3 +37,45 @@
 }
 .deleteBtn:hover { background: rgba(232, 34, 10, 0.25); }
 .deleteBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.actionBtns { display: flex; gap: 6px; justify-content: center; }
+
+.pinBtn {
+  background: rgba(234,179,8,0.12);
+  border: 1px solid rgba(234,179,8,0.3);
+  color: #eab308;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: background 0.2s;
+}
+.pinBtn:hover { background: rgba(234,179,8,0.25); }
+.pinBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.unpinBtn {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: background 0.2s;
+}
+.unpinBtn:hover { background: rgba(255,255,255,0.12); color: var(--text); }
+.unpinBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.pinnedRow { background: rgba(234,179,8,0.04) !important; }
+
+.pinnedBadge {
+  display: inline-block;
+  font-size: 10px;
+  color: #eab308;
+  margin-right: 6px;
+  font-weight: 700;
+}

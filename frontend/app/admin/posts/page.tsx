@@ -30,6 +30,15 @@ export default function AdminPostsPage() {
     onError: () => toast.error("삭제에 실패했습니다."),
   });
 
+  const pinMutation = useMutation({
+    mutationFn: (id: number) => adminApi.togglePinPost(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "posts"] });
+      toast.success("공지 상태가 변경되었습니다.");
+    },
+    onError: () => toast.error("공지 변경에 실패했습니다."),
+  });
+
   const handleDelete = (id: number, title: string) => {
     if (!window.confirm(`"${title}" 게시글을 삭제하시겠습니까?`)) return;
     deleteMutation.mutate(id);
@@ -61,12 +70,13 @@ export default function AdminPostsPage() {
                 </tr>
               ))
             ) : (
-              data?.content?.map((post: { id: number; category: string; title: string; userName: string; viewCount: number; likeCount: number; commentCount: number; createdAt: string }) => (
-                <tr key={post.id} className={s.tr}>
+              data?.content?.map((post: { id: number; category: string; title: string; userName: string; viewCount: number; likeCount: number; commentCount: number; createdAt: string; pinned: boolean }) => (
+                <tr key={post.id} className={`${s.tr} ${post.pinned ? ps.pinnedRow : ""}`}>
                   <td className={s.td}>
                     <span className={ps.catBadge}>{CATEGORY_LABEL[post.category] || post.category}</span>
                   </td>
                   <td className={`${s.td} ${s.tdName}`}>
+                    {post.pinned && <span className={ps.pinnedBadge}>📌 공지</span>}
                     <span className={ps.postTitle}>{post.title}</span>
                   </td>
                   <td className={s.td}>{post.userName}</td>
@@ -79,13 +89,23 @@ export default function AdminPostsPage() {
                     {dayjs(post.createdAt).format("MM.DD HH:mm")}
                   </td>
                   <td className={`${s.td} ${s.tdCenter}`}>
-                    <button
-                      onClick={() => handleDelete(post.id, post.title)}
-                      className={ps.deleteBtn}
-                      disabled={deleteMutation.isPending}
-                    >
-                      삭제
-                    </button>
+                    <div className={ps.actionBtns}>
+                      <button
+                        onClick={() => pinMutation.mutate(post.id)}
+                        className={post.pinned ? ps.unpinBtn : ps.pinBtn}
+                        disabled={pinMutation.isPending}
+                        title={post.pinned ? "공지 해제" : "공지 고정"}
+                      >
+                        {post.pinned ? "해제" : "고정"}
+                      </button>
+                      <button
+                        onClick={() => handleDelete(post.id, post.title)}
+                        className={ps.deleteBtn}
+                        disabled={deleteMutation.isPending}
+                      >
+                        삭제
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))

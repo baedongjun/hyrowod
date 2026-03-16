@@ -1,9 +1,28 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import { Box } from "@/types";
+import { boxApi } from "@/lib/api";
+import { isLoggedIn } from "@/lib/auth";
 import s from "./BoxCard.module.css";
 
 export default function BoxCard({ box }: { box: Box }) {
   const img = box.imageUrls?.[0] || "";
+  const [favorited, setFavorited] = useState(false);
+  const [toggling, setToggling] = useState(false);
+
+  const handleFavorite = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!isLoggedIn() || toggling) return;
+    setToggling(true);
+    try {
+      await boxApi.toggleFavorite(box.id);
+      setFavorited((f) => !f);
+    } finally {
+      setToggling(false);
+    }
+  };
 
   return (
     <Link href={`/boxes/${box.id}`} className={s.card}>
@@ -23,6 +42,14 @@ export default function BoxCard({ box }: { box: Box }) {
           {box.premium  && <span className="badge badge-premium">PREMIUM</span>}
           {box.verified && <span className="badge badge-verified">인증</span>}
         </div>
+
+        {isLoggedIn() && (
+          <button className={`${s.favoriteBtn} ${favorited ? s.favoriteBtnActive : ""}`} onClick={handleFavorite} title="즐겨찾기">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill={favorited ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+          </button>
+        )}
 
         <div className={s.ratingBadge}>
           <span className={s.star}>★</span>

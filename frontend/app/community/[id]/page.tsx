@@ -32,6 +32,8 @@ function CommentItem({ comment, postId, currentUser, onReplySuccess, onDeleteSuc
 }) {
   const [showReply, setShowReply] = useState(false);
   const [replyText, setReplyText] = useState("");
+  const [editing, setEditing] = useState(false);
+  const [editText, setEditText] = useState(comment.content);
 
   const replyMutation = useMutation({
     mutationFn: () => communityApi.createComment(postId, replyText, comment.id),
@@ -41,6 +43,16 @@ function CommentItem({ comment, postId, currentUser, onReplySuccess, onDeleteSuc
       onReplySuccess();
     },
     onError: () => toast.error("댓글 작성에 실패했습니다."),
+  });
+
+  const editMutation = useMutation({
+    mutationFn: () => communityApi.updateComment(comment.id, editText),
+    onSuccess: () => {
+      toast.success("댓글이 수정되었습니다.");
+      setEditing(false);
+      onReplySuccess();
+    },
+    onError: () => toast.error("수정에 실패했습니다."),
   });
 
   const deleteMutation = useMutation({
@@ -54,14 +66,18 @@ function CommentItem({ comment, postId, currentUser, onReplySuccess, onDeleteSuc
     onError: () => toast.error("삭제에 실패했습니다."),
   });
 
-  const canDelete = currentUser && (currentUser.name === comment.userName || currentUser.role === "ROLE_ADMIN");
+  const isMyComment = currentUser && currentUser.name === comment.userName;
+  const canDelete = currentUser && (isMyComment || currentUser.role === "ROLE_ADMIN");
 
   return (
     <div className={s.comment}>
       <div className={s.commentHeader}>
         <span className={s.commentUser}>{comment.userName}</span>
         <span className={s.commentDate}>{dayjs(comment.createdAt).fromNow()}</span>
-        {canDelete && (
+        {isMyComment && !editing && (
+          <button className={s.commentEditBtn} onClick={() => { setEditing(true); setEditText(comment.content); }}>수정</button>
+        )}
+        {canDelete && !editing && (
           <button
             className={s.commentDeleteBtn}
             onClick={() => { if (confirm("댓글을 삭제하시겠습니까?")) deleteMutation.mutate(); }}
@@ -70,7 +86,22 @@ function CommentItem({ comment, postId, currentUser, onReplySuccess, onDeleteSuc
           </button>
         )}
       </div>
-      <p className={s.commentContent}>{comment.content}</p>
+      {editing ? (
+        <div className={s.editCommentForm}>
+          <textarea
+            className={s.editCommentInput}
+            value={editText}
+            onChange={(e) => setEditText(e.target.value)}
+            rows={2}
+          />
+          <div className={s.editCommentActions}>
+            <button className={s.editCommentSave} disabled={!editText.trim() || editMutation.isPending} onClick={() => editMutation.mutate()}>저장</button>
+            <button className={s.editCommentCancel} onClick={() => setEditing(false)}>취소</button>
+          </div>
+        </div>
+      ) : (
+        <p className={s.commentContent}>{comment.content}</p>
+      )}
       {isLoggedIn() && (
         <button className={s.commentReplyBtn} onClick={() => setShowReply(!showReply)}>
           답글

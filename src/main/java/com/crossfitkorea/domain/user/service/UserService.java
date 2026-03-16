@@ -92,6 +92,16 @@ public class UserService {
     }
 
     @Transactional
+    public void deleteMyAccount(String email) {
+        User user = getUserByEmail(email);
+        user.setActive(false);
+        // 탈퇴 처리: 이메일을 고유값으로 유지하면서 개인정보 최소화
+        user.setName("탈퇴한 회원");
+        user.setPhone(null);
+        user.setProfileImageUrl(null);
+    }
+
+    @Transactional
     public String resetPassword(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));

@@ -20,6 +20,8 @@ export default function WodRecordsPage() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const [page, setPage] = useState(0);
+  const [viewMode, setViewMode] = useState<"list" | "calendar">("list");
+  const [calMonth, setCalMonth] = useState(dayjs().startOf("month"));
 
   useEffect(() => {
     if (!isLoggedIn()) router.replace("/login");
@@ -61,6 +63,9 @@ export default function WodRecordsPage() {
     cur = cur.add(1, "week");
   }
 
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editForm, setEditForm] = useState({ score: "", notes: "", rx: false });
+
   const deleteMutation = useMutation({
     mutationFn: (id: number) => wodRecordApi.deleteRecord(id),
     onSuccess: () => {
@@ -68,6 +73,18 @@ export default function WodRecordsPage() {
       queryClient.invalidateQueries({ queryKey: ["wod-records"] });
     },
     onError: () => toast.error("삭제에 실패했습니다."),
+  });
+
+  const editMutation = useMutation({
+    mutationFn: ({ wodDate, score, notes, rx }: { wodDate: string; score: string; notes: string; rx: boolean }) =>
+      wodRecordApi.saveRecord({ wodDate, score: score || undefined, notes: notes || undefined, rx }),
+    onSuccess: () => {
+      toast.success("기록이 수정되었습니다.");
+      queryClient.invalidateQueries({ queryKey: ["wod-records"] });
+      queryClient.invalidateQueries({ queryKey: ["wod-records-recent"] });
+      setEditingId(null);
+    },
+    onError: () => toast.error("수정에 실패했습니다."),
   });
 
   const records: WodRecord[] = data?.content || [];
@@ -79,6 +96,19 @@ export default function WodRecordsPage() {
   const thisMonthRecords = records.filter((r) => r.wodDate?.startsWith(thisMonth));
   const rxCount = records.filter((r) => r.rx).length;
   const rxRatio = records.length > 0 ? Math.round((rxCount / records.length) * 100) : 0;
+
+  // 캘린더: 이번 달 기록 맵
+  const calRecordMap: Record<string, WodRecord> = {};
+  (recentRecords || []).forEach((r) => { calRecordMap[r.wodDate] = r; });
+  const calDays = (() => {
+    const start = calMonth.startOf("month");
+    const end = calMonth.endOf("month");
+    const startDow = start.day(); // 0=일
+    const days: (dayjs.Dayjs | null)[] = Array(startDow).fill(null);
+    for (let d = 0; d < end.date(); d++) days.push(start.add(d, "day"));
+    while (days.length % 7 !== 0) days.push(null);
+    return days;
+  })();
 
   return (
     <div className={s.page}>
@@ -94,9 +124,15 @@ export default function WodRecordsPage() {
             <h1 className={s.title}>내 WOD 기록</h1>
             <p className={s.sub}>총 {totalElements}개의 기록</p>
           </div>
-          <Link href="/wod" className="btn-primary" style={{ padding: "12px 24px", fontSize: 14 }}>
-            + 오늘 기록 입력
-          </Link>
+          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+            <div className={s.viewToggle}>
+              <button className={`${s.viewBtn} ${viewMode === "list" ? s.viewBtnActive : ""}`} onClick={() => setViewMode("list")}>목록</button>
+              <button className={`${s.viewBtn} ${viewMode === "calendar" ? s.viewBtnActive : ""}`} onClick={() => setViewMode("calendar")}>캘린더</button>
+            </div>
+            <Link href="/wod" className="btn-primary" style={{ padding: "12px 24px", fontSize: 14 }}>
+              + 오늘 기록 입력
+            </Link>
+          </div>
         </div>
 
         {/* 출석 히트맵 */}
@@ -154,11 +190,44 @@ export default function WodRecordsPage() {
           </div>
         )}
 
-        {isLoading ? (
+        {/* 캘린더 뷰 */}
+        {viewMode === "calendar" && (
+          <div className={s.calendar}>
+            <div className={s.calNav}>
+              <button className={s.calNavBtn} onClick={() => setCalMonth(m => m.subtract(1, "month"))}>‹</button>
+              <span className={s.calMonthLabel}>{calMonth.format("YYYY년 M월")}</span>
+              <button className={s.calNavBtn} onClick={() => setCalMonth(m => m.add(1, "month"))}>›</button>
+            </div>
+            <div className={s.calGrid}>
+              {["일","월","화","수","목","금","토"].map(d => (
+                <div key={d} className={s.calDayHeader}>{d}</div>
+              ))}
+              {calDays.map((day, i) => {
+                if (!day) return <div key={i} className={s.calCell} />;
+                const dateStr = day.format("YYYY-MM-DD");
+                const rec = calRecordMap[dateStr];
+                const isToday = dateStr === dayjs().format("YYYY-MM-DD");
+                return (
+                  <div key={i} className={`${s.calCell} ${rec ? s.calCellHasRecord : ""} ${isToday ? s.calCellToday : ""}`}>
+                    <span className={s.calDate}>{day.date()}</span>
+                    {rec && (
+                      <div className={s.calRecordDot}>
+                        {rec.rx && <span className={s.calRx}>RX</span>}
+                        {rec.score && <span className={s.calScore}>{rec.score}</span>}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {viewMode === "list" && isLoading ? (
           <div className={s.list}>
             {[...Array(8)].map((_, i) => <div key={i} className={s.skeleton} />)}
           </div>
-        ) : records.length === 0 ? (
+        ) : viewMode === "list" && records.length === 0 ? (
           <div className={s.empty}>
             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ color: "var(--muted)" }}>
               <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
@@ -168,7 +237,7 @@ export default function WodRecordsPage() {
               첫 기록 남기기
             </Link>
           </div>
-        ) : (
+        ) : viewMode === "list" ? (
           <>
             <div className={s.list}>
               {records.map((rec) => (
@@ -178,26 +247,67 @@ export default function WodRecordsPage() {
                     <p className={s.itemDay}>{dayjs(rec.wodDate).format("DD")}</p>
                     <p className={s.itemDow}>{dayjs(rec.wodDate).format("ddd")}</p>
                   </div>
-                  <div className={s.itemBody}>
-                    {wodByDate[rec.wodDate] && (
-                      <p className={s.itemWodTitle}>{wodByDate[rec.wodDate].title}</p>
-                    )}
-                    <div className={s.itemTop}>
-                      {rec.rx && <span className={s.rxBadge}>RX</span>}
-                      {rec.score && <span className={s.scoreText}>{rec.score}</span>}
+                  {editingId === rec.id ? (
+                    <div className={s.editForm}>
+                      <label className={s.editRxLabel}>
+                        <input type="checkbox" checked={editForm.rx} onChange={(e) => setEditForm(f => ({ ...f, rx: e.target.checked }))} />
+                        RX
+                      </label>
+                      <input
+                        className={s.editInput}
+                        placeholder="점수 (ex: 12:34 / 150 reps)"
+                        value={editForm.score}
+                        onChange={(e) => setEditForm(f => ({ ...f, score: e.target.value }))}
+                      />
+                      <input
+                        className={s.editInput}
+                        placeholder="메모"
+                        value={editForm.notes}
+                        onChange={(e) => setEditForm(f => ({ ...f, notes: e.target.value }))}
+                      />
+                      <div className={s.editActions}>
+                        <button
+                          className={s.editSaveBtn}
+                          disabled={editMutation.isPending}
+                          onClick={() => editMutation.mutate({ wodDate: rec.wodDate, ...editForm })}
+                        >저장</button>
+                        <button className={s.editCancelBtn} onClick={() => setEditingId(null)}>취소</button>
+                      </div>
                     </div>
-                    {rec.notes && <p className={s.itemNotes}>{rec.notes}</p>}
+                  ) : (
+                    <div className={s.itemBody}>
+                      {wodByDate[rec.wodDate] && (
+                        <p className={s.itemWodTitle}>{wodByDate[rec.wodDate].title}</p>
+                      )}
+                      <div className={s.itemTop}>
+                        {rec.rx && <span className={s.rxBadge}>RX</span>}
+                        {rec.score && <span className={s.scoreText}>{rec.score}</span>}
+                      </div>
+                      {rec.notes && <p className={s.itemNotes}>{rec.notes}</p>}
+                    </div>
+                  )}
+                  <div className={s.itemActions}>
+                    <button
+                      className={s.editBtn}
+                      onClick={() => { setEditingId(rec.id); setEditForm({ score: rec.score || "", notes: rec.notes || "", rx: rec.rx || false }); }}
+                      title="수정"
+                    >
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                      </svg>
+                    </button>
+                    <button
+                      className={s.deleteBtn}
+                      onClick={() => { if (window.confirm("이 기록을 삭제하시겠습니까?")) deleteMutation.mutate(rec.id); }}
+                      disabled={deleteMutation.isPending}
+                    >
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/>
+                        <path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
+                      </svg>
+                    </button>
                   </div>
-                  <button
-                    className={s.deleteBtn}
-                    onClick={() => { if (window.confirm("이 기록을 삭제하시겠습니까?")) deleteMutation.mutate(rec.id); }}
-                    disabled={deleteMutation.isPending}
-                  >
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/>
-                      <path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
-                    </svg>
-                  </button>
                 </div>
               ))}
             </div>
@@ -210,7 +320,7 @@ export default function WodRecordsPage() {
               </div>
             )}
           </>
-        )}
+        ) : null}
       </div>
     </div>
   );

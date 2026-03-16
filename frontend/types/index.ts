@@ -119,6 +119,7 @@ export interface Post {
   userName: string;
   userProfileImageUrl: string | null;
   createdAt: string;
+  pinned?: boolean;
 }
 
 export interface Comment {

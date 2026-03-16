@@ -156,13 +156,16 @@ export default function CommunityPage() {
         ) : (
           <div className={s.postList}>
             {data?.content?.map((post: Post) => (
-              <Link key={post.id} href={`/community/${post.id}`} className={s.postItem}>
+              <Link key={post.id} href={`/community/${post.id}`} className={`${s.postItem} ${post.pinned ? s.postItemPinned : ""}`}>
                 <span className={`badge ${CATEGORY_BADGE[post.category]}`}>
                   {CATEGORY_LABELS[post.category]}
                 </span>
 
                 <div className={s.postMain}>
-                  <p className={s.postTitle}>{post.title}</p>
+                  <p className={s.postTitle}>
+                    {post.pinned && <span className={s.pinnedMark}>📌 </span>}
+                    {post.title}
+                  </p>
                   <p className={s.postMeta}>
                     {post.userName} · {dayjs(post.createdAt).fromNow()}
                   </p>

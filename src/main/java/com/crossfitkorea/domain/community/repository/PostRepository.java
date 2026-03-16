@@ -29,4 +29,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     );
 
     List<Post> findTop5ByActiveTrueOrderByLikeCountDesc();
+
+    Page<Post> findByActiveTrueOrderByPinnedDescCreatedAtDesc(Pageable pageable);
 }

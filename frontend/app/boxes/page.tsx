@@ -16,26 +16,47 @@ function BoxesContent() {
   const router = useRouter();
 
   const [viewMode, setViewMode] = useState<"list" | "map">("list");
-  const [keyword, setKeyword] = useState("");
-  const [debouncedKeyword, setDebouncedKeyword] = useState("");
+  const [keyword, setKeyword] = useState(searchParams.get("q") || "");
+  const [debouncedKeyword, setDebouncedKeyword] = useState(searchParams.get("q") || "");
   const [selectedCity, setSelectedCity] = useState(searchParams.get("city") || "전체");
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(Number(searchParams.get("page") || "0"));
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [showFilters, setShowFilters] = useState(false);
+  const [verifiedOnly, setVerifiedOnly] = useState(searchParams.get("verified") === "true");
+  const [premiumOnly, setPremiumOnly] = useState(searchParams.get("premium") === "true");
+  const [maxFee, setMaxFee] = useState(searchParams.get("maxFee") || "");
+  const [minRating, setMinRating] = useState(searchParams.get("minRating") || "");
+  const [sortBy, setSortBy] = useState(searchParams.get("sort") || "createdAt,desc");
+
+  // URL 동기화
+  const syncUrl = (overrides: Record<string, string | undefined> = {}) => {
+    const params = new URLSearchParams();
+    const vals: Record<string, string | undefined> = {
+      city: selectedCity !== "전체" ? selectedCity : undefined,
+      q: debouncedKeyword || undefined,
+      verified: verifiedOnly ? "true" : undefined,
+      premium: premiumOnly ? "true" : undefined,
+      maxFee: maxFee || undefined,
+      minRating: minRating || undefined,
+      sort: sortBy !== "createdAt,desc" ? sortBy : undefined,
+      page: page > 0 ? String(page) : undefined,
+      ...overrides,
+    };
+    Object.entries(vals).forEach(([k, v]) => { if (v) params.set(k, v); });
+    const qs = params.toString();
+    router.replace(`/boxes${qs ? `?${qs}` : ""}`, { scroll: false });
+  };
 
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
       setDebouncedKeyword(keyword);
       setPage(0);
+      syncUrl({ q: keyword || undefined, page: undefined });
     }, 400);
     return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [keyword]);
-  const [showFilters, setShowFilters] = useState(false);
-  const [verifiedOnly, setVerifiedOnly] = useState(false);
-  const [premiumOnly, setPremiumOnly] = useState(false);
-  const [maxFee, setMaxFee] = useState("");
-  const [minRating, setMinRating] = useState("");
-  const [sortBy, setSortBy] = useState("createdAt,desc");
 
   const currentUser = typeof window !== "undefined" ? (() => { try { const u = localStorage.getItem("user"); return u ? JSON.parse(u) : null; } catch { return null; } })() : null;
   const isOwner = currentUser?.role === "ROLE_BOX_OWNER" || currentUser?.role === "ROLE_ADMIN";
@@ -63,7 +84,7 @@ function BoxesContent() {
   const handleCityChange = (city: string) => {
     setSelectedCity(city);
     setPage(0);
-    router.push(`/boxes${city !== "전체" ? `?city=${city}` : ""}`, { scroll: false });
+    syncUrl({ city: city !== "전체" ? city : undefined, page: undefined });
   };
 
   return (

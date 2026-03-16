@@ -238,6 +238,9 @@ export const communityApi = {
   createComment: (postId: number, content: string, parentId?: number) =>
     api.post(`/api/v1/community/posts/${postId}/comments`, { content, parentId }),
 
+  updateComment: (commentId: number, content: string) =>
+    api.put(`/api/v1/community/comments/${commentId}`, { content }),
+
   deleteComment: (commentId: number) =>
     api.delete(`/api/v1/community/comments/${commentId}`),
 };
@@ -279,6 +282,9 @@ export const userApi = {
 
   getMyComments: (page = 0) =>
     api.get("/api/v1/users/me/comments", { params: { page } }),
+
+  deleteMyAccount: () =>
+    api.delete("/api/v1/users/me"),
 };
 
 // Admin API
@@ -318,6 +324,9 @@ export const adminApi = {
 
   deletePost: (id: number) =>
     api.delete(`/api/v1/admin/posts/${id}`),
+
+  togglePinPost: (id: number) =>
+    api.patch(`/api/v1/admin/posts/${id}/pin`),
 
   deleteComment: (id: number) =>
     api.delete(`/api/v1/admin/comments/${id}`),
