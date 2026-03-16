@@ -182,6 +182,16 @@
   margin-top: 2px;
 }
 
+/* Records link */
+.recordsLink {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--red);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.recordsLink:hover { color: var(--text); }
+
 /* Share button */
 .shareBtn {
   display: flex;

@@ -102,6 +102,15 @@ public class AdminBoxController {
         return ResponseEntity.ok(ApiResponse.success(wodService.createWod(null, request, userDetails.getUsername())));
     }
 
+    @Operation(summary = "[어드민] WOD 수정")
+    @PutMapping("/wod/{id}")
+    public ResponseEntity<ApiResponse<WodDto>> updateWod(
+        @PathVariable Long id,
+        @Valid @RequestBody WodCreateRequest request
+    ) {
+        return ResponseEntity.ok(ApiResponse.success(wodService.updateWod(id, request)));
+    }
+
     @Operation(summary = "[어드민] WOD 삭제")
     @DeleteMapping("/wod/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteWod(@PathVariable Long id) {

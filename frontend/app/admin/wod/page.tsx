@@ -29,6 +29,8 @@ export default function AdminWodPage() {
     scoreType: "",
     wodDate: dayjs().format("YYYY-MM-DD"),
   });
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editForm, setEditForm] = useState({ title: "", type: "AMRAP", content: "", scoreType: "", wodDate: "" });
 
   const { data } = useQuery({
     queryKey: ["wod", "history"],
@@ -53,6 +55,23 @@ export default function AdminWodPage() {
     },
     onError: () => toast.error("삭제에 실패했습니다."),
   });
+
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: object }) => adminApi.updateWod(id, data),
+    onSuccess: () => {
+      toast.success("WOD가 수정되었습니다.");
+      setEditingId(null);
+      queryClient.invalidateQueries({ queryKey: ["wod"] });
+    },
+    onError: () => toast.error("수정에 실패했습니다."),
+  });
+
+  const startEdit = (wod: Wod) => {
+    setEditingId(wod.id);
+    setEditForm({ title: wod.title, type: wod.type, content: wod.content, scoreType: wod.scoreType || "", wodDate: wod.wodDate });
+  };
+
+  const setE = (key: string, val: string) => setEditForm((f) => ({ ...f, [key]: val }));
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -113,28 +132,58 @@ export default function AdminWodPage() {
             {data?.content?.length > 0 ? (
               data.content.map((wod: Wod) => (
                 <div key={wod.id} className={s.item}>
-                  <div className={s.itemDate}>
-                    <p className={s.itemDateNum}>{dayjs(wod.wodDate).format("DD")}</p>
-                    <p className={s.itemDateMon}>{dayjs(wod.wodDate).format("MMM")}</p>
-                  </div>
-                  <div className={s.itemBody}>
-                    <span className={`badge ${WOD_TYPE_BADGE[wod.type] || "badge-default"}`}>
-                      {WOD_LABELS[wod.type] || wod.type}
-                    </span>
-                    <p className={s.itemTitle}>{wod.title}</p>
-                    <p className={s.itemSnippet}>{wod.content}</p>
-                  </div>
-                  <button
-                    className={s.deleteBtn}
-                    onClick={() => {
-                      if (window.confirm(`"${wod.title}" WOD를 삭제하시겠습니까?`)) {
-                        deleteMutation.mutate(wod.id);
-                      }
-                    }}
-                    disabled={deleteMutation.isPending}
-                  >
-                    삭제
-                  </button>
+                  {editingId === wod.id ? (
+                    <div className={s.editForm}>
+                      <div className={s.editRow}>
+                        <input type="date" className="input-field" value={editForm.wodDate} onChange={(e) => setE("wodDate", e.target.value)} style={{ flex: 1 }} />
+                        <select className={s.select} value={editForm.type} onChange={(e) => setE("type", e.target.value)} style={{ flex: 1 }}>
+                          {WOD_TYPES.map((t) => <option key={t} value={t}>{WOD_LABELS[t]}</option>)}
+                        </select>
+                      </div>
+                      <input type="text" className="input-field" placeholder="제목" value={editForm.title} onChange={(e) => setE("title", e.target.value)} />
+                      <textarea className={s.textarea} value={editForm.content} onChange={(e) => setE("content", e.target.value)} style={{ minHeight: 80 }} />
+                      <input type="text" className="input-field" placeholder="점수 유형 (선택)" value={editForm.scoreType} onChange={(e) => setE("scoreType", e.target.value)} />
+                      <div className={s.editActions}>
+                        <button className={s.deleteBtn} onClick={() => setEditingId(null)}>취소</button>
+                        <button
+                          className="btn-primary"
+                          style={{ padding: "8px 20px", fontSize: 13 }}
+                          disabled={updateMutation.isPending}
+                          onClick={() => updateMutation.mutate({ id: wod.id, data: editForm })}
+                        >
+                          {updateMutation.isPending ? "저장 중..." : "저장"}
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <div className={s.itemDate}>
+                        <p className={s.itemDateNum}>{dayjs(wod.wodDate).format("DD")}</p>
+                        <p className={s.itemDateMon}>{dayjs(wod.wodDate).format("MMM")}</p>
+                      </div>
+                      <div className={s.itemBody}>
+                        <span className={`badge ${WOD_TYPE_BADGE[wod.type] || "badge-default"}`}>
+                          {WOD_LABELS[wod.type] || wod.type}
+                        </span>
+                        <p className={s.itemTitle}>{wod.title}</p>
+                        <p className={s.itemSnippet}>{wod.content}</p>
+                      </div>
+                      <div className={s.itemActions}>
+                        <button className={s.editBtn} onClick={() => startEdit(wod)}>수정</button>
+                        <button
+                          className={s.deleteBtn}
+                          onClick={() => {
+                            if (window.confirm(`"${wod.title}" WOD를 삭제하시겠습니까?`)) {
+                              deleteMutation.mutate(wod.id);
+                            }
+                          }}
+                          disabled={deleteMutation.isPending}
+                        >
+                          삭제
+                        </button>
+                      </div>
+                    </>
+                  )}
                 </div>
               ))
             ) : (

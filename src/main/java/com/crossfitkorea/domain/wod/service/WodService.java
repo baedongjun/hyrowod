@@ -45,6 +45,19 @@ public class WodService {
     }
 
     @Transactional
+    public WodDto updateWod(Long id, WodCreateRequest request) {
+        Wod wod = wodRepository.findById(id)
+            .orElseThrow(() -> new BusinessException(ErrorCode.WOD_NOT_FOUND));
+        wod.setWodDate(request.getWodDate());
+        wod.setTitle(request.getTitle());
+        wod.setType(request.getType());
+        wod.setContent(request.getContent());
+        wod.setScoreType(request.getScoreType());
+        if (request.getImageUrl() != null) wod.setImageUrl(request.getImageUrl());
+        return WodDto.from(wodRepository.save(wod));
+    }
+
+    @Transactional
     public void deleteWod(Long id) {
         Wod wod = wodRepository.findById(id)
             .orElseThrow(() -> new com.crossfitkorea.common.exception.BusinessException(

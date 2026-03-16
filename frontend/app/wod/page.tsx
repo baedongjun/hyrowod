@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import Link from "next/link";
 import { wodApi, wodRecordApi } from "@/lib/api";
 import { Wod, WodRecord } from "@/types";
 import { isLoggedIn } from "@/lib/auth";
@@ -194,15 +195,20 @@ export default function WodPage() {
           <div className={s.myRecord}>
             <div className={s.myRecordHeader}>
               <p className={s.myRecordTitle}>내 오늘 기록</p>
-              {!todayRecord && !showRecordForm && (
-                <button
-                  className="btn-primary"
-                  style={{ padding: "8px 18px", fontSize: 13 }}
-                  onClick={() => setShowRecordForm(true)}
-                >
-                  기록 입력
-                </button>
-              )}
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <Link href="/wod/records" className={s.recordsLink}>
+                  전체 기록 →
+                </Link>
+                {!todayRecord && !showRecordForm && (
+                  <button
+                    className="btn-primary"
+                    style={{ padding: "8px 18px", fontSize: 13 }}
+                    onClick={() => setShowRecordForm(true)}
+                  >
+                    기록 입력
+                  </button>
+                )}
+              </div>
             </div>
 
             {todayRecord && !showRecordForm ? (

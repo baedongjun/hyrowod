@@ -35,12 +35,13 @@ function BoxesContent() {
   const [premiumOnly, setPremiumOnly] = useState(false);
   const [maxFee, setMaxFee] = useState("");
   const [minRating, setMinRating] = useState("");
+  const [sortBy, setSortBy] = useState("createdAt,desc");
 
   const currentUser = typeof window !== "undefined" ? (() => { try { const u = localStorage.getItem("user"); return u ? JSON.parse(u) : null; } catch { return null; } })() : null;
   const isOwner = currentUser?.role === "ROLE_BOX_OWNER" || currentUser?.role === "ROLE_ADMIN";
 
   const { data, isLoading } = useQuery({
-    queryKey: ["boxes", selectedCity, debouncedKeyword, page, verifiedOnly, premiumOnly, maxFee, minRating],
+    queryKey: ["boxes", selectedCity, debouncedKeyword, page, verifiedOnly, premiumOnly, maxFee, minRating, sortBy],
     queryFn: async () => {
       const res = await boxApi.search({
         city: selectedCity === "전체" ? undefined : selectedCity,
@@ -51,6 +52,7 @@ function BoxesContent() {
         premium: premiumOnly ? true : undefined,
         maxFee: maxFee ? parseInt(maxFee) : undefined,
         minRating: minRating ? parseFloat(minRating) : undefined,
+        sort: sortBy,
       });
       return res.data.data as Page<Box>;
     },
@@ -200,6 +202,17 @@ function BoxesContent() {
               <p className={s.resultCount}>
                 총 <span>{data?.totalElements || 0}</span>개 박스
               </p>
+              <select
+                className={s.sortSelect}
+                value={sortBy}
+                onChange={(e) => { setSortBy(e.target.value); setPage(0); }}
+              >
+                <option value="createdAt,desc">최신순</option>
+                <option value="rating,desc">별점 높은순</option>
+                <option value="reviewCount,desc">후기 많은순</option>
+                <option value="monthlyFee,asc">회비 낮은순</option>
+                <option value="monthlyFee,desc">회비 높은순</option>
+              </select>
             </div>
 
             {isLoading ? (

@@ -127,7 +127,7 @@ export const uploadApi = {
 
 // Box API
 export const boxApi = {
-  search: (params: { city?: string; district?: string; keyword?: string; page?: number; size?: number; verified?: boolean; premium?: boolean; maxFee?: number; minRating?: number }) =>
+  search: (params: { city?: string; district?: string; keyword?: string; page?: number; size?: number; verified?: boolean; premium?: boolean; maxFee?: number; minRating?: number; sort?: string }) =>
     api.get("/api/v1/boxes", { params }),
 
   getOne: (id: number) =>
@@ -171,6 +171,9 @@ export const boxApi = {
 
   deleteSchedule: (scheduleId: number) =>
     api.delete(`/api/v1/schedules/${scheduleId}`),
+
+  deleteReview: (reviewId: number) =>
+    api.delete(`/api/v1/reviews/${reviewId}`),
 
   toggleFavorite: (boxId: number) =>
     api.post(`/api/v1/boxes/${boxId}/favorite`),
@@ -309,6 +312,9 @@ export const adminApi = {
 
   deleteComment: (id: number) =>
     api.delete(`/api/v1/admin/comments/${id}`),
+
+  updateWod: (id: number, data: object) =>
+    api.put(`/api/v1/admin/wod/${id}`, data),
 
   deleteWod: (id: number) =>
     api.delete(`/api/v1/admin/wod/${id}`),

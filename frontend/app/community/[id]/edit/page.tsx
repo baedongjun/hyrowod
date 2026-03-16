@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { communityApi } from "@/lib/api";
+import { communityApi, uploadApi } from "@/lib/api";
 import { PostCategory } from "@/types";
 import { isLoggedIn } from "@/lib/auth";
 import { toast } from "react-toastify";
@@ -21,10 +21,13 @@ export default function PostEditPage() {
   const router = useRouter();
   const { id } = useParams<{ id: string }>();
   const postId = Number(id);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [category, setCategory] = useState<PostCategory>("FREE");
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [uploading, setUploading] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -42,12 +45,25 @@ export default function PostEditPage() {
       setTitle(post.title || "");
       setContent(post.content || "");
       setCategory(post.category || "FREE");
+      setImageUrls(post.imageUrls || []);
       setLoaded(true);
     }
   }, [post, loaded]);
 
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+    if (imageUrls.length + files.length > 5) { toast.error("이미지는 최대 5개까지 첨부할 수 있습니다."); return; }
+    setUploading(true);
+    try {
+      const res = await uploadApi.uploadImages(files, "community");
+      setImageUrls((prev) => [...prev, ...(res.data.data as string[])]);
+    } catch { toast.error("이미지 업로드에 실패했습니다."); }
+    finally { setUploading(false); if (fileInputRef.current) fileInputRef.current.value = ""; }
+  };
+
   const mutation = useMutation({
-    mutationFn: () => communityApi.updatePost(postId, { title, content, category }),
+    mutationFn: () => communityApi.updatePost(postId, { title, content, category, imageUrls }),
     onSuccess: () => {
       toast.success("게시글이 수정되었습니다.");
       router.push(`/community/${postId}`);
@@ -107,11 +123,32 @@ export default function PostEditPage() {
               />
             </div>
 
+            <div className={s.field}>
+              <label className={s.label}>이미지 첨부 (최대 5장)</label>
+              <div className={s.imageSection}>
+                <div className={s.imageList}>
+                  {imageUrls.map((url, i) => (
+                    <div key={i} className={s.imageItem}>
+                      <img src={url} alt="" />
+                      <button type="button" className={s.removeImgBtn} onClick={() => setImageUrls((p) => p.filter((_, idx) => idx !== i))}>✕</button>
+                    </div>
+                  ))}
+                  {imageUrls.length < 5 && (
+                    <button type="button" className={s.addImgBtn} onClick={() => fileInputRef.current?.click()} disabled={uploading}>
+                      {uploading ? "…" : "+"}
+                    </button>
+                  )}
+                </div>
+                <p className={s.imageHint}>JPG, PNG, WEBP · 장당 최대 10MB</p>
+                <input ref={fileInputRef} type="file" accept="image/*" multiple style={{ display: "none" }} onChange={handleImageUpload} />
+              </div>
+            </div>
+
             <div className={s.actions}>
               <Link href={`/community/${postId}`} className="btn-secondary" style={{ padding: "12px 24px" }}>
                 취소
               </Link>
-              <button type="submit" className="btn-primary" disabled={mutation.isPending} style={{ padding: "12px 32px" }}>
+              <button type="submit" className="btn-primary" disabled={mutation.isPending || uploading} style={{ padding: "12px 32px" }}>
                 {mutation.isPending ? "저장 중..." : "수정 완료"}
               </button>
             </div>

@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { userApi, communityApi } from "@/lib/api";
+import { userApi, communityApi, uploadApi } from "@/lib/api";
 import { Review, Box } from "@/types";
 import { isLoggedIn, getUser } from "@/lib/auth";
 import { Post } from "@/types";
@@ -32,6 +32,8 @@ export default function MyPage() {
 
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const avatarInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!isLoggedIn()) {
@@ -70,6 +72,24 @@ export default function MyPage() {
     }
   }, [me]);
 
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setAvatarUploading(true);
+    try {
+      const res = await uploadApi.uploadImage(file, "profile");
+      const profileImageUrl = res.data.data as string;
+      await userApi.updateMe({ name: me?.name || name, phone: me?.phone || phone, profileImageUrl });
+      queryClient.invalidateQueries({ queryKey: ["me"] });
+      toast.success("프로필 사진이 변경되었습니다.");
+    } catch {
+      toast.error("업로드에 실패했습니다.");
+    } finally {
+      setAvatarUploading(false);
+      if (avatarInputRef.current) avatarInputRef.current.value = "";
+    }
+  };
+
   const updateMutation = useMutation({
     mutationFn: () => userApi.updateMe({ name, phone }),
     onSuccess: () => {
@@ -88,11 +108,22 @@ export default function MyPage() {
       {/* Hero */}
       <div className={s.hero}>
         <div className={s.heroInner}>
-          <div className={s.avatar}>
+          <div
+            className={s.avatar}
+            style={{ cursor: "pointer", position: "relative" }}
+            onClick={() => avatarInputRef.current?.click()}
+            title="클릭하여 프로필 사진 변경"
+          >
             {me?.profileImageUrl
               ? <img src={me.profileImageUrl} alt="" className={s.avatarImg} />
               : (user?.name?.[0] || "U")
             }
+            {avatarUploading && (
+              <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, color: "#fff" }}>
+                업로드 중
+              </div>
+            )}
+            <input ref={avatarInputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={handleAvatarUpload} />
           </div>
           <div className={s.heroInfo}>
             <p className={s.heroName}>{user?.name || "—"}</p>

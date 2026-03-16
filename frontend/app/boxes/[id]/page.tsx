@@ -46,6 +46,7 @@ export default function BoxDetailPage() {
   const [hoverRating, setHoverRating] = useState(0);
   const [reviewContent, setReviewContent] = useState("");
   const [favorited, setFavorited] = useState(false);
+  const [reviewPage, setReviewPage] = useState(0);
 
   const { data: box, isLoading } = useQuery({
     queryKey: ["box", boxId],
@@ -65,8 +66,8 @@ export default function BoxDetailPage() {
   });
 
   const { data: reviewData } = useQuery({
-    queryKey: ["box", boxId, "reviews"],
-    queryFn: async () => (await boxApi.getReviews(boxId)).data.data,
+    queryKey: ["box", boxId, "reviews", reviewPage],
+    queryFn: async () => (await boxApi.getReviews(boxId, reviewPage)).data.data,
     enabled: tab === "후기",
   });
 
@@ -155,11 +156,31 @@ export default function BoxDetailPage() {
       toast.success("후기가 등록되었습니다.");
       setRating(0);
       setReviewContent("");
+      setReviewPage(0);
       queryClient.invalidateQueries({ queryKey: ["box", boxId, "reviews"] });
       queryClient.invalidateQueries({ queryKey: ["box", boxId] });
     },
     onError: () => toast.error("후기 등록에 실패했습니다."),
   });
+
+  const deleteReviewMutation = useMutation({
+    mutationFn: (reviewId: number) => boxApi.deleteReview(reviewId),
+    onSuccess: () => {
+      toast.success("후기가 삭제되었습니다.");
+      queryClient.invalidateQueries({ queryKey: ["box", boxId, "reviews"] });
+      queryClient.invalidateQueries({ queryKey: ["box", boxId] });
+    },
+    onError: () => toast.error("삭제에 실패했습니다."),
+  });
+
+  const handleShare = () => {
+    if (typeof navigator !== "undefined" && "share" in navigator) {
+      navigator.share({ title: box?.name, text: `${box?.name} - ${box?.city} ${box?.district}`, url: window.location.href }).catch(() => {});
+    } else {
+      navigator.clipboard?.writeText(window.location.href);
+      toast.success("링크가 복사되었습니다.");
+    }
+  };
 
   // Group schedules by day
   const scheduleByDay: Record<string, Schedule[]> = {};
@@ -247,6 +268,13 @@ export default function BoxDetailPage() {
                   {favorited ? "즐겨찾기 해제" : "즐겨찾기"}
                 </button>
               )}
+              <button className={s.shareBtn} onClick={handleShare}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                </svg>
+                공유
+              </button>
               {(currentUser?.role === "ROLE_ADMIN" ||
                 (currentUser?.role === "ROLE_BOX_OWNER" && box.ownerName === currentUser?.name)) && (
                 <Link href={`/boxes/${boxId}/edit`} className={s.editBtn}>
@@ -506,20 +534,44 @@ export default function BoxDetailPage() {
               )}
 
               {reviewData?.content?.length > 0 ? (
-                <div className={s.reviewList}>
-                  {reviewData.content.map((rev: Review) => (
-                    <div key={rev.id} className={s.reviewItem}>
-                      <div className={s.reviewHeader}>
-                        <span className={s.reviewUser}>{rev.userName}</span>
-                        <span className={s.reviewDate}>{dayjs(rev.createdAt).format("YYYY.MM.DD")}</span>
+                <>
+                  <div className={s.reviewList}>
+                    {reviewData.content.map((rev: Review) => (
+                      <div key={rev.id} className={s.reviewItem}>
+                        <div className={s.reviewHeader}>
+                          <span className={s.reviewUser}>{rev.userName}</span>
+                          <span className={s.reviewDate}>{dayjs(rev.createdAt).format("YYYY.MM.DD")}</span>
+                          {currentUser && (currentUser.name === rev.userName || currentUser.role === "ROLE_ADMIN") && (
+                            <button
+                              className={s.reviewDeleteBtn}
+                              onClick={() => { if (window.confirm("후기를 삭제하시겠습니까?")) deleteReviewMutation.mutate(rev.id); }}
+                              disabled={deleteReviewMutation.isPending}
+                            >삭제</button>
+                          )}
+                        </div>
+                        <div className={s.reviewStars}>
+                          {"★".repeat(rev.rating)}{"☆".repeat(5 - rev.rating)}
+                        </div>
+                        <p className={s.reviewContent}>{rev.content}</p>
                       </div>
-                      <div className={s.reviewStars}>
-                        {"★".repeat(rev.rating)}{"☆".repeat(5 - rev.rating)}
-                      </div>
-                      <p className={s.reviewContent}>{rev.content}</p>
+                    ))}
+                  </div>
+                  {reviewData.totalPages > 1 && (
+                    <div className={s.reviewPagination}>
+                      <button
+                        className={s.reviewPageBtn}
+                        disabled={reviewPage === 0}
+                        onClick={() => setReviewPage((p) => p - 1)}
+                      >이전</button>
+                      <span className={s.reviewPageInfo}>{reviewPage + 1} / {reviewData.totalPages}</span>
+                      <button
+                        className={s.reviewPageBtn}
+                        disabled={reviewPage >= reviewData.totalPages - 1}
+                        onClick={() => setReviewPage((p) => p + 1)}
+                      >다음</button>
                     </div>
-                  ))}
-                </div>
+                  )}
+                </>
               ) : (
                 <div className={s.empty}>
                   <div className={s.emptyIcon}>⭐</div>
