@@ -62,7 +62,9 @@
       "Bash(curl -s \"http://localhost:8080/api/v1/community/posts?category=FREE\" | python -c \"import sys,json; d=json.load\\(sys.stdin\\); [print\\(p['title']\\) for p in d['data']['content']]\" 2>&1)",
       "Bash(curl -s \"http://localhost:8080/api/v1/community/posts?category=FREE\" | python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(d\\)\" 2>&1 | head -c 200)",
       "Bash(sleep 20 && curl -s http://localhost:8080/api/v1/boxes | python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('boxes:', d['data']['totalElements']\\)\" 2>&1 && curl -s \"http://localhost:8080/api/v1/community/posts?category=FREE\" | python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('posts:', d['data']['totalElements']\\); [print\\(' -', p['title']\\) for p in d['data']['content'][:3]]\" 2>&1)",
-      "Bash(sleep 15 && curl -s http://localhost:8080/api/v1/competitions | python -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\('OK:', d['data']['totalElements'], 'competitions'\\)\" && curl -s \"http://localhost:8080/api/v1/community/posts?keyword=크로스핏\" | python -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\('Keyword search OK:', d['data']['totalElements'], 'posts'\\)\")"
+      "Bash(sleep 15 && curl -s http://localhost:8080/api/v1/competitions | python -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\('OK:', d['data']['totalElements'], 'competitions'\\)\" && curl -s \"http://localhost:8080/api/v1/community/posts?keyword=크로스핏\" | python -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\('Keyword search OK:', d['data']['totalElements'], 'posts'\\)\")",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ]
   }
 }

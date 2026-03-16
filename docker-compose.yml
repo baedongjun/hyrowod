@@ -15,6 +15,7 @@ services:
       - DB_PASSWORD=password
       - REDIS_HOST=redis
       - REDIS_PORT=6379
+      - JAVA_OPTS=-Xms128m -Xmx384m -XX:MetaspaceSize=96m -XX:MaxMetaspaceSize=192m -XX:+UseG1GC -XX:+ExitOnOutOfMemoryError
     depends_on:
       postgres:
         condition: service_healthy
@@ -23,6 +24,8 @@ services:
     networks:
       - crossfitkorea-net
     restart: on-failure
+    mem_limit: 600m
+    memswap_limit: 600m
 
   postgres:
     image: postgres:16-alpine
@@ -58,24 +61,9 @@ services:
     networks:
       - crossfitkorea-net
 
-  elasticsearch:
-    image: elasticsearch:8.17.0
-    container_name: crossfitkorea-es
-    environment:
-      - discovery.type=single-node
-      - xpack.security.enabled=false
-      - ES_JAVA_OPTS=-Xms512m -Xmx512m
-    ports:
-      - "9200:9200"
-    volumes:
-      - es-data:/usr/share/elasticsearch/data
-    networks:
-      - crossfitkorea-net
-
 volumes:
   postgres-data:
   redis-data:
-  es-data:
 
 networks:
   crossfitkorea-net:
