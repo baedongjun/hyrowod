@@ -41,6 +41,17 @@ public class ScheduleController {
         return ResponseEntity.ok(ApiResponse.success(scheduleService.createSchedule(boxId, request, userDetails.getUsername())));
     }
 
+    @Operation(summary = "시간표 수정")
+    @PutMapping("/schedules/{scheduleId}")
+    @PreAuthorize("hasAnyRole('BOX_OWNER', 'ADMIN')")
+    public ResponseEntity<ApiResponse<ScheduleDto>> updateSchedule(
+        @PathVariable Long scheduleId,
+        @Valid @RequestBody ScheduleCreateRequest request,
+        @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        return ResponseEntity.ok(ApiResponse.success(scheduleService.updateSchedule(scheduleId, request, userDetails.getUsername())));
+    }
+
     @Operation(summary = "시간표 삭제")
     @DeleteMapping("/schedules/{scheduleId}")
     @PreAuthorize("hasAnyRole('BOX_OWNER', 'ADMIN')")

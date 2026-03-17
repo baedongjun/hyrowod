@@ -328,6 +328,9 @@ export default function WodPage() {
                 </div>
               ))}
             </div>
+            <Link href="/wod/leaderboard" className={s.leaderboardMore}>
+              전체 리더보드 보기 →
+            </Link>
           </div>
         )}
 

@@ -2,10 +2,11 @@
 
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import Script from "next/script";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { competitionApi } from "@/lib/api";
+import { competitionApi, paymentApi } from "@/lib/api";
 import { Competition } from "@/types";
-import { isLoggedIn } from "@/lib/auth";
+import { isLoggedIn, getUser } from "@/lib/auth";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
@@ -27,6 +28,7 @@ export default function CompetitionDetailPage() {
   const { id } = useParams<{ id: string }>();
   const qc = useQueryClient();
   const loggedIn = isLoggedIn();
+  const currentUser = getUser();
 
   const { data: comp, isLoading } = useQuery({
     queryKey: ["competition", id],
@@ -60,6 +62,42 @@ export default function CompetitionDetailPage() {
     onError: () => toast.error("취소에 실패했습니다."),
   });
 
+  const handlePaymentRegister = async () => {
+    if (!comp?.entryFee || comp.entryFee <= 0) {
+      registerMutation.mutate();
+      return;
+    }
+
+    try {
+      const orderId = `ORDER-${Date.now()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
+      const orderName = `${comp.name} 참가비`;
+
+      await paymentApi.initiate({ competitionId: Number(id), orderId, orderName });
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const TossPayments = (window as any).TossPayments;
+      if (!TossPayments) {
+        toast.error("결제 모듈 로딩 중입니다. 잠시 후 다시 시도해주세요.");
+        return;
+      }
+
+      const toss = TossPayments(process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY || "");
+      await toss.requestPayment("카드", {
+        amount: comp.entryFee,
+        orderId,
+        orderName,
+        successUrl: `${window.location.origin}/payment/success?competitionId=${id}`,
+        failUrl: `${window.location.origin}/payment/fail`,
+        customerName: currentUser?.name || "",
+      });
+    } catch (err: unknown) {
+      const error = err as { code?: string; message?: string };
+      if (error?.code !== "USER_CANCEL") {
+        toast.error(error?.message || "결제 처리 중 오류가 발생했습니다.");
+      }
+    }
+  };
+
   if (isLoading) {
     return (
       <div className={s.page}>
@@ -89,6 +127,8 @@ export default function CompetitionDetailPage() {
   };
 
   return (
+    <>
+    <Script src="https://js.tosspayments.com/v1/payment" strategy="lazyOnload" />
     <div className={s.page}>
       {/* Hero */}
       <div className={s.hero}>
@@ -226,10 +266,10 @@ export default function CompetitionDetailPage() {
                     <button
                       className="btn-primary"
                       style={{ width: "100%", padding: 14, marginTop: 12 }}
-                      onClick={() => registerMutation.mutate()}
+                      onClick={handlePaymentRegister}
                       disabled={registerMutation.isPending || (comp.maxParticipants != null && (regStatus?.count ?? 0) >= comp.maxParticipants)}
                     >
-                      {registerMutation.isPending ? "신청 중..." : "참가 신청"}
+                      {registerMutation.isPending ? "신청 중..." : comp.entryFee && comp.entryFee > 0 ? `결제하고 신청 (${comp.entryFee.toLocaleString()}원)` : "참가 신청"}
                     </button>
                   )
                 ) : (
@@ -302,5 +342,6 @@ export default function CompetitionDetailPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }

@@ -41,6 +41,17 @@ public class CoachController {
         return ResponseEntity.ok(ApiResponse.success(coachService.createCoach(boxId, request, userDetails.getUsername())));
     }
 
+    @Operation(summary = "코치 수정")
+    @PutMapping("/coaches/{coachId}")
+    @PreAuthorize("hasAnyRole('BOX_OWNER', 'ADMIN')")
+    public ResponseEntity<ApiResponse<CoachDto>> updateCoach(
+        @PathVariable Long coachId,
+        @Valid @RequestBody CoachCreateRequest request,
+        @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        return ResponseEntity.ok(ApiResponse.success(coachService.updateCoach(coachId, request, userDetails.getUsername())));
+    }
+
     @Operation(summary = "코치 삭제")
     @DeleteMapping("/coaches/{coachId}")
     @PreAuthorize("hasAnyRole('BOX_OWNER', 'ADMIN')")

@@ -290,7 +290,10 @@ export default function MyPage() {
 
         {/* 내 댓글 */}
         <div className={s.postsCard}>
-          <p className={s.postsHeader}>내가 쓴 댓글</p>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+            <p className={s.postsHeader} style={{ margin: 0 }}>내가 쓴 댓글</p>
+            <Link href="/my/comments" style={{ fontSize: 12, color: "var(--muted)", textDecoration: "none" }}>전체 보기 →</Link>
+          </div>
           {myComments?.content?.length > 0 ? (
             <div className={s.postList}>
               {myComments.content.slice(0, 10).map((comment: { id: number; content: string; postId: number; postTitle: string; createdAt: string }) => (
@@ -315,7 +318,10 @@ export default function MyPage() {
 
         {/* 내 후기 */}
         <div className={s.postsCard}>
-          <p className={s.postsHeader}>내가 쓴 후기</p>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+            <p className={s.postsHeader} style={{ margin: 0 }}>내가 쓴 후기</p>
+            <Link href="/my/reviews" style={{ fontSize: 12, color: "var(--muted)", textDecoration: "none" }}>전체 보기 →</Link>
+          </div>
           {myReviews?.content?.length > 0 ? (
             <div className={s.postList}>
               {myReviews.content.slice(0, 10).map((review: Review) => (

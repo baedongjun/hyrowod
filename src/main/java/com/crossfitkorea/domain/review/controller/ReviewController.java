@@ -43,6 +43,16 @@ public class ReviewController {
         return ResponseEntity.ok(ApiResponse.success(reviewService.createReview(boxId, request, userDetails.getUsername())));
     }
 
+    @Operation(summary = "후기 수정")
+    @PutMapping("/reviews/{reviewId}")
+    public ResponseEntity<ApiResponse<ReviewDto>> updateReview(
+        @PathVariable Long reviewId,
+        @Valid @RequestBody ReviewCreateRequest request,
+        @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        return ResponseEntity.ok(ApiResponse.success(reviewService.updateReview(reviewId, request, userDetails.getUsername())));
+    }
+
     @Operation(summary = "후기 삭제")
     @DeleteMapping("/reviews/{reviewId}")
     public ResponseEntity<ApiResponse<Void>> deleteReview(

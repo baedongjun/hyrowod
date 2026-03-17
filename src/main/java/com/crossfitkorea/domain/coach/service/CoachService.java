@@ -48,6 +48,27 @@ public class CoachService {
     }
 
     @Transactional
+    public CoachDto updateCoach(Long coachId, CoachCreateRequest request, String ownerEmail) {
+        Coach coach = coachRepository.findById(coachId)
+            .orElseThrow(() -> new BusinessException(ErrorCode.COACH_NOT_FOUND));
+
+        if (!coach.getBox().getOwner().getEmail().equals(ownerEmail)) {
+            throw new BusinessException(ErrorCode.BOX_NOT_AUTHORIZED);
+        }
+
+        coach.setName(request.getName());
+        coach.setBio(request.getBio());
+        coach.setImageUrl(request.getImageUrl());
+        coach.setExperienceYears(request.getExperienceYears());
+        if (request.getCertifications() != null) {
+            coach.getCertifications().clear();
+            coach.getCertifications().addAll(request.getCertifications());
+        }
+
+        return CoachDto.from(coach);
+    }
+
+    @Transactional
     public void deleteCoach(Long coachId, String ownerEmail) {
         Coach coach = coachRepository.findById(coachId)
             .orElseThrow(() -> new BusinessException(ErrorCode.COACH_NOT_FOUND));

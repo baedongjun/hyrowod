@@ -52,7 +52,12 @@ public enum ErrorCode {
     // Competition Registration
     COMPETITION_ALREADY_REGISTERED(HttpStatus.CONFLICT, "이미 참가 신청한 대회입니다."),
     COMPETITION_FULL(HttpStatus.BAD_REQUEST, "참가 인원이 마감되었습니다."),
-    COMPETITION_REGISTRATION_NOT_FOUND(HttpStatus.NOT_FOUND, "참가 신청 내역을 찾을 수 없습니다.");
+    COMPETITION_REGISTRATION_NOT_FOUND(HttpStatus.NOT_FOUND, "참가 신청 내역을 찾을 수 없습니다."),
+
+    // Payment
+    PAYMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "결제 내역을 찾을 수 없습니다."),
+    PAYMENT_CONFIRM_FAILED(HttpStatus.BAD_REQUEST, "결제 승인에 실패했습니다."),
+    PAYMENT_AMOUNT_MISMATCH(HttpStatus.BAD_REQUEST, "결제 금액이 일치하지 않습니다.");
 
     private final HttpStatus status;
     private final String message;

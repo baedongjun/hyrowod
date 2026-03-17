@@ -79,6 +79,7 @@ services:
     environment:
       NEXT_PUBLIC_API_URL: https://crossfitkorea.com
       NEXT_PUBLIC_KAKAO_MAP_KEY: ${NEXT_PUBLIC_KAKAO_MAP_KEY}
+      NEXT_PUBLIC_TOSS_CLIENT_KEY: ${NEXT_PUBLIC_TOSS_CLIENT_KEY}
     depends_on:
       - backend
     networks:

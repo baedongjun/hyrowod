@@ -12,6 +12,7 @@ public class ReviewDto {
 
     private Long id;
     private Long boxId;
+    private String boxName;
     private int rating;
     private String content;
     private String userName;
@@ -22,6 +23,7 @@ public class ReviewDto {
         return ReviewDto.builder()
             .id(review.getId())
             .boxId(review.getBox().getId())
+            .boxName(review.getBox().getName())
             .rating(review.getRating())
             .content(review.getContent())
             .userName(review.getUser().getName())

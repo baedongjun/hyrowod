@@ -63,6 +63,22 @@ public class ReviewService {
     }
 
     @Transactional
+    public ReviewDto updateReview(Long reviewId, ReviewCreateRequest request, String userEmail) {
+        Review review = reviewRepository.findById(reviewId)
+            .orElseThrow(() -> new BusinessException(ErrorCode.REVIEW_NOT_FOUND));
+
+        if (!review.getUser().getEmail().equals(userEmail)) {
+            throw new BusinessException(ErrorCode.REVIEW_NOT_AUTHORIZED);
+        }
+
+        review.setRating(request.getRating());
+        review.setContent(request.getContent());
+        updateBoxRating(review.getBox());
+
+        return ReviewDto.from(review);
+    }
+
+    @Transactional
     public void deleteReview(Long reviewId, String userEmail) {
         Review review = reviewRepository.findById(reviewId)
             .orElseThrow(() -> new BusinessException(ErrorCode.REVIEW_NOT_FOUND));

@@ -169,14 +169,23 @@ export const boxApi = {
   addCoach: (boxId: number, data: { name: string; bio?: string; experienceYears?: number; certifications?: string[] }) =>
     api.post(`/api/v1/boxes/${boxId}/coaches`, data),
 
+  updateCoach: (coachId: number, data: { name: string; bio?: string; imageUrl?: string; experienceYears?: number; certifications?: string[] }) =>
+    api.put(`/api/v1/coaches/${coachId}`, data),
+
   deleteCoach: (coachId: number) =>
     api.delete(`/api/v1/coaches/${coachId}`),
 
   addSchedule: (boxId: number, data: { dayOfWeek: string; startTime: string; endTime: string; className: string; maxCapacity?: number }) =>
     api.post(`/api/v1/boxes/${boxId}/schedules`, data),
 
+  updateSchedule: (scheduleId: number, data: { dayOfWeek: string; startTime: string; endTime: string; className?: string; maxCapacity?: number; coachId?: number }) =>
+    api.put(`/api/v1/schedules/${scheduleId}`, data),
+
   deleteSchedule: (scheduleId: number) =>
     api.delete(`/api/v1/schedules/${scheduleId}`),
+
+  updateReview: (reviewId: number, data: { rating: number; content: string }) =>
+    api.put(`/api/v1/reviews/${reviewId}`, data),
 
   deleteReview: (reviewId: number) =>
     api.delete(`/api/v1/reviews/${reviewId}`),
@@ -324,6 +333,15 @@ export const userApi = {
 
   deleteMyAccount: () =>
     api.delete("/api/v1/users/me"),
+};
+
+// Payment API
+export const paymentApi = {
+  initiate: (data: { competitionId: number; orderId: string; orderName: string }) =>
+    api.post("/api/v1/payments/toss/initiate", data),
+
+  confirm: (data: { paymentKey: string; orderId: string; amount: number }) =>
+    api.post("/api/v1/payments/toss/confirm", data),
 };
 
 // Admin API

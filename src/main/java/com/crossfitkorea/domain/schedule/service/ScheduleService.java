@@ -58,6 +58,32 @@ public class ScheduleService {
     }
 
     @Transactional
+    public ScheduleDto updateSchedule(Long scheduleId, ScheduleCreateRequest request, String ownerEmail) {
+        Schedule schedule = scheduleRepository.findById(scheduleId)
+            .orElseThrow(() -> new BusinessException(ErrorCode.SCHEDULE_NOT_FOUND));
+
+        if (!schedule.getBox().getOwner().getEmail().equals(ownerEmail)) {
+            throw new BusinessException(ErrorCode.BOX_NOT_AUTHORIZED);
+        }
+
+        schedule.setDayOfWeek(request.getDayOfWeek());
+        schedule.setStartTime(request.getStartTime());
+        schedule.setEndTime(request.getEndTime());
+        schedule.setClassName(request.getClassName());
+        schedule.setMaxCapacity(request.getMaxCapacity());
+
+        if (request.getCoachId() != null) {
+            Coach coach = coachRepository.findById(request.getCoachId())
+                .orElseThrow(() -> new BusinessException(ErrorCode.COACH_NOT_FOUND));
+            schedule.setCoach(coach);
+        } else {
+            schedule.setCoach(null);
+        }
+
+        return ScheduleDto.from(schedule);
+    }
+
+    @Transactional
     public void deleteSchedule(Long scheduleId, String ownerEmail) {
         Schedule schedule = scheduleRepository.findById(scheduleId)
             .orElseThrow(() -> new BusinessException(ErrorCode.SCHEDULE_NOT_FOUND));

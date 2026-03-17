@@ -69,7 +69,8 @@
       "Bash(cat D:/gitWorkspace/workspace/crossfitkorea/frontend/app/competitions/page.tsx && echo \"===\" && cat D:/gitWorkspace/workspace/crossfitkorea/frontend/app/competitions/\\\\[id\\\\]/page.tsx 2>/dev/null || echo \"NO [id] page\")",
       "Bash(cat D:/gitWorkspace/workspace/crossfitkorea/frontend/app/community/page.tsx | head -80 && echo \"===\" && cat D:/gitWorkspace/workspace/crossfitkorea/frontend/app/community/\\\\[id\\\\]/page.tsx | head -80 && echo \"===\" && cat D:/gitWorkspace/workspace/crossfitkorea/frontend/app/wod/page.tsx | head -60)",
       "Bash(cat D:/gitWorkspace/workspace/crossfitkorea/frontend/app/community/write/page.tsx | head -50 && echo \"===\" && cat D:/gitWorkspace/workspace/crossfitkorea/frontend/app/boxes/\\\\[id\\\\]/page.tsx | grep -E \"review|Review|deleteReview|favorite|Favorite\" | head -20 && echo \"===\" && grep -n \"deleteReview\\\\|editReview\\\\|my.*review\\\\|updateReview\" D:/gitWorkspace/workspace/crossfitkorea/frontend/lib/api.ts)",
-      "Bash(cat D:/gitWorkspace/workspace/crossfitkorea/frontend/app/admin/posts/page.tsx | head -50 && echo \"===\" && cat D:/gitWorkspace/workspace/crossfitkorea/frontend/app/boxes/\\\\[id\\\\]/page.tsx | grep -n \"deleteReview\\\\|review\" | head -20 && echo \"===\" && grep \"deleteReview\\\\|editReview\" D:/gitWorkspace/workspace/crossfitkorea/frontend/lib/api.ts)"
+      "Bash(cat D:/gitWorkspace/workspace/crossfitkorea/frontend/app/admin/posts/page.tsx | head -50 && echo \"===\" && cat D:/gitWorkspace/workspace/crossfitkorea/frontend/app/boxes/\\\\[id\\\\]/page.tsx | grep -n \"deleteReview\\\\|review\" | head -20 && echo \"===\" && grep \"deleteReview\\\\|editReview\" D:/gitWorkspace/workspace/crossfitkorea/frontend/lib/api.ts)",
+      "Bash(grep -E \"app/[^/]+$\")"
     ]
   }
 }
