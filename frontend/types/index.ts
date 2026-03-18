@@ -63,6 +63,7 @@ export interface Schedule {
 export interface Review {
   id: number;
   boxId: number;
+  boxName: string | null;
   rating: number;
   content: string;
   userName: string;
