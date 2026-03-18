@@ -80,7 +80,6 @@ export default function MyCompetitionsPage() {
         ) : (
           <div className={s.list}>
             {competitions?.map((comp) => {
-              const isOpen = comp.status === "OPEN";
               const isPast = comp.status === "COMPLETED" || comp.status === "CLOSED";
               return (
                 <div key={comp.id} className={s.item}>

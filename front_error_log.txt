@@ -1,326 +1,243 @@
-﻿2026-03-18T00:29:59.3665712Z Current runner version: '2.332.0'
-2026-03-18T00:29:59.3702294Z ##[group]Runner Image Provisioner
-2026-03-18T00:29:59.3703446Z Hosted Compute Agent
-2026-03-18T00:29:59.3704519Z Version: 20260213.493
-2026-03-18T00:29:59.3705590Z Commit: 5c115507f6dd24b8de37d8bbe0bb4509d0cc0fa3
-2026-03-18T00:29:59.3706822Z Build Date: 2026-02-13T00:28:41Z
-2026-03-18T00:29:59.3708184Z Worker ID: {8b4fc08c-f05d-4bc6-8556-75aa51048cff}
-2026-03-18T00:29:59.3709355Z Azure Region: eastus
-2026-03-18T00:29:59.3710646Z ##[endgroup]
-2026-03-18T00:29:59.3712949Z ##[group]Operating System
-2026-03-18T00:29:59.3714068Z Ubuntu
-2026-03-18T00:29:59.3714890Z 24.04.3
-2026-03-18T00:29:59.3715708Z LTS
-2026-03-18T00:29:59.3716476Z ##[endgroup]
-2026-03-18T00:29:59.3717410Z ##[group]Runner Image
-2026-03-18T00:29:59.3718413Z Image: ubuntu-24.04
-2026-03-18T00:29:59.3719268Z Version: 20260309.50.1
-2026-03-18T00:29:59.3721756Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260309.50/images/ubuntu/Ubuntu2404-Readme.md
-2026-03-18T00:29:59.3724319Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260309.50
-2026-03-18T00:29:59.3726127Z ##[endgroup]
-2026-03-18T00:29:59.3728046Z ##[group]GITHUB_TOKEN Permissions
-2026-03-18T00:29:59.3731059Z Contents: read
-2026-03-18T00:29:59.3732107Z Metadata: read
-2026-03-18T00:29:59.3732953Z Packages: read
-2026-03-18T00:29:59.3733965Z ##[endgroup]
-2026-03-18T00:29:59.3737000Z Secret source: Actions
-2026-03-18T00:29:59.3738806Z Prepare workflow directory
-2026-03-18T00:29:59.4325281Z Prepare all required actions
-2026-03-18T00:29:59.4383043Z Getting action download info
-2026-03-18T00:29:59.6456641Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
-2026-03-18T00:29:59.8095877Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
-2026-03-18T00:30:00.0709474Z Complete job name: Frontend Test
-2026-03-18T00:30:00.1439444Z ##[group]Run actions/checkout@v4
-2026-03-18T00:30:00.1440565Z with:
-2026-03-18T00:30:00.1441020Z   repository: baedongjun/crossfitkorea
-2026-03-18T00:30:00.1441712Z   token: ***
-2026-03-18T00:30:00.1442106Z   ssh-strict: true
-2026-03-18T00:30:00.1442505Z   ssh-user: git
-2026-03-18T00:30:00.1442910Z   persist-credentials: true
-2026-03-18T00:30:00.1443358Z   clean: true
-2026-03-18T00:30:00.1443759Z   sparse-checkout-cone-mode: true
-2026-03-18T00:30:00.1444239Z   fetch-depth: 1
-2026-03-18T00:30:00.1444630Z   fetch-tags: false
-2026-03-18T00:30:00.1445033Z   show-progress: true
-2026-03-18T00:30:00.1445446Z   lfs: false
-2026-03-18T00:30:00.1445815Z   submodules: false
-2026-03-18T00:30:00.1446227Z   set-safe-directory: true
-2026-03-18T00:30:00.1447090Z ##[endgroup]
-2026-03-18T00:30:00.2545686Z Syncing repository: baedongjun/crossfitkorea
-2026-03-18T00:30:00.2547476Z ##[group]Getting Git version info
-2026-03-18T00:30:00.2548302Z Working directory is '/home/runner/work/crossfitkorea/crossfitkorea'
-2026-03-18T00:30:00.2549299Z [command]/usr/bin/git version
-2026-03-18T00:30:00.2651229Z git version 2.53.0
-2026-03-18T00:30:00.2677398Z ##[endgroup]
-2026-03-18T00:30:00.2699185Z Temporarily overriding HOME='/home/runner/work/_temp/7af89d8b-9017-4d69-8ffa-50bf1cfccaca' before making global git config changes
-2026-03-18T00:30:00.2700827Z Adding repository directory to the temporary git global config as a safe directory
-2026-03-18T00:30:00.2704575Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/crossfitkorea/crossfitkorea
-2026-03-18T00:30:00.2746461Z Deleting the contents of '/home/runner/work/crossfitkorea/crossfitkorea'
-2026-03-18T00:30:00.2750289Z ##[group]Initializing the repository
-2026-03-18T00:30:00.2754440Z [command]/usr/bin/git init /home/runner/work/crossfitkorea/crossfitkorea
-2026-03-18T00:30:00.2876675Z hint: Using 'master' as the name for the initial branch. This default branch name
-2026-03-18T00:30:00.2877950Z hint: will change to "main" in Git 3.0. To configure the initial branch name
-2026-03-18T00:30:00.2878944Z hint: to use in all of your new repositories, which will suppress this warning,
-2026-03-18T00:30:00.2879969Z hint: call:
-2026-03-18T00:30:00.2880699Z hint:
-2026-03-18T00:30:00.2881831Z hint: 	git config --global init.defaultBranch <name>
-2026-03-18T00:30:00.2882661Z hint:
-2026-03-18T00:30:00.2883266Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
-2026-03-18T00:30:00.2884267Z hint: 'development'. The just-created branch can be renamed via this command:
-2026-03-18T00:30:00.2885080Z hint:
-2026-03-18T00:30:00.2885512Z hint: 	git branch -m <name>
-2026-03-18T00:30:00.2886022Z hint:
-2026-03-18T00:30:00.2887008Z hint: Disable this message with "git config set advice.defaultBranchName false"
-2026-03-18T00:30:00.2888719Z Initialized empty Git repository in /home/runner/work/crossfitkorea/crossfitkorea/.git/
-2026-03-18T00:30:00.2892883Z [command]/usr/bin/git remote add origin https://github.com/baedongjun/crossfitkorea
-2026-03-18T00:30:00.2932750Z ##[endgroup]
-2026-03-18T00:30:00.2933482Z ##[group]Disabling automatic garbage collection
-2026-03-18T00:30:00.2936699Z [command]/usr/bin/git config --local gc.auto 0
-2026-03-18T00:30:00.2965690Z ##[endgroup]
-2026-03-18T00:30:00.2966361Z ##[group]Setting up auth
-2026-03-18T00:30:00.2972589Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
-2026-03-18T00:30:00.3003068Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
-2026-03-18T00:30:00.3427848Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
-2026-03-18T00:30:00.3462122Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
-2026-03-18T00:30:00.3721597Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
-2026-03-18T00:30:00.3760754Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
-2026-03-18T00:30:00.4039377Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
-2026-03-18T00:30:00.4077716Z ##[endgroup]
-2026-03-18T00:30:00.4078830Z ##[group]Fetching the repository
-2026-03-18T00:30:00.4086782Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +dca9cf5b8b472ac30397ad5303c142f170233721:refs/remotes/origin/main
-2026-03-18T00:30:00.6394997Z From https://github.com/baedongjun/crossfitkorea
-2026-03-18T00:30:00.6396475Z  * [new ref]         dca9cf5b8b472ac30397ad5303c142f170233721 -> origin/main
-2026-03-18T00:30:00.6428266Z ##[endgroup]
-2026-03-18T00:30:00.6428978Z ##[group]Determining the checkout info
-2026-03-18T00:30:00.6431694Z ##[endgroup]
-2026-03-18T00:30:00.6438120Z [command]/usr/bin/git sparse-checkout disable
-2026-03-18T00:30:00.6482131Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
-2026-03-18T00:30:00.6509678Z ##[group]Checking out the ref
-2026-03-18T00:30:00.6514603Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
-2026-03-18T00:30:00.6751209Z Switched to a new branch 'main'
-2026-03-18T00:30:00.6753662Z branch 'main' set up to track 'origin/main'.
-2026-03-18T00:30:00.6761831Z ##[endgroup]
-2026-03-18T00:30:00.6801827Z [command]/usr/bin/git log -1 --format=%H
-2026-03-18T00:30:00.6826156Z dca9cf5b8b472ac30397ad5303c142f170233721
-2026-03-18T00:30:00.7064842Z ##[group]Run actions/setup-node@v4
-2026-03-18T00:30:00.7065371Z with:
-2026-03-18T00:30:00.7065729Z   node-version: 20
-2026-03-18T00:30:00.7066117Z   cache: npm
-2026-03-18T00:30:00.7066570Z   cache-dependency-path: frontend/package-lock.json
-2026-03-18T00:30:00.7067140Z   always-auth: false
-2026-03-18T00:30:00.7067546Z   check-latest: false
-2026-03-18T00:30:00.7068088Z   token: ***
-2026-03-18T00:30:00.7068464Z ##[endgroup]
-2026-03-18T00:30:00.9199556Z Found in cache @ /opt/hostedtoolcache/node/20.20.1/x64
-2026-03-18T00:30:00.9206406Z ##[group]Environment details
-2026-03-18T00:30:03.6988988Z node: v20.20.1
-2026-03-18T00:30:03.6989787Z npm: 10.8.2
-2026-03-18T00:30:03.6990818Z yarn: 1.22.22
-2026-03-18T00:30:03.6992097Z ##[endgroup]
-2026-03-18T00:30:03.7013468Z [command]/opt/hostedtoolcache/node/20.20.1/x64/bin/npm config get cache
-2026-03-18T00:30:04.0058705Z /home/runner/.npm
-2026-03-18T00:30:04.0943848Z Cache hit for: node-cache-Linux-x64-npm-57588e844e454d0ea240ee6a2c1304e9d0130ce91d6e580adfe6e2450e072de1
-2026-03-18T00:30:05.0790777Z Received 155950778 of 155950778 (100.0%), 160.1 MBs/sec
-2026-03-18T00:30:05.0791826Z Cache Size: ~149 MB (155950778 B)
-2026-03-18T00:30:05.0821761Z [command]/usr/bin/tar -xf /home/runner/work/_temp/9cc63d15-361e-496b-954d-235c71797d9e/cache.tzst -P -C /home/runner/work/crossfitkorea/crossfitkorea --use-compress-program unzstd
-2026-03-18T00:30:05.3809900Z Cache restored successfully
-2026-03-18T00:30:05.4123286Z Cache restored from key: node-cache-Linux-x64-npm-57588e844e454d0ea240ee6a2c1304e9d0130ce91d6e580adfe6e2450e072de1
-2026-03-18T00:30:05.4307114Z ##[group]Run npm ci
-2026-03-18T00:30:05.4307436Z [36;1mnpm ci[0m
-2026-03-18T00:30:05.4526257Z shell: /usr/bin/bash -e {0}
-2026-03-18T00:30:05.4526545Z ##[endgroup]
-2026-03-18T00:30:10.2904417Z npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
-2026-03-18T00:30:10.4037096Z npm warn deprecated @humanwhocodes/config-array@0.13.0: Use @eslint/config-array instead
-2026-03-18T00:30:10.4136957Z npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
-2026-03-18T00:30:10.4881381Z npm warn deprecated glob@7.2.3: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
-2026-03-18T00:30:10.5006464Z npm warn deprecated @humanwhocodes/object-schema@2.0.3: Use @eslint/object-schema instead
-2026-03-18T00:30:12.1552988Z npm warn deprecated eslint@8.57.1: This version is no longer supported. Please see https://eslint.org/version-support for other options.
-2026-03-18T00:30:16.5066916Z npm warn deprecated next@15.2.1: This version has a security vulnerability. Please upgrade to a patched version. See https://nextjs.org/blog/CVE-2025-66478 for more details.
-2026-03-18T00:30:17.0836402Z
-2026-03-18T00:30:17.0837273Z added 398 packages, and audited 399 packages in 12s
-2026-03-18T00:30:17.0838387Z
-2026-03-18T00:30:17.0838718Z 155 packages are looking for funding
-2026-03-18T00:30:17.0839284Z   run `npm fund` for details
-2026-03-18T00:30:17.1713353Z
-2026-03-18T00:30:17.1716350Z 2 vulnerabilities (1 high, 1 critical)
-2026-03-18T00:30:17.1716850Z
-2026-03-18T00:30:17.1721492Z To address issues that do not require attention, run:
-2026-03-18T00:30:17.1722851Z   npm audit fix
-2026-03-18T00:30:17.1725296Z
-2026-03-18T00:30:17.1725635Z To address all issues, run:
-2026-03-18T00:30:17.1726187Z   npm audit fix --force
-2026-03-18T00:30:17.1726490Z
-2026-03-18T00:30:17.1726745Z Run `npm audit` for details.
-2026-03-18T00:30:17.2454201Z ##[group]Run npm run lint
-2026-03-18T00:30:17.2454505Z [36;1mnpm run lint[0m
-2026-03-18T00:30:17.2512240Z shell: /usr/bin/bash -e {0}
-2026-03-18T00:30:17.2512502Z ##[endgroup]
-2026-03-18T00:30:17.3763451Z
-2026-03-18T00:30:17.3763905Z > crossfitkorea-frontend@0.1.0 lint
-2026-03-18T00:30:17.3764441Z > next lint
-2026-03-18T00:30:17.3764656Z
-2026-03-18T00:30:20.9688268Z Attention: Next.js now collects completely anonymous telemetry regarding usage.
-2026-03-18T00:30:20.9692684Z This information is used to shape Next.js' roadmap and prioritize features.
-2026-03-18T00:30:20.9694230Z You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
-2026-03-18T00:30:20.9695850Z https://nextjs.org/telemetry
-2026-03-18T00:30:20.9696121Z
-2026-03-18T00:30:21.1310573Z
-2026-03-18T00:30:21.1311045Z ./app/boxes/[id]/edit/page.tsx
-2026-03-18T00:30:21.1312566Z 31:6  Warning: React Hook useEffect has a missing dependency: 'router'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
-2026-03-18T00:30:21.1316181Z 162:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-18T00:30:21.1318177Z
-2026-03-18T00:30:21.1318431Z ./app/boxes/[id]/page.tsx
-2026-03-18T00:30:21.1321422Z 211:11  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-18T00:30:21.1326078Z 405:29  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-18T00:30:21.1330695Z 677:29  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-18T00:30:21.1332740Z
-2026-03-18T00:30:21.1333005Z ./app/boxes/create/page.tsx
-2026-03-18T00:30:21.1334525Z 45:6  Warning: React Hook useEffect has missing dependencies: 'router' and 'user?.role'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
-2026-03-18T00:30:21.1337960Z 153:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-18T00:30:21.1339842Z
-2026-03-18T00:30:21.1340249Z ./app/community/[id]/edit/page.tsx
-2026-03-18T00:30:21.1341666Z 35:6  Warning: React Hook useEffect has a missing dependency: 'router'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
-2026-03-18T00:30:21.1344956Z 132:23  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-18T00:30:21.1346868Z
-2026-03-18T00:30:21.1347064Z ./app/community/[id]/page.tsx
-2026-03-18T00:30:21.1350241Z 265:17  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-18T00:30:21.1352237Z
-2026-03-18T00:30:21.1352441Z ./app/community/page.tsx
-2026-03-18T00:30:21.1355091Z 175:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-18T00:30:21.1357031Z
-2026-03-18T00:30:21.1357271Z ./app/community/write/page.tsx
-2026-03-18T00:30:21.1360449Z 120:23  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-18T00:30:21.1362396Z
-2026-03-18T00:30:21.1362636Z ./app/competitions/[id]/page.tsx
-2026-03-18T00:30:21.1365307Z 136:11  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-18T00:30:21.1367214Z
-2026-03-18T00:30:21.1367367Z ./app/layout.tsx
-2026-03-18T00:30:21.1369071Z 50:9  Warning: Custom fonts not added in `pages/_document.js` will only load for a single page. This is discouraged. See: https://nextjs.org/docs/messages/no-page-custom-font  @next/next/no-page-custom-font
-2026-03-18T00:30:21.1370705Z
-2026-03-18T00:30:21.1370901Z ./app/my/box/page.tsx
-2026-03-18T00:30:21.1372419Z 36:6  Warning: React Hook useEffect has missing dependencies: 'router' and 'user?.role'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
-2026-03-18T00:30:21.1375831Z 275:43  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-18T00:30:21.1377740Z
-2026-03-18T00:30:21.1377994Z ./app/my/favorites/page.tsx
-2026-03-18T00:30:21.1380780Z 76:27  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-18T00:30:21.1382662Z
-2026-03-18T00:30:21.1382823Z ./app/my/page.tsx
-2026-03-18T00:30:21.1385423Z 144:17  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-18T00:30:21.1389774Z 365:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-18T00:30:21.1391842Z
-2026-03-18T00:30:21.1392042Z ./app/my/password/page.tsx
-2026-03-18T00:30:21.1393340Z 20:6  Warning: React Hook useEffect has a missing dependency: 'router'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
-2026-03-18T00:30:21.1394275Z
-2026-03-18T00:30:21.1394432Z ./app/wod/page.tsx
-2026-03-18T00:30:21.1397230Z 189:17  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-18T00:30:21.1399179Z
-2026-03-18T00:30:21.1399373Z ./components/box/BoxCard.tsx
-2026-03-18T00:30:21.1402192Z 43:11  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-18T00:30:21.1404290Z
-2026-03-18T00:30:21.1404545Z ./components/common/ImageUpload.tsx
-2026-03-18T00:30:21.1407216Z 60:11  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-18T00:30:21.1409124Z
-2026-03-18T00:30:21.1410061Z info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
-2026-03-18T00:30:21.2446108Z ##[group]Run npm run build
-2026-03-18T00:30:21.2446396Z [36;1mnpm run build[0m
-2026-03-18T00:30:21.2495467Z shell: /usr/bin/bash -e {0}
-2026-03-18T00:30:21.2495700Z env:
-2026-03-18T00:30:21.2495928Z   NEXT_PUBLIC_API_URL: http://localhost:8080
-2026-03-18T00:30:21.2496237Z   NEXT_PUBLIC_KAKAO_MAP_KEY: test_key
-2026-03-18T00:30:21.2496503Z ##[endgroup]
-2026-03-18T00:30:21.3631935Z
-2026-03-18T00:30:21.3632335Z > crossfitkorea-frontend@0.1.0 build
-2026-03-18T00:30:21.3632849Z > next build
-2026-03-18T00:30:21.3633049Z
-2026-03-18T00:30:22.0938533Z    ▲ Next.js 15.2.1
-2026-03-18T00:30:22.0942823Z
-2026-03-18T00:30:22.1352832Z    Creating an optimized production build ...
-2026-03-18T00:30:40.0927582Z  ✓ Compiled successfully
-2026-03-18T00:30:40.0966095Z    Linting and checking validity of types ...
-2026-03-18T00:30:41.9632077Z
-2026-03-18T00:30:41.9637827Z ./app/boxes/[id]/edit/page.tsx
-2026-03-18T00:30:41.9644170Z 31:6  Warning: React Hook useEffect has a missing dependency: 'router'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
-2026-03-18T00:30:41.9652463Z 162:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-18T00:30:41.9659046Z
-2026-03-18T00:30:41.9664333Z ./app/boxes/[id]/page.tsx
-2026-03-18T00:30:41.9668527Z 211:11  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-18T00:30:41.9672931Z 405:29  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-18T00:30:41.9677490Z 677:29  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-18T00:30:41.9679371Z
-2026-03-18T00:30:41.9679563Z ./app/boxes/create/page.tsx
-2026-03-18T00:30:41.9681133Z 45:6  Warning: React Hook useEffect has missing dependencies: 'router' and 'user?.role'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
-2026-03-18T00:30:41.9684462Z 153:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-18T00:30:41.9686295Z
-2026-03-18T00:30:41.9686530Z ./app/community/[id]/edit/page.tsx
-2026-03-18T00:30:41.9687812Z 35:6  Warning: React Hook useEffect has a missing dependency: 'router'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
-2026-03-18T00:30:41.9691440Z 132:23  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-18T00:30:41.9693301Z
-2026-03-18T00:30:41.9693493Z ./app/community/[id]/page.tsx
-2026-03-18T00:30:41.9696345Z 265:17  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-18T00:30:41.9698275Z
-2026-03-18T00:30:41.9698457Z ./app/community/page.tsx
-2026-03-18T00:30:41.9701242Z 175:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-18T00:30:41.9703131Z
-2026-03-18T00:30:41.9703365Z ./app/community/write/page.tsx
-2026-03-18T00:30:41.9705973Z 120:23  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-18T00:30:41.9707838Z
-2026-03-18T00:30:41.9708068Z ./app/competitions/[id]/page.tsx
-2026-03-18T00:30:41.9710865Z 136:11  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-18T00:30:41.9712740Z
-2026-03-18T00:30:41.9712875Z ./app/layout.tsx
-2026-03-18T00:30:41.9714531Z 50:9  Warning: Custom fonts not added in `pages/_document.js` will only load for a single page. This is discouraged. See: https://nextjs.org/docs/messages/no-page-custom-font  @next/next/no-page-custom-font
-2026-03-18T00:30:41.9715767Z
-2026-03-18T00:30:41.9715928Z ./app/my/box/page.tsx
-2026-03-18T00:30:41.9717319Z 36:6  Warning: React Hook useEffect has missing dependencies: 'router' and 'user?.role'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
-2026-03-18T00:30:41.9720749Z 275:43  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-18T00:30:41.9722608Z
-2026-03-18T00:30:41.9722790Z ./app/my/favorites/page.tsx
-2026-03-18T00:30:41.9725339Z 76:27  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-18T00:30:41.9727160Z
-2026-03-18T00:30:41.9727307Z ./app/my/page.tsx
-2026-03-18T00:30:41.9729785Z 144:17  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-18T00:30:41.9734138Z 365:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-18T00:30:41.9736209Z
-2026-03-18T00:30:41.9736393Z ./app/my/password/page.tsx
-2026-03-18T00:30:41.9737678Z 20:6  Warning: React Hook useEffect has a missing dependency: 'router'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
-2026-03-18T00:30:41.9738598Z
-2026-03-18T00:30:41.9738757Z ./app/wod/page.tsx
-2026-03-18T00:30:41.9741543Z 189:17  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-18T00:30:41.9743419Z
-2026-03-18T00:30:41.9743619Z ./components/box/BoxCard.tsx
-2026-03-18T00:30:41.9746181Z 43:11  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-18T00:30:41.9748046Z
-2026-03-18T00:30:41.9748281Z ./components/common/ImageUpload.tsx
-2026-03-18T00:30:41.9751004Z 60:11  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-18T00:30:41.9752866Z
-2026-03-18T00:30:41.9753781Z info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
-2026-03-18T00:30:46.9126288Z Failed to compile.
-2026-03-18T00:30:46.9127073Z
-2026-03-18T00:30:46.9127399Z ./app/my/reviews/page.tsx:128:35
-2026-03-18T00:30:46.9133120Z Type error: Property 'boxName' does not exist on type 'Review'.
-2026-03-18T00:30:46.9133689Z
-2026-03-18T00:30:46.9134806Z [0m [90m 126 |[39m                       [33m<[39m[33mdiv[39m className[33m=[39m{s[33m.[39mitemHeader}[33m>[39m[0m
-2026-03-18T00:30:46.9136789Z [0m [90m 127 |[39m                         [33m<[39m[33mLink[39m href[33m=[39m{[32m`/boxes/${review.boxId}`[39m} className[33m=[39m{s[33m.[39mboxName}[33m>[39m[0m
-2026-03-18T00:30:46.9138495Z [0m[31m[1m>[22m[39m[90m 128 |[39m                           {review[33m.[39mboxName [33m||[39m [32m`박스 #${review.boxId}`[39m}[0m
-2026-03-18T00:30:46.9139230Z [0m [90m     |[39m                                   [31m[1m^[22m[39m[0m
-2026-03-18T00:30:46.9139825Z [0m [90m 129 |[39m                         [33m<[39m[33m/[39m[33mLink[39m[33m>[39m[0m
-2026-03-18T00:30:46.9141752Z [0m [90m 130 |[39m                         [33m<[39m[33mspan[39m className[33m=[39m{s[33m.[39mstars}[33m>[39m{[32m"★"[39m[33m.[39mrepeat(review[33m.[39mrating)}{[32m"☆"[39m[33m.[39mrepeat([35m5[39m [33m-[39m review[33m.[39mrating)}[33m<[39m[33m/[39m[33mspan[39m[33m>[39m[0m
-2026-03-18T00:30:46.9143764Z [0m [90m 131 |[39m                         [33m<[39m[33mspan[39m className[33m=[39m{s[33m.[39mdate}[33m>[39m{dayjs(review[33m.[39mcreatedAt)[33m.[39mformat([32m"YYYY.MM.DD"[39m)}[33m<[39m[33m/[39m[33mspan[39m[33m>[39m[0m
-2026-03-18T00:30:46.9478924Z Next.js build worker exited with code: 1 and signal: null
-2026-03-18T00:30:46.9650454Z ##[error]Process completed with exit code 1.
-2026-03-18T00:30:46.9754055Z Post job cleanup.
-2026-03-18T00:30:47.0725131Z [command]/usr/bin/git version
-2026-03-18T00:30:47.0762613Z git version 2.53.0
-2026-03-18T00:30:47.0807934Z Temporarily overriding HOME='/home/runner/work/_temp/6b168eb0-5690-4a22-a4c3-8e36bf78d177' before making global git config changes
-2026-03-18T00:30:47.0809755Z Adding repository directory to the temporary git global config as a safe directory
-2026-03-18T00:30:47.0822253Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/crossfitkorea/crossfitkorea
-2026-03-18T00:30:47.0858189Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
-2026-03-18T00:30:47.0892644Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
-2026-03-18T00:30:47.1139401Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
-2026-03-18T00:30:47.1163227Z http.https://github.com/.extraheader
-2026-03-18T00:30:47.1176450Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
-2026-03-18T00:30:47.1209992Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
-2026-03-18T00:30:47.1446905Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
-2026-03-18T00:30:47.1480285Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
-2026-03-18T00:30:47.1835024Z Cleaning up orphan processes
-2026-03-18T00:30:47.2158153Z ##[warning]Node.js 20 actions are deprecated. The following actions are running on Node.js 20 and may not work as expected: actions/checkout@v4, actions/setup-node@v4. Actions will be forced to run with Node.js 24 by default starting June 2nd, 2026. Please check if updated versions of these actions are available that support Node.js 24. To opt into Node.js 24 now, set the FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true environment variable on the runner or in your workflow file. Once Node.js 24 becomes the default, you can temporarily opt out by setting ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+﻿2026-03-18T23:44:42.5437602Z Current runner version: '2.332.0'
+2026-03-18T23:44:42.5463579Z ##[group]Runner Image Provisioner
+2026-03-18T23:44:42.5464728Z Hosted Compute Agent
+2026-03-18T23:44:42.5465279Z Version: 20260213.493
+2026-03-18T23:44:42.5465946Z Commit: 5c115507f6dd24b8de37d8bbe0bb4509d0cc0fa3
+2026-03-18T23:44:42.5466671Z Build Date: 2026-02-13T00:28:41Z
+2026-03-18T23:44:42.5467288Z Worker ID: {bed24ee6-0bcd-462d-884d-54ba8710ccc3}
+2026-03-18T23:44:42.5468152Z Azure Region: northcentralus
+2026-03-18T23:44:42.5468749Z ##[endgroup]
+2026-03-18T23:44:42.5470138Z ##[group]Operating System
+2026-03-18T23:44:42.5470815Z Ubuntu
+2026-03-18T23:44:42.5471245Z 24.04.3
+2026-03-18T23:44:42.5471740Z LTS
+2026-03-18T23:44:42.5472202Z ##[endgroup]
+2026-03-18T23:44:42.5472724Z ##[group]Runner Image
+2026-03-18T23:44:42.5473231Z Image: ubuntu-24.04
+2026-03-18T23:44:42.5473776Z Version: 20260309.50.1
+2026-03-18T23:44:42.5475218Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260309.50/images/ubuntu/Ubuntu2404-Readme.md
+2026-03-18T23:44:42.5476942Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260309.50
+2026-03-18T23:44:42.5477799Z ##[endgroup]
+2026-03-18T23:44:42.5478886Z ##[group]GITHUB_TOKEN Permissions
+2026-03-18T23:44:42.5480954Z Contents: read
+2026-03-18T23:44:42.5481544Z Metadata: read
+2026-03-18T23:44:42.5482080Z Packages: read
+2026-03-18T23:44:42.5482603Z ##[endgroup]
+2026-03-18T23:44:42.5484877Z Secret source: Actions
+2026-03-18T23:44:42.5485665Z Prepare workflow directory
+2026-03-18T23:44:42.5881561Z Prepare all required actions
+2026-03-18T23:44:42.5919333Z Getting action download info
+2026-03-18T23:44:42.9114152Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+2026-03-18T23:44:43.0354797Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+2026-03-18T23:44:43.2285804Z Complete job name: Frontend Test
+2026-03-18T23:44:43.2986398Z ##[group]Run actions/checkout@v4
+2026-03-18T23:44:43.2987219Z with:
+2026-03-18T23:44:43.2987613Z   repository: baedongjun/crossfitkorea
+2026-03-18T23:44:43.2988269Z   token: ***
+2026-03-18T23:44:43.2988683Z   ssh-strict: true
+2026-03-18T23:44:43.2989107Z   ssh-user: git
+2026-03-18T23:44:43.2989656Z   persist-credentials: true
+2026-03-18T23:44:43.2990075Z   clean: true
+2026-03-18T23:44:43.2990457Z   sparse-checkout-cone-mode: true
+2026-03-18T23:44:43.2990967Z   fetch-depth: 1
+2026-03-18T23:44:43.2991346Z   fetch-tags: false
+2026-03-18T23:44:43.2991727Z   show-progress: true
+2026-03-18T23:44:43.2992118Z   lfs: false
+2026-03-18T23:44:43.2992487Z   submodules: false
+2026-03-18T23:44:43.2992927Z   set-safe-directory: true
+2026-03-18T23:44:43.2993582Z ##[endgroup]
+2026-03-18T23:44:43.4060983Z Syncing repository: baedongjun/crossfitkorea
+2026-03-18T23:44:43.4062648Z ##[group]Getting Git version info
+2026-03-18T23:44:43.4063501Z Working directory is '/home/runner/work/crossfitkorea/crossfitkorea'
+2026-03-18T23:44:43.4064928Z [command]/usr/bin/git version
+2026-03-18T23:44:43.4163186Z git version 2.53.0
+2026-03-18T23:44:43.4190371Z ##[endgroup]
+2026-03-18T23:44:43.4212487Z Temporarily overriding HOME='/home/runner/work/_temp/fa65ce4c-87a7-44c2-b5d5-2e31692d67a6' before making global git config changes
+2026-03-18T23:44:43.4215081Z Adding repository directory to the temporary git global config as a safe directory
+2026-03-18T23:44:43.4219256Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/crossfitkorea/crossfitkorea
+2026-03-18T23:44:43.4261484Z Deleting the contents of '/home/runner/work/crossfitkorea/crossfitkorea'
+2026-03-18T23:44:43.4265267Z ##[group]Initializing the repository
+2026-03-18T23:44:43.4270699Z [command]/usr/bin/git init /home/runner/work/crossfitkorea/crossfitkorea
+2026-03-18T23:44:43.4380973Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-03-18T23:44:43.4382436Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-03-18T23:44:43.4383346Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-03-18T23:44:43.4385125Z hint: call:
+2026-03-18T23:44:43.4385540Z hint:
+2026-03-18T23:44:43.4386312Z hint: 	git config --global init.defaultBranch <name>
+2026-03-18T23:44:43.4387353Z hint:
+2026-03-18T23:44:43.4388347Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-03-18T23:44:43.4389966Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-03-18T23:44:43.4391268Z hint:
+2026-03-18T23:44:43.4391984Z hint: 	git branch -m <name>
+2026-03-18T23:44:43.4392752Z hint:
+2026-03-18T23:44:43.4393732Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-03-18T23:44:43.4395752Z Initialized empty Git repository in /home/runner/work/crossfitkorea/crossfitkorea/.git/
+2026-03-18T23:44:43.4398779Z [command]/usr/bin/git remote add origin https://github.com/baedongjun/crossfitkorea
+2026-03-18T23:44:43.4433404Z ##[endgroup]
+2026-03-18T23:44:43.4434812Z ##[group]Disabling automatic garbage collection
+2026-03-18T23:44:43.4438631Z [command]/usr/bin/git config --local gc.auto 0
+2026-03-18T23:44:43.4467978Z ##[endgroup]
+2026-03-18T23:44:43.4468606Z ##[group]Setting up auth
+2026-03-18T23:44:43.4475257Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-03-18T23:44:43.4508589Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-03-18T23:44:43.4866903Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-03-18T23:44:43.4895795Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-03-18T23:44:43.5126071Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-03-18T23:44:43.5161602Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-03-18T23:44:43.5412343Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-03-18T23:44:43.5449060Z ##[endgroup]
+2026-03-18T23:44:43.5450220Z ##[group]Fetching the repository
+2026-03-18T23:44:43.5461779Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +2f91235706b98517d188b0fb47dc2b03a481ff12:refs/remotes/origin/main
+2026-03-18T23:44:43.9552489Z From https://github.com/baedongjun/crossfitkorea
+2026-03-18T23:44:43.9554875Z  * [new ref]         2f91235706b98517d188b0fb47dc2b03a481ff12 -> origin/main
+2026-03-18T23:44:43.9589235Z ##[endgroup]
+2026-03-18T23:44:43.9590645Z ##[group]Determining the checkout info
+2026-03-18T23:44:43.9592281Z ##[endgroup]
+2026-03-18T23:44:43.9597622Z [command]/usr/bin/git sparse-checkout disable
+2026-03-18T23:44:43.9642241Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-03-18T23:44:43.9669393Z ##[group]Checking out the ref
+2026-03-18T23:44:43.9672989Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2026-03-18T23:44:43.9928247Z Switched to a new branch 'main'
+2026-03-18T23:44:43.9931288Z branch 'main' set up to track 'origin/main'.
+2026-03-18T23:44:43.9938714Z ##[endgroup]
+2026-03-18T23:44:43.9974626Z [command]/usr/bin/git log -1 --format=%H
+2026-03-18T23:44:43.9997916Z 2f91235706b98517d188b0fb47dc2b03a481ff12
+2026-03-18T23:44:44.0312395Z ##[group]Run actions/setup-node@v4
+2026-03-18T23:44:44.0312966Z with:
+2026-03-18T23:44:44.0313340Z   node-version: 20
+2026-03-18T23:44:44.0313731Z   cache: npm
+2026-03-18T23:44:44.0314426Z   cache-dependency-path: frontend/package-lock.json
+2026-03-18T23:44:44.0315022Z   always-auth: false
+2026-03-18T23:44:44.0315438Z   check-latest: false
+2026-03-18T23:44:44.0316009Z   token: ***
+2026-03-18T23:44:44.0316385Z ##[endgroup]
+2026-03-18T23:44:44.2140352Z Found in cache @ /opt/hostedtoolcache/node/20.20.1/x64
+2026-03-18T23:44:44.2147009Z ##[group]Environment details
+2026-03-18T23:44:44.5558026Z node: v20.20.1
+2026-03-18T23:44:44.5559659Z npm: 10.8.2
+2026-03-18T23:44:44.5560884Z yarn: 1.22.22
+2026-03-18T23:44:44.5562763Z ##[endgroup]
+2026-03-18T23:44:44.5582376Z [command]/opt/hostedtoolcache/node/20.20.1/x64/bin/npm config get cache
+2026-03-18T23:44:44.6722392Z /home/runner/.npm
+2026-03-18T23:44:44.8331005Z Cache hit for: node-cache-Linux-x64-npm-57588e844e454d0ea240ee6a2c1304e9d0130ce91d6e580adfe6e2450e072de1
+2026-03-18T23:44:46.0061735Z Received 134217728 of 155950778 (86.1%), 123.7 MBs/sec
+2026-03-18T23:44:46.2622473Z Received 155950778 of 155950778 (100.0%), 115.2 MBs/sec
+2026-03-18T23:44:46.2624090Z Cache Size: ~149 MB (155950778 B)
+2026-03-18T23:44:46.2655214Z [command]/usr/bin/tar -xf /home/runner/work/_temp/ebdbb39b-41fb-4d5c-898f-e952123e907c/cache.tzst -P -C /home/runner/work/crossfitkorea/crossfitkorea --use-compress-program unzstd
+2026-03-18T23:44:46.6113354Z Cache restored successfully
+2026-03-18T23:44:46.6424382Z Cache restored from key: node-cache-Linux-x64-npm-57588e844e454d0ea240ee6a2c1304e9d0130ce91d6e580adfe6e2450e072de1
+2026-03-18T23:44:46.6597667Z ##[group]Run npm ci
+2026-03-18T23:44:46.6597964Z [36;1mnpm ci[0m
+2026-03-18T23:44:46.6660411Z shell: /usr/bin/bash -e {0}
+2026-03-18T23:44:46.6660734Z ##[endgroup]
+2026-03-18T23:44:50.1952072Z npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+2026-03-18T23:44:50.3132359Z npm warn deprecated @humanwhocodes/config-array@0.13.0: Use @eslint/config-array instead
+2026-03-18T23:44:50.3287884Z npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+2026-03-18T23:44:50.3961598Z npm warn deprecated glob@7.2.3: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+2026-03-18T23:44:50.3998343Z npm warn deprecated @humanwhocodes/object-schema@2.0.3: Use @eslint/object-schema instead
+2026-03-18T23:44:51.9831386Z npm warn deprecated eslint@8.57.1: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+2026-03-18T23:44:56.4167029Z npm warn deprecated next@15.2.1: This version has a security vulnerability. Please upgrade to a patched version. See https://nextjs.org/blog/CVE-2025-66478 for more details.
+2026-03-18T23:44:56.6503401Z
+2026-03-18T23:44:56.6504374Z added 398 packages, and audited 399 packages in 10s
+2026-03-18T23:44:56.6504940Z
+2026-03-18T23:44:56.6505253Z 155 packages are looking for funding
+2026-03-18T23:44:56.6505793Z   run `npm fund` for details
+2026-03-18T23:44:56.7370390Z
+2026-03-18T23:44:56.7371506Z 2 vulnerabilities (1 high, 1 critical)
+2026-03-18T23:44:56.7372009Z
+2026-03-18T23:44:56.7372417Z To address issues that do not require attention, run:
+2026-03-18T23:44:56.7373059Z   npm audit fix
+2026-03-18T23:44:56.7373273Z
+2026-03-18T23:44:56.7373511Z To address all issues, run:
+2026-03-18T23:44:56.7374306Z   npm audit fix --force
+2026-03-18T23:44:56.7374614Z
+2026-03-18T23:44:56.7374844Z Run `npm audit` for details.
+2026-03-18T23:44:56.8029412Z ##[group]Run npm run lint
+2026-03-18T23:44:56.8029773Z [36;1mnpm run lint[0m
+2026-03-18T23:44:56.8081331Z shell: /usr/bin/bash -e {0}
+2026-03-18T23:44:56.8081572Z ##[endgroup]
+2026-03-18T23:44:56.9189502Z
+2026-03-18T23:44:56.9189888Z > crossfitkorea-frontend@0.1.0 lint
+2026-03-18T23:44:56.9190210Z > next lint
+2026-03-18T23:44:56.9190327Z
+2026-03-18T23:45:00.2822560Z Attention: Next.js now collects completely anonymous telemetry regarding usage.
+2026-03-18T23:45:00.2827911Z This information is used to shape Next.js' roadmap and prioritize features.
+2026-03-18T23:45:00.2829405Z You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+2026-03-18T23:45:00.2831094Z https://nextjs.org/telemetry
+2026-03-18T23:45:00.2831372Z
+2026-03-18T23:45:00.5497264Z
+2026-03-18T23:45:00.5498193Z ./app/boxes/[id]/edit/page.tsx
+2026-03-18T23:45:00.5499677Z 31:6  Warning: React Hook useEffect has a missing dependency: 'router'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+2026-03-18T23:45:00.5502985Z 162:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-18T23:45:00.5504526Z
+2026-03-18T23:45:00.5504679Z ./app/boxes/[id]/page.tsx
+2026-03-18T23:45:00.5506190Z 501:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-18T23:45:00.5507317Z
+2026-03-18T23:45:00.5507437Z ./app/boxes/create/page.tsx
+2026-03-18T23:45:00.5508283Z 45:6  Warning: React Hook useEffect has missing dependencies: 'router' and 'user?.role'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
+2026-03-18T23:45:00.5510175Z 153:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-18T23:45:00.5511262Z
+2026-03-18T23:45:00.5511395Z ./app/community/[id]/edit/page.tsx
+2026-03-18T23:45:00.5512140Z 35:6  Warning: React Hook useEffect has a missing dependency: 'router'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+2026-03-18T23:45:00.5514163Z 132:23  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-18T23:45:00.5515244Z
+2026-03-18T23:45:00.5515362Z ./app/community/[id]/page.tsx
+2026-03-18T23:45:00.5516842Z 265:17  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-18T23:45:00.5517912Z
+2026-03-18T23:45:00.5518037Z ./app/community/write/page.tsx
+2026-03-18T23:45:00.5519474Z 120:23  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-18T23:45:00.5520544Z
+2026-03-18T23:45:00.5521033Z ./app/competitions/[id]/page.tsx
+2026-03-18T23:45:00.5522527Z 136:11  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-18T23:45:00.5523612Z
+2026-03-18T23:45:00.5523699Z ./app/layout.tsx
+2026-03-18T23:45:00.5524870Z 50:9  Warning: Custom fonts not added in `pages/_document.js` will only load for a single page. This is discouraged. See: https://nextjs.org/docs/messages/no-page-custom-font  @next/next/no-page-custom-font
+2026-03-18T23:45:00.5525745Z
+2026-03-18T23:45:00.5525851Z ./app/my/box/page.tsx
+2026-03-18T23:45:00.5526629Z 47:6  Warning: React Hook useEffect has missing dependencies: 'router' and 'user?.role'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
+2026-03-18T23:45:00.5528518Z 368:43  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-18T23:45:00.5529605Z
+2026-03-18T23:45:00.5529730Z ./app/my/competitions/page.tsx
+2026-03-18T23:45:00.5530219Z 83:21  Error: 'isOpen' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+2026-03-18T23:45:00.5531848Z 89:23  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-18T23:45:00.5532913Z
+2026-03-18T23:45:00.5533022Z ./app/my/favorites/page.tsx
+2026-03-18T23:45:00.5534830Z 76:27  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-18T23:45:00.5535931Z
+2026-03-18T23:45:00.5536039Z ./app/my/page.tsx
+2026-03-18T23:45:00.5537449Z 156:17  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-18T23:45:00.5539810Z 449:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-18T23:45:00.5540881Z
+2026-03-18T23:45:00.5540984Z ./app/my/password/page.tsx
+2026-03-18T23:45:00.5541695Z 20:6  Warning: React Hook useEffect has a missing dependency: 'router'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+2026-03-18T23:45:00.5542212Z
+2026-03-18T23:45:00.5542311Z ./app/my/profile/page.tsx
+2026-03-18T23:45:00.5543731Z 88:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-18T23:45:00.5544950Z
+2026-03-18T23:45:00.5545059Z ./app/users/[id]/page.tsx
+2026-03-18T23:45:00.5546689Z 61:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-18T23:45:00.5547761Z
+2026-03-18T23:45:00.5547910Z ./app/wod/page.tsx
+2026-03-18T23:45:00.5549305Z 195:17  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-18T23:45:00.5550484Z
+2026-03-18T23:45:00.5550620Z ./components/common/ImageUpload.tsx
+2026-03-18T23:45:00.5552071Z 60:11  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-18T23:45:00.5553136Z
+2026-03-18T23:45:00.5553653Z info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
+2026-03-18T23:45:00.6550757Z ##[error]Process completed with exit code 1.
+2026-03-18T23:45:00.6670149Z Post job cleanup.
+2026-03-18T23:45:00.7613397Z [command]/usr/bin/git version
+2026-03-18T23:45:00.7649901Z git version 2.53.0
+2026-03-18T23:45:00.7694538Z Temporarily overriding HOME='/home/runner/work/_temp/04303e1e-c5cc-4308-b82e-7e4ec002bffd' before making global git config changes
+2026-03-18T23:45:00.7696082Z Adding repository directory to the temporary git global config as a safe directory
+2026-03-18T23:45:00.7707925Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/crossfitkorea/crossfitkorea
+2026-03-18T23:45:00.7743256Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-03-18T23:45:00.7777776Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-03-18T23:45:00.8019502Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-03-18T23:45:00.8040656Z http.https://github.com/.extraheader
+2026-03-18T23:45:00.8053043Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-03-18T23:45:00.8083655Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-03-18T23:45:00.8316559Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-03-18T23:45:00.8347600Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-03-18T23:45:00.8681276Z Cleaning up orphan processes
+2026-03-18T23:45:00.8984285Z ##[warning]Node.js 20 actions are deprecated. The following actions are running on Node.js 20 and may not work as expected: actions/checkout@v4, actions/setup-node@v4. Actions will be forced to run with Node.js 24 by default starting June 2nd, 2026. Please check if updated versions of these actions are available that support Node.js 24. To opt into Node.js 24 now, set the FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true environment variable on the runner or in your workflow file. Once Node.js 24 becomes the default, you can temporarily opt out by setting ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
