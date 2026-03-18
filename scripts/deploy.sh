@@ -32,8 +32,10 @@ cd "$APP_DIR"
 COMPOSE_CMD="docker compose"
 command -v docker-compose &>/dev/null && COMPOSE_CMD="docker-compose"
 
-$COMPOSE_CMD -f docker-compose.prod.yml down --remove-orphans 2>/dev/null || true
-IMAGE_TAG=$IMAGE_TAG $COMPOSE_CMD -f docker-compose.prod.yml up -d --no-build
+$COMPOSE_CMD -p crossfitkorea -f docker-compose.prod.yml down --remove-orphans 2>/dev/null || true
+sudo fuser -k 80/tcp 2>/dev/null || true
+sudo fuser -k 443/tcp 2>/dev/null || true
+IMAGE_TAG=$IMAGE_TAG $COMPOSE_CMD -p crossfitkorea -f docker-compose.prod.yml up -d --no-build
 
 # 헬스체크
 echo "[4/4] 헬스체크..."
