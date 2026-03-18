@@ -158,7 +158,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: "seed.sql,docker-compose.prod.yml,scripts/deploy.sh"
+          source: "seed.sql,docker-compose.prod.yml,scripts/deploy.sh,nginx/nginx.conf"
           target: "/home/ubuntu/crossfitkorea/"
 
       - name: Deploy to EC2
