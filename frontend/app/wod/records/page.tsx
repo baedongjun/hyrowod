@@ -97,6 +97,19 @@ export default function WodRecordsPage() {
   const rxCount = records.filter((r) => r.rx).length;
   const rxRatio = records.length > 0 ? Math.round((rxCount / records.length) * 100) : 0;
 
+  // 월별 기록 수 차트 데이터 (최근 6개월, recentRecords 기반)
+  const monthlyChart = (() => {
+    const months: { label: string; count: number }[] = [];
+    for (let i = 5; i >= 0; i--) {
+      const m = dayjs().subtract(i, "month");
+      const key = m.format("YYYY-MM");
+      const count = (recentRecords || []).filter((r) => r.wodDate?.startsWith(key)).length;
+      months.push({ label: m.format("M월"), count });
+    }
+    return months;
+  })();
+  const maxMonthlyCount = Math.max(...monthlyChart.map((m) => m.count), 1);
+
   // 연속 기록 스트릭 계산 (recentRecords 기반)
   const streak = (() => {
     if (!recentRecords || recentRecords.length === 0) return 0;
@@ -203,6 +216,28 @@ export default function WodRecordsPage() {
             <div className={s.statItem}>
               <p className={s.statNum}>{streak}<span style={{ fontSize: 14 }}>일</span></p>
               <p className={s.statLabel}>연속 출석</p>
+            </div>
+          </div>
+        )}
+
+        {/* 월별 기록 차트 */}
+        {recentRecords && recentRecords.length > 0 && (
+          <div className={s.chartCard}>
+            <p className={s.heatmapTitle}>월별 기록 현황 (최근 6개월)</p>
+            <div className={s.barChart}>
+              {monthlyChart.map((m) => (
+                <div key={m.label} className={s.barItem}>
+                  <div className={s.barWrap}>
+                    <div
+                      className={s.bar}
+                      style={{ height: `${Math.max((m.count / maxMonthlyCount) * 100, m.count > 0 ? 8 : 0)}%` }}
+                    >
+                      {m.count > 0 && <span className={s.barValue}>{m.count}</span>}
+                    </div>
+                  </div>
+                  <p className={s.barLabel}>{m.label}</p>
+                </div>
+              ))}
             </div>
           </div>
         )}

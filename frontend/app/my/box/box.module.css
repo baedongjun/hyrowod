@@ -216,9 +216,38 @@
 }
 .wodContent { font-size: 14px; color: var(--muted); line-height: 1.8; white-space: pre-line; }
 
+/* Inline management form */
+.manageForm {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.manageFormGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* Delete row button */
+.deleteRowBtn {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+  flex-shrink: 0;
+}
+.deleteRowBtn:hover { color: var(--red); }
+.deleteRowBtn:disabled { opacity: 0.4; cursor: not-allowed; }
+
 /* Coach list */
 .coachList { display: flex; flex-direction: column; gap: 12px; }
 .coachItem { display: flex; align-items: center; gap: 12px; }
+.coachItemRow { display: flex; align-items: center; gap: 12px; }
 .coachAvatar {
   width: 40px;
   height: 40px;
@@ -249,6 +278,16 @@
   font-size: 13px;
 }
 .scheduleItem:last-child { border-bottom: none; }
+.scheduleItemRow {
+  display: grid;
+  grid-template-columns: 48px 100px 1fr 60px 32px;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.scheduleItemRow:last-child { border-bottom: none; }
 .scheduleDay { color: var(--red); font-weight: 700; }
 .scheduleTime { color: var(--muted); font-family: monospace; }
 .scheduleName { color: var(--text); }

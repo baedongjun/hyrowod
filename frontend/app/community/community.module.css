@@ -190,6 +190,15 @@
   border: 1px solid var(--border);
 }
 
+.postThumbWrap {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
 .postStats {
   display: flex;
   align-items: center;
@@ -227,7 +236,7 @@
 .emptyIcon { font-size: 48px; opacity: 0.15; margin-bottom: 16px; }
 .emptyAction { margin-top: 16px; }
 
-/* Pagination */
+/* Pagination (kept for reference) */
 .pagination {
   display: flex;
   align-items: center;
@@ -236,6 +245,26 @@
   margin-top: 40px;
 }
 .pageInfo { font-size: 14px; color: var(--muted); }
+
+/* Infinite scroll */
+.infiniteSentinel {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 8px;
+}
+.loadingDots {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  letter-spacing: 6px;
+  color: var(--muted);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
 
 /* Sidebar */
 .sidebar { position: sticky; top: calc(64px + 120px); display: flex; flex-direction: column; gap: 16px; }

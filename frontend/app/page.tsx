@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { boxApi, wodApi, competitionApi, communityApi } from "@/lib/api";
+import { boxApi, wodApi, competitionApi, communityApi, membershipApi, leaderboardApi, statsApi } from "@/lib/api";
 import { isLoggedIn, getUser } from "@/lib/auth";
-import { Box, Wod, Competition, Post } from "@/types";
+import { Box, Wod, Competition, Post, BoxMembership, BoxRanking } from "@/types";
 import BoxCard from "@/components/box/BoxCard";
 import dayjs from "dayjs";
 import s from "./page.module.css";
@@ -189,6 +189,26 @@ export default function HomePage() {
     queryFn: async () => (await communityApi.getPosts({ page: 0 })).data.data,
   });
 
+  const todayDate = dayjs().format("YYYY-MM-DD");
+
+  const { data: myBox } = useQuery({
+    queryKey: ["membership", "myBox", "home"],
+    queryFn: async () => (await membershipApi.getMyBox()).data.data as BoxMembership | null,
+    enabled: loggedIn,
+  });
+
+  const { data: boxRanking } = useQuery({
+    queryKey: ["wod", "boxRanking", todayDate, "home"],
+    queryFn: async () => (await leaderboardApi.getBoxRanking(todayDate)).data.data as BoxRanking[],
+    enabled: !!todayWod,
+  });
+
+  const { data: platformStats } = useQuery({
+    queryKey: ["stats", "public"],
+    queryFn: async () => (await statsApi.getPublicStats()).data.data,
+    staleTime: 1000 * 60 * 10,
+  });
+
   const activeComps: Competition[] = (competitions?.content ?? []).filter(
     (c: Competition) => c.status === "OPEN" || c.status === "UPCOMING"
   ).slice(0, 3);
@@ -241,12 +261,22 @@ export default function HomePage() {
       {/* Stats */}
       <div className={s.stats}>
         <div className={s.statsGrid}>
-          {STATS.map((st) => (
-            <div key={st.label} className={`${s.statItem} fade-in`}>
-              <p className={s.statNum}>{st.num}</p>
-              <p className={s.statLabel}>{st.label}</p>
-            </div>
-          ))}
+          <div className={`${s.statItem} fade-in`}>
+            <p className={s.statNum}>{platformStats ? `${platformStats.totalBoxes.toLocaleString()}+` : STATS[0].num}</p>
+            <p className={s.statLabel}>{STATS[0].label}</p>
+          </div>
+          <div className={`${s.statItem} fade-in`}>
+            <p className={s.statNum}>{STATS[1].num}</p>
+            <p className={s.statLabel}>{STATS[1].label}</p>
+          </div>
+          <div className={`${s.statItem} fade-in`}>
+            <p className={s.statNum}>{platformStats ? `${platformStats.totalUsers.toLocaleString()}+` : STATS[2].num}</p>
+            <p className={s.statLabel}>{STATS[2].label}</p>
+          </div>
+          <div className={`${s.statItem} fade-in`}>
+            <p className={s.statNum}>{STATS[3].num}</p>
+            <p className={s.statLabel}>{STATS[3].label}</p>
+          </div>
         </div>
       </div>
 
@@ -430,6 +460,56 @@ export default function HomePage() {
                 </Link>
               ))}
             </div>
+          </div>
+        </section>
+      )}
+
+      {/* 박스 랭킹 (오늘 WOD 있고 랭킹 데이터 있을 때) */}
+      {boxRanking && boxRanking.length > 0 && (
+        <section className={s.rankSection}>
+          <div className={s.rankInner}>
+            <div className={s.rankHeader}>
+              <div>
+                <p className="section-tag">BOX RANKING</p>
+                <h2 className="section-title">오늘의<br /><span>박스 랭킹</span></h2>
+              </div>
+              <Link href="/wod" className={s.viewAll}>전체 보기</Link>
+            </div>
+            <div className={s.rankList}>
+              {boxRanking.slice(0, 5).map((box, idx) => (
+                <Link key={box.boxId} href={`/boxes/${box.boxId}`} className={s.rankItem}>
+                  <span className={`${s.rankNum} ${idx === 0 ? s.rankNumFirst : ""}`}>{idx + 1}</span>
+                  <div className={s.rankBody}>
+                    <p className={s.rankBoxName}>{box.boxName}</p>
+                    <p className={s.rankBoxCity}>{box.boxCity}</p>
+                  </div>
+                  <div className={s.rankStats}>
+                    <span className={s.rankStat}>참여 {box.participantCount}명</span>
+                    <span className={s.rankStatRx}>RX {box.rxCount}명</span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* 내 박스 (로그인 + 박스 가입 시) */}
+      {loggedIn && myBox && (
+        <section className={s.myBoxSection}>
+          <div className={s.myBoxInner}>
+            <p className="section-tag">MY BOX</p>
+            <h2 className="section-title" style={{ marginBottom: 24 }}>
+              내<span> 박스</span>
+            </h2>
+            <Link href={`/boxes/${myBox.boxId}`} className={s.myBoxCard}>
+              <div className={s.myBoxLeft}>
+                <p className={s.myBoxName}>{myBox.boxName}</p>
+                <p className={s.myBoxMeta}>{myBox.boxCity} {myBox.boxDistrict} · 멤버 {myBox.memberCount}명</p>
+                <p className={s.myBoxDays}>가입 {myBox.daysInBox}일째</p>
+              </div>
+              <span className={s.myBoxArrow}>→</span>
+            </Link>
           </div>
         </section>
       )}

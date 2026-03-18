@@ -16,8 +16,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +39,8 @@ public class AdminDashboardController {
 
     @Operation(summary = "대시보드 통계")
     @GetMapping("/dashboard")
-    public ResponseEntity<ApiResponse<Map<String, Object>>> getDashboard() {
+    public ResponseEntity<ApiResponse<Map<String, Object>>> getDashboard(
+            @RequestParam(defaultValue = "6") int months) {
         PageRequest recent5 = PageRequest.of(0, 5, Sort.by("createdAt").descending());
 
         List<User> recentUsers = userRepository.findAll(recent5).getContent();
@@ -74,6 +78,19 @@ public class AdminDashboardController {
             "city", b.getCity() != null ? b.getCity() : "",
             "createdAt", b.getCreatedAt().toString()
         )).collect(Collectors.toList()));
+
+        // Monthly user signups for last N months
+        List<Map<String, Object>> monthlySignups = new ArrayList<>();
+        List<User> allUsers = userRepository.findAll();
+        for (int i = months - 1; i >= 0; i--) {
+            LocalDateTime monthStart = LocalDateTime.now().minusMonths(i).withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
+            LocalDateTime monthEnd = monthStart.plusMonths(1);
+            long count = allUsers.stream()
+                .filter(u -> u.getCreatedAt() != null && !u.getCreatedAt().isBefore(monthStart) && u.getCreatedAt().isBefore(monthEnd))
+                .count();
+            monthlySignups.add(Map.of("month", monthStart.getMonthValue() + "월", "count", count));
+        }
+        stats.put("monthlySignups", monthlySignups);
 
         return ResponseEntity.ok(ApiResponse.success(stats));
     }

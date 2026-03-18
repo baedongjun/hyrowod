@@ -15,6 +15,9 @@ public interface WodRepository extends JpaRepository<Wod, Long> {
 
     Optional<Wod> findByBoxIsNullAndWodDateAndActiveTrue(LocalDate date);
 
+    // 배지 체크용: 공통 WOD 제목 조회
+    Optional<Wod> findByWodDateAndBoxIdIsNull(LocalDate date);
+
     Page<Wod> findByBoxIsNullAndActiveTrueOrderByWodDateDesc(Pageable pageable);
 
     List<Wod> findByBoxIdAndActiveTrueAndWodDateBetweenOrderByWodDateDesc(

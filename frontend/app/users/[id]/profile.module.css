@@ -1,0 +1,112 @@
+.page { padding-top: 80px; min-height: 100vh; background: var(--bg); }
+.inner { max-width: 800px; margin: 0 auto; padding: 48px 24px; }
+
+.profileCard {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 32px;
+  margin-bottom: 32px;
+}
+.avatarWrap { flex-shrink: 0; }
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--border);
+}
+.avatarFallback {
+  width: 80px;
+  height: 80px;
+  background: var(--red);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px;
+  color: #fff;
+}
+.profileInfo { flex: 1; }
+.name {
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: 28px;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.badgeSummary {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+.tierCount {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  letter-spacing: 1px;
+}
+
+/* Section */
+.section { margin-bottom: 32px; }
+.sectionTitle {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: var(--red);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.sectionTitle span {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px;
+  letter-spacing: 1px;
+  color: var(--muted);
+  margin-left: 8px;
+}
+
+/* Badge Grid */
+.badgeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+}
+.badgeItem {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 20px 16px;
+  text-align: center;
+  transition: transform 0.2s, border-color 0.2s;
+}
+.badgeItem:hover { transform: translateY(-2px); }
+.badgeIcon { font-size: 30px; margin-bottom: 10px; }
+.badgeName { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.badgeDesc { font-size: 11px; color: var(--muted); margin-bottom: 6px; line-height: 1.4; }
+.badgeTier { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; margin-bottom: 4px; }
+.badgeDate { font-size: 10px; color: var(--muted); opacity: 0.6; }
+
+/* Empty */
+.empty { text-align: center; padding: 60px 0; }
+.emptyIcon { font-size: 40px; opacity: 0.4; margin-bottom: 12px; }
+.empty p { font-size: 14px; color: var(--muted); }
+
+/* Skeleton */
+.skeleton {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.5; } }
+
+/* Back */
+.backRow { margin-top: 32px; }
+.backLink { font-size: 13px; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+.backLink:hover { color: var(--text); }
+
+@media (max-width: 768px) {
+  .profileCard { flex-direction: column; align-items: flex-start; }
+  .badgeGrid { grid-template-columns: repeat(2, 1fr); }
+}

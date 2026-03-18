@@ -20,5 +20,7 @@ public interface WodRecordRepository extends JpaRepository<WodRecord, Long> {
 
     List<WodRecord> findByWodDateOrderByScoreAsc(LocalDate wodDate);
 
+    List<WodRecord> findByWodDate(LocalDate wodDate);
+
     long countByUserEmail(String email);
 }

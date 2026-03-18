@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Box } from "@/types";
 import { boxApi } from "@/lib/api";
 import { isLoggedIn } from "@/lib/auth";
@@ -40,7 +41,7 @@ export default function BoxCard({ box }: { box: Box }) {
     <Link href={`/boxes/${box.id}`} className={s.card}>
       <div className={s.imgWrap}>
         {img ? (
-          <img src={img} alt={box.name} className={s.img} />
+          <Image src={img} alt={box.name} fill style={{ objectFit: "cover", transition: "transform 0.4s" }} className={s.img} />
         ) : (
           <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#333" strokeWidth="1">

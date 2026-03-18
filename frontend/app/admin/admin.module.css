@@ -2,6 +2,7 @@
   padding-top: 64px;
   min-height: 100vh;
   display: flex;
+  overflow-x: hidden; /* 전체 어드민 레이아웃 overflow 차단 */
 }
 
 /* Sidebar */
@@ -14,6 +15,8 @@
   top: 64px;
   bottom: 0;
   overflow-y: auto;
+  flex-shrink: 0;
+  z-index: 10;
 }
 .sidebarInner { padding: 24px 16px; }
 .sidebarLabel {
@@ -36,6 +39,7 @@
   color: var(--muted);
   text-decoration: none;
   transition: color 0.2s, background 0.2s;
+  white-space: nowrap;
 }
 .navLink:hover { color: var(--text); background: rgba(255,255,255,0.04); }
 .navLinkActive {
@@ -45,11 +49,16 @@
 .navLinkActive:hover { color: var(--red); }
 
 /* Main */
-.main { flex: 1; margin-left: 220px; }
+.main {
+  flex: 1;
+  margin-left: 220px;
+  min-width: 0;       /* flex/grid child가 container 밖으로 벗어나지 않도록 */
+  overflow-x: hidden; /* 수평 스크롤 방지 */
+}
 .mainInner {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 40px 48px;
+  padding: 40px 40px;
 }
 
 /* Auth loading */
@@ -62,8 +71,12 @@
   font-size: 14px;
 }
 
+@media (max-width: 1100px) {
+  .mainInner { padding: 32px 28px; }
+}
+
 @media (max-width: 768px) {
   .sidebar { display: none; }
   .main    { margin-left: 0; }
-  .mainInner { padding: 24px; }
+  .mainInner { padding: 24px 20px; }
 }

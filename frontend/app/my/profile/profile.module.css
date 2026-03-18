@@ -1,0 +1,119 @@
+.page { padding-top: 64px; min-height: 100vh; }
+
+.inner {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--muted);
+  text-decoration: none;
+  margin-bottom: 24px;
+  transition: color 0.2s;
+}
+.back:hover { color: var(--text); }
+
+.title {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 32px;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.sub { font-size: 14px; color: var(--muted); margin-bottom: 40px; }
+
+.skeleton {
+  height: 400px;
+  background: var(--bg-card);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Avatar */
+.avatarSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatarWrap {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  cursor: pointer;
+  overflow: hidden;
+  border: 2px solid var(--border);
+}
+
+.avatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.avatarPlaceholder {
+  width: 100%;
+  height: 100%;
+  background: var(--bg-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+}
+
+.avatarOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.avatarWrap:hover .avatarOverlay { opacity: 1; }
+.avatarOverlayText { font-size: 11px; color: #fff; font-weight: 600; }
+
+.removePhotoBtn {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-size: 12px;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+  transition: color 0.2s;
+}
+.removePhotoBtn:hover { color: var(--red); }
+
+/* Fields */
+.field { display: flex; flex-direction: column; gap: 8px; }
+.label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.hint { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+.actions { display: flex; gap: 12px; margin-top: 8px; }
+
+@media (max-width: 768px) {
+  .inner { padding: 32px 16px 60px; }
+  .actions { flex-direction: column; }
+}

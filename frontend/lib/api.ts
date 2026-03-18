@@ -166,7 +166,7 @@ export const boxApi = {
   createReview: (boxId: number, data: { rating: number; content: string }) =>
     api.post(`/api/v1/boxes/${boxId}/reviews`, data),
 
-  addCoach: (boxId: number, data: { name: string; bio?: string; experienceYears?: number; certifications?: string[] }) =>
+  addCoach: (boxId: number, data: { name: string; bio?: string; experienceYears?: number; certifications?: string[]; imageUrl?: string }) =>
     api.post(`/api/v1/boxes/${boxId}/coaches`, data),
 
   updateCoach: (coachId: number, data: { name: string; bio?: string; imageUrl?: string; experienceYears?: number; certifications?: string[] }) =>
@@ -225,6 +225,9 @@ export const competitionApi = {
 
   cancelRegistration: (id: number) =>
     api.delete(`/api/v1/competitions/${id}/register`),
+
+  getMyRegistrations: () =>
+    api.get("/api/v1/competitions/my"),
 };
 
 // Notification API
@@ -291,6 +294,39 @@ export const communityApi = {
 export const leaderboardApi = {
   getLeaderboard: (date: string) =>
     api.get("/api/v1/wod/records/leaderboard", { params: { date } }),
+
+  getBoxRanking: (date: string) =>
+    api.get("/api/v1/wod/records/box-ranking", { params: { date } }),
+};
+
+// Membership API
+export const membershipApi = {
+  join: (boxId: number) =>
+    api.post(`/api/v1/boxes/${boxId}/join`),
+
+  leave: (boxId: number) =>
+    api.delete(`/api/v1/boxes/${boxId}/join`),
+
+  checkMembership: (boxId: number) =>
+    api.get(`/api/v1/boxes/${boxId}/membership`),
+
+  getMemberCount: (boxId: number) =>
+    api.get(`/api/v1/boxes/${boxId}/members/count`),
+
+  getBoxMembers: (boxId: number) =>
+    api.get(`/api/v1/boxes/${boxId}/members`),
+
+  getMyBox: () =>
+    api.get("/api/v1/users/me/box"),
+};
+
+// Badge API
+export const badgeApi = {
+  getMyBadges: () =>
+    api.get("/api/v1/users/me/badges"),
+
+  getUserBadges: (userId: number) =>
+    api.get(`/api/v1/badges/users/${userId}`),
 };
 
 // WOD Record API
@@ -333,6 +369,15 @@ export const userApi = {
 
   deleteMyAccount: () =>
     api.delete("/api/v1/users/me"),
+
+  getPublicProfile: (id: number) =>
+    api.get(`/api/v1/users/${id}/profile`),
+};
+
+// Stats API
+export const statsApi = {
+  getPublicStats: () =>
+    api.get<ApiResponse<{ totalBoxes: number; totalUsers: number; totalPosts: number; totalCompetitions: number }>>("/api/v1/stats"),
 };
 
 // Payment API
@@ -346,8 +391,8 @@ export const paymentApi = {
 
 // Admin API
 export const adminApi = {
-  getDashboard: () =>
-    api.get("/api/v1/admin/dashboard"),
+  getDashboard: (months = 6) =>
+    api.get("/api/v1/admin/dashboard", { params: { months } }),
 
   getBoxes: (page = 0) =>
     api.get("/api/v1/admin/boxes", { params: { page } }),
@@ -399,4 +444,23 @@ export const adminApi = {
 
   updateCompetition: (id: number, data: object) =>
     api.put(`/api/v1/admin/competitions/${id}`, data),
+};
+
+// Advertisement API
+export const advertisementApi = {
+  getAds: (position?: string) =>
+    api.get("/api/v1/advertisements", { params: position ? { position } : {} }),
+
+  // Admin
+  createAd: (data: object) =>
+    api.post("/api/v1/admin/advertisements", data),
+
+  updateAd: (id: number, data: object) =>
+    api.put(`/api/v1/admin/advertisements/${id}`, data),
+
+  toggleActive: (id: number, active: boolean) =>
+    api.patch(`/api/v1/admin/advertisements/${id}/active`, null, { params: { active } }),
+
+  deleteAd: (id: number) =>
+    api.delete(`/api/v1/admin/advertisements/${id}`),
 };

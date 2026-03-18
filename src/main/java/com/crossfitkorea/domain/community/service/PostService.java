@@ -10,6 +10,7 @@ import com.crossfitkorea.domain.community.entity.Post;
 import com.crossfitkorea.domain.community.entity.PostCategory;
 import com.crossfitkorea.domain.community.repository.CommentRepository;
 import com.crossfitkorea.domain.community.repository.PostRepository;
+import com.crossfitkorea.domain.badge.service.BadgeService;
 import com.crossfitkorea.domain.notification.entity.NotificationType;
 import com.crossfitkorea.domain.notification.service.NotificationService;
 import com.crossfitkorea.domain.user.entity.User;
@@ -31,6 +32,7 @@ public class PostService {
     private final CommentRepository commentRepository;
     private final UserService userService;
     private final NotificationService notificationService;
+    private final BadgeService badgeService;
 
     public Page<PostDto> getMyPosts(String userEmail, Pageable pageable) {
         return postRepository.findByUserEmailAndActiveTrueOrderByCreatedAtDesc(userEmail, pageable)
@@ -72,7 +74,13 @@ public class PostService {
             .imageUrls(request.getImageUrls() != null ? request.getImageUrls() : List.of())
             .build();
 
-        return PostDto.from(postRepository.save(post));
+        PostDto result = PostDto.from(postRepository.save(post));
+
+        // 게시글 수 배지 체크
+        long totalPosts = postRepository.countByUserEmailAndActiveTrue(userEmail);
+        badgeService.checkPostBadges(user, totalPosts);
+
+        return result;
     }
 
     @Transactional

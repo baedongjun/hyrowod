@@ -1,15 +1,18 @@
 package com.crossfitkorea.domain.competition.controller;
 
 import com.crossfitkorea.common.ApiResponse;
+import com.crossfitkorea.domain.competition.dto.CompetitionDto;
 import com.crossfitkorea.domain.competition.service.CompetitionRegistrationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -19,6 +22,15 @@ import java.util.Map;
 public class CompetitionRegistrationController {
 
     private final CompetitionRegistrationService registrationService;
+
+    @Operation(summary = "내 대회 신청 목록")
+    @GetMapping("/my")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ApiResponse<List<CompetitionDto>>> getMyRegistrations(
+        @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        return ResponseEntity.ok(ApiResponse.success(registrationService.getMyRegistrations(userDetails.getUsername())));
+    }
 
     @Operation(summary = "참가 신청 상태 조회")
     @GetMapping("/{id}/registration-status")

@@ -1,14 +1,16 @@
 "use client";
 
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { communityApi } from "@/lib/api";
 import { Post, PostCategory } from "@/types";
+import Image from "next/image";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Link from "next/link";
 import { isLoggedIn } from "@/lib/auth";
+import AdBanner from "@/components/common/AdBanner";
 import s from "./community.module.css";
 
 dayjs.extend(relativeTime);
@@ -38,10 +40,10 @@ const CATEGORIES: { value: PostCategory | "ALL"; label: string }[] = [
 
 export default function CommunityPage() {
   const [selectedCategory, setSelectedCategory] = useState<PostCategory | "ALL">("ALL");
-  const [page, setPage] = useState(0);
   const [keyword, setKeyword] = useState("");
   const [searchInput, setSearchInput] = useState("");
   const [sortBy, setSortBy] = useState("createdAt,desc");
+  const observerRef = useRef<HTMLDivElement | null>(null);
 
   const { data: hotPosts } = useQuery({
     queryKey: ["posts", "hot"],
@@ -49,24 +51,60 @@ export default function CommunityPage() {
     staleTime: 1000 * 60 * 5,
   });
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["posts", selectedCategory, page, keyword, sortBy],
-    queryFn: async () => {
+  const {
+    data,
+    isLoading,
+    isFetchingNextPage,
+    fetchNextPage,
+    hasNextPage,
+  } = useInfiniteQuery({
+    queryKey: ["posts", "infinite", selectedCategory, keyword, sortBy],
+    queryFn: async ({ pageParam = 0 }) => {
       const res = await communityApi.getPosts({
         category: selectedCategory === "ALL" ? undefined : selectedCategory,
         keyword: keyword || undefined,
-        page,
+        page: pageParam as number,
         sort: sortBy,
       });
       return res.data.data;
     },
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => {
+      if (lastPage.last) return undefined;
+      return lastPage.number + 1;
+    },
   });
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    setKeyword(searchInput);
-    setPage(0);
-  };
+  const allPosts = data?.pages.flatMap((p) => p.content as Post[]) ?? [];
+  const totalElements = data?.pages[0]?.totalElements ?? 0;
+
+  // 300ms 디바운스 실시간 검색
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      setKeyword(searchInput);
+    }, 300);
+    return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
+  }, [searchInput]);
+
+  // IntersectionObserver for infinite scroll
+  const handleObserver = useCallback(
+    (entries: IntersectionObserverEntry[]) => {
+      if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
+      }
+    },
+    [hasNextPage, isFetchingNextPage, fetchNextPage]
+  );
+
+  useEffect(() => {
+    const el = observerRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(handleObserver, { threshold: 0.1 });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [handleObserver]);
 
   return (
     <div className={s.page}>
@@ -89,7 +127,7 @@ export default function CommunityPage() {
           {CATEGORIES.map((cat) => (
             <button
               key={cat.value}
-              onClick={() => { setSelectedCategory(cat.value); setPage(0); }}
+              onClick={() => setSelectedCategory(cat.value)}
               className={`${s.pill} ${selectedCategory === cat.value ? s.pillActive : ""}`}
             >
               {cat.label}
@@ -98,7 +136,7 @@ export default function CommunityPage() {
         </div>
 
         {/* Search */}
-        <form onSubmit={handleSearch} className={s.searchBar}>
+        <form onSubmit={(e) => { e.preventDefault(); setKeyword(searchInput); }} className={s.searchBar}>
           <div className={s.searchInputWrap}>
             <svg className={s.searchIcon} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
@@ -115,7 +153,7 @@ export default function CommunityPage() {
             <button
               type="button"
               className={s.searchClear}
-              onClick={() => { setSearchInput(""); setKeyword(""); setPage(0); }}
+              onClick={() => { setSearchInput(""); setKeyword(""); }}
             >✕</button>
           )}
         </form>
@@ -125,11 +163,11 @@ export default function CommunityPage() {
       <div className={s.layout}>
       <div className={s.content}>
         <div className={s.contentHeader}>
-          <p className={s.resultCount}>총 <strong>{data?.totalElements || 0}</strong>개 게시글</p>
+          <p className={s.resultCount}>총 <strong>{totalElements}</strong>개 게시글</p>
           <select
             className={s.sortSelect}
             value={sortBy}
-            onChange={(e) => { setSortBy(e.target.value); setPage(0); }}
+            onChange={(e) => setSortBy(e.target.value)}
           >
             <option value="createdAt,desc">최신순</option>
             <option value="likeCount,desc">인기순</option>
@@ -143,7 +181,7 @@ export default function CommunityPage() {
               <div key={i} className={s.skeleton} />
             ))}
           </div>
-        ) : data?.content?.length === 0 ? (
+        ) : allPosts.length === 0 ? (
           <div className={s.empty}>
             <div className={s.emptyIcon}>💬</div>
             <p>게시글이 없습니다</p>
@@ -155,7 +193,7 @@ export default function CommunityPage() {
           </div>
         ) : (
           <div className={s.postList}>
-            {data?.content?.map((post: Post) => (
+            {allPosts.map((post: Post) => (
               <Link key={post.id} href={`/community/${post.id}`} className={`${s.postItem} ${post.pinned ? s.postItemPinned : ""}`}>
                 <span className={`badge ${CATEGORY_BADGE[post.category]}`}>
                   {CATEGORY_LABELS[post.category]}
@@ -172,7 +210,9 @@ export default function CommunityPage() {
                 </div>
 
                 {post.imageUrls?.[0] && (
-                  <img src={post.imageUrls[0]} alt="" className={s.postThumb} />
+                  <div className={s.postThumbWrap}>
+                    <Image src={post.imageUrls[0]} alt="" fill style={{ objectFit: "cover" }} />
+                  </div>
                 )}
 
                 <div className={s.postStats}>
@@ -200,13 +240,10 @@ export default function CommunityPage() {
           </div>
         )}
 
-        {data && data.totalPages > 1 && (
-          <div className={s.pagination}>
-            <button onClick={() => setPage(page - 1)} disabled={data.first} className="btn-secondary">이전</button>
-            <span className={s.pageInfo}>{data.number + 1} / {data.totalPages}</span>
-            <button onClick={() => setPage(page + 1)} disabled={data.last} className="btn-secondary">다음</button>
-          </div>
-        )}
+        {/* Infinite scroll sentinel */}
+        <div ref={observerRef} className={s.infiniteSentinel}>
+          {isFetchingNextPage && <span className={s.loadingDots}>...</span>}
+        </div>
       </div>
 
       {/* Sidebar */}
@@ -252,6 +289,8 @@ export default function CommunityPage() {
             <Link href="/login" className={`btn-secondary ${s.sideWriteBtn}`}>로그인 후 작성</Link>
           )}
         </div>
+
+        <AdBanner position="SIDEBAR" />
       </aside>
       </div>
     </div>

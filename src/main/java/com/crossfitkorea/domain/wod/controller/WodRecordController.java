@@ -1,6 +1,7 @@
 package com.crossfitkorea.domain.wod.controller;
 
 import com.crossfitkorea.common.ApiResponse;
+import com.crossfitkorea.domain.wod.dto.BoxRankingDto;
 import com.crossfitkorea.domain.wod.dto.WodRecordDto;
 import com.crossfitkorea.domain.wod.dto.WodRecordRequest;
 import com.crossfitkorea.domain.wod.service.WodRecordService;
@@ -72,6 +73,15 @@ public class WodRecordController {
     ) {
         LocalDate d = date != null ? LocalDate.parse(date) : LocalDate.now();
         return ResponseEntity.ok(ApiResponse.success(wodRecordService.getLeaderboard(d)));
+    }
+
+    @Operation(summary = "박스별 WOD 랭킹 (공개) - 박스끼리 경쟁")
+    @GetMapping("/box-ranking")
+    public ResponseEntity<ApiResponse<List<BoxRankingDto>>> getBoxRanking(
+        @RequestParam(required = false) String date
+    ) {
+        LocalDate d = date != null ? LocalDate.parse(date) : LocalDate.now();
+        return ResponseEntity.ok(ApiResponse.success(wodRecordService.getBoxRanking(d)));
     }
 
     @Operation(summary = "WOD 기록 삭제")

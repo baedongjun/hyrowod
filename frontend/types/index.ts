@@ -136,9 +136,12 @@ export interface Comment {
 }
 
 export interface User {
+  id?: number;
   email: string;
   name: string;
   role: "ROLE_USER" | "ROLE_BOX_OWNER" | "ROLE_ADMIN";
+  profileImageUrl?: string;
+  phone?: string;
 }
 
 export interface AuthResponse {
@@ -156,4 +159,37 @@ export interface WodRecord {
   notes: string | null;
   rx: boolean;
   userName: string;
+  boxName: string | null;
+}
+
+export interface BoxMembership {
+  id: number;
+  boxId: number;
+  boxName: string;
+  boxCity: string;
+  boxDistrict: string;
+  boxAddress: string;
+  joinedAt: string;
+  memberCount: number;
+  daysInBox: number;
+}
+
+export type BadgeTier = "BRONZE" | "SILVER" | "GOLD" | "PLATINUM";
+
+export interface Badge {
+  id: number;
+  type: string;
+  name: string;
+  description: string;
+  tier: BadgeTier;
+  awardedAt: string;
+}
+
+export interface BoxRanking {
+  boxId: number;
+  boxName: string;
+  boxCity: string;
+  participantCount: number;
+  rxCount: number;
+  topScores: string[];
 }

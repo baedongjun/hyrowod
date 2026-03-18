@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { adminApi } from "@/lib/api";
@@ -12,16 +13,19 @@ dayjs.extend(relativeTime);
 dayjs.locale("ko");
 
 export default function AdminDashboard() {
+  const [months, setMonths] = useState<3 | 6 | 12>(6);
+
   const { data, isLoading } = useQuery({
-    queryKey: ["admin", "dashboard"],
+    queryKey: ["admin", "dashboard", months],
     queryFn: async () => {
-      const res = await adminApi.getDashboard();
+      const res = await adminApi.getDashboard(months);
       return res.data.data as {
         totalUsers: number;
         totalBoxes: number;
         totalPosts: number;
         totalCompetitions: number;
         pendingBoxCount: number;
+        monthlySignups: { month: string; count: number }[];
         recentUsers: { id: number; name: string; email: string; role: string; createdAt: string }[];
         recentPosts: { id: number; title: string; userName: string; createdAt: string }[];
         pendingBoxes: { id: number; name: string; city: string; createdAt: string }[];
@@ -94,6 +98,42 @@ export default function AdminDashboard() {
         ))}
       </div>
 
+      {/* Monthly Signups Chart */}
+      {data?.monthlySignups && (
+        <div className={s.chartPanel}>
+          <div className={s.chartHeader}>
+            <p className={s.chartTitle}>월별 신규 회원</p>
+            <select
+              className={s.monthsSelect}
+              value={months}
+              onChange={(e) => setMonths(Number(e.target.value) as 3 | 6 | 12)}
+            >
+              <option value={3}>최근 3개월</option>
+              <option value={6}>최근 6개월</option>
+              <option value={12}>최근 12개월</option>
+            </select>
+          </div>
+          <div className={s.barChart}>
+            {(() => {
+              const maxCount = Math.max(...data.monthlySignups.map(m => m.count), 1);
+              return data.monthlySignups.map((m) => (
+                <div key={m.month} className={s.barItem}>
+                  <div className={s.barWrap}>
+                    <div
+                      className={s.bar}
+                      style={{ height: `${Math.max((m.count / maxCount) * 100, m.count > 0 ? 5 : 2)}%` }}
+                    >
+                      {m.count > 0 && <span className={s.barValue}>{m.count}</span>}
+                    </div>
+                  </div>
+                  <span className={s.barLabel}>{m.month}</span>
+                </div>
+              ));
+            })()}
+          </div>
+        </div>
+      )}
+
       <div className={s.bottomGrid}>
         <div className={s.panel}>
           <p className={s.panelTitle}>빠른 작업</p>
@@ -109,6 +149,7 @@ export default function AdminDashboard() {
             <a href="/admin/competitions" className={s.quickLink}>대회 일정 등록 →</a>
             <a href="/admin/users" className={s.quickLink}>회원 관리 →</a>
             <a href="/admin/posts" className={s.quickLink}>게시글 관리 →</a>
+            <a href="/admin/advertisements" className={s.quickLink}>광고 관리 →</a>
           </div>
         </div>
 

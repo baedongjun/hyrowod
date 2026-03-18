@@ -258,6 +258,65 @@
 .deleteReviewBtn:hover { color: var(--red); }
 .deleteReviewBtn:disabled { opacity: 0.4; cursor: not-allowed; }
 
+/* 내 박스 */
+.myBoxCard {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-card-2);
+  border: 1px solid rgba(232, 34, 10, 0.2);
+  padding: 16px 20px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s;
+}
+.myBoxCard:hover { border-color: rgba(232, 34, 10, 0.5); }
+.myBoxInfo { flex: 1; min-width: 0; }
+.myBoxName {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.myBoxMeta { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
+.myBoxStats { display: flex; gap: 20px; }
+.myBoxStatItem { display: flex; flex-direction: column; gap: 2px; }
+.myBoxStatLabel { font-size: 10px; color: var(--muted); letter-spacing: 0.5px; text-transform: uppercase; }
+.myBoxStatValue {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  color: var(--text);
+  letter-spacing: 1px;
+  line-height: 1;
+}
+
+/* 배지 */
+.badgeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+}
+.badgeItem {
+  background: var(--bg-card-2);
+  border: 1px solid var(--border);
+  padding: 16px;
+  text-align: center;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.badgeItem:hover { transform: translateY(-2px); }
+.badgeTierBRONZE { border-color: rgba(205, 127, 50, 0.3); }
+.badgeTierBRONZE:hover { border-color: rgba(205, 127, 50, 0.6); }
+.badgeTierSILVER { border-color: rgba(192, 192, 192, 0.3); }
+.badgeTierSILVER:hover { border-color: rgba(192, 192, 192, 0.6); }
+.badgeTierGOLD { border-color: rgba(234, 179, 8, 0.3); }
+.badgeTierGOLD:hover { border-color: rgba(234, 179, 8, 0.6); }
+.badgeTierPLATINUM { border-color: rgba(14, 165, 233, 0.3); }
+.badgeTierPLATINUM:hover { border-color: rgba(14, 165, 233, 0.6); }
+.badgeIcon { font-size: 28px; margin-bottom: 8px; }
+.badgeName { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.badgeDesc { font-size: 11px; color: var(--muted); margin-bottom: 6px; line-height: 1.4; }
+.badgeDate { font-size: 10px; color: var(--muted); opacity: 0.6; }
+
 @media (max-width: 768px) {
   .hero    { padding: 32px 24px; }
   .content { grid-template-columns: 1fr; padding: 24px; }

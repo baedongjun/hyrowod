@@ -2,12 +2,18 @@ package com.crossfitkorea.domain.wod.service;
 
 import com.crossfitkorea.common.exception.BusinessException;
 import com.crossfitkorea.common.exception.ErrorCode;
+import com.crossfitkorea.domain.badge.service.BadgeService;
+import com.crossfitkorea.domain.box.entity.BoxMembership;
+import com.crossfitkorea.domain.box.repository.BoxMembershipRepository;
 import com.crossfitkorea.domain.user.entity.User;
 import com.crossfitkorea.domain.user.service.UserService;
+import com.crossfitkorea.domain.wod.dto.BoxRankingDto;
 import com.crossfitkorea.domain.wod.dto.WodRecordDto;
 import com.crossfitkorea.domain.wod.dto.WodRecordRequest;
+import com.crossfitkorea.domain.wod.entity.Wod;
 import com.crossfitkorea.domain.wod.entity.WodRecord;
 import com.crossfitkorea.domain.wod.repository.WodRecordRepository;
+import com.crossfitkorea.domain.wod.repository.WodRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -23,24 +30,27 @@ import java.util.List;
 public class WodRecordService {
 
     private final WodRecordRepository wodRecordRepository;
+    private final WodRepository wodRepository;
+    private final BoxMembershipRepository membershipRepository;
     private final UserService userService;
+    private final BadgeService badgeService;
 
     public Page<WodRecordDto> getMyRecords(String email, Pageable pageable) {
         return wodRecordRepository.findByUserEmailOrderByWodDateDesc(email, pageable)
-            .map(WodRecordDto::from);
+            .map(r -> toDto(r));
     }
 
     public List<WodRecordDto> getRecentRecords(String email, int days) {
         LocalDate from = LocalDate.now().minusDays(days);
-        LocalDate to = LocalDate.now();
-        return wodRecordRepository.findByUserEmailAndWodDateBetweenOrderByWodDateDesc(email, from, to)
-            .stream().map(WodRecordDto::from).toList();
+        return wodRecordRepository
+            .findByUserEmailAndWodDateBetweenOrderByWodDateDesc(email, from, LocalDate.now())
+            .stream().map(r -> toDto(r)).toList();
     }
 
     public WodRecordDto getTodayRecord(String email) {
         User user = userService.getUserByEmail(email);
         return wodRecordRepository.findByUserIdAndWodDate(user.getId(), LocalDate.now())
-            .map(WodRecordDto::from)
+            .map(r -> toDto(r))
             .orElse(null);
     }
 
@@ -56,12 +66,65 @@ public class WodRecordService {
         record.setNotes(request.getNotes());
         record.setRx(request.isRx());
 
-        return WodRecordDto.from(wodRecordRepository.save(record));
+        WodRecord saved = wodRecordRepository.save(record);
+
+        // 배지 체크 (신규 기록인 경우만)
+        long totalCount = wodRecordRepository.countByUserEmail(email);
+        String wodTitle = wodRepository.findByWodDateAndBoxIdIsNull(date)
+            .map(Wod::getTitle).orElse(null);
+        badgeService.checkWodBadges(user, totalCount, wodTitle);
+
+        // 박스 멤버십 기간 배지 체크
+        membershipRepository.findByUserAndActiveTrue(user).ifPresent(m -> {
+            long days = ChronoUnit.DAYS.between(m.getJoinedAt(), LocalDate.now());
+            badgeService.checkMembershipBadges(user, days);
+        });
+
+        return toDto(saved);
     }
 
     public List<WodRecordDto> getLeaderboard(LocalDate date) {
         return wodRecordRepository.findByWodDateOrderByScoreAsc(date)
-            .stream().map(WodRecordDto::from).toList();
+            .stream().map(r -> toDto(r)).toList();
+    }
+
+    /** 박스별 WOD 랭킹 - 특정 날짜에 기록을 남긴 회원들을 박스 단위로 집계 */
+    public List<BoxRankingDto> getBoxRanking(LocalDate date) {
+        List<WodRecord> records = wodRecordRepository.findByWodDate(date);
+
+        // boxId → records 그룹핑
+        Map<Long, List<WodRecord>> byBox = new LinkedHashMap<>();
+        Map<Long, BoxMembership> boxMap = new LinkedHashMap<>();
+
+        for (WodRecord r : records) {
+            membershipRepository.findByUserAndActiveTrue(r.getUser()).ifPresent(m -> {
+                Long boxId = m.getBox().getId();
+                byBox.computeIfAbsent(boxId, k -> new ArrayList<>()).add(r);
+                boxMap.put(boxId, m);
+            });
+        }
+
+        return byBox.entrySet().stream()
+            .map(entry -> {
+                BoxMembership m = boxMap.get(entry.getKey());
+                List<WodRecord> boxRecords = entry.getValue();
+                int rxCount = (int) boxRecords.stream().filter(WodRecord::isRx).count();
+                List<String> topScores = boxRecords.stream()
+                    .filter(r -> r.getScore() != null && !r.getScore().isBlank())
+                    .limit(3)
+                    .map(WodRecord::getScore)
+                    .toList();
+                return BoxRankingDto.builder()
+                    .boxId(m.getBox().getId())
+                    .boxName(m.getBox().getName())
+                    .boxCity(m.getBox().getCity())
+                    .participantCount(boxRecords.size())
+                    .rxCount(rxCount)
+                    .topScores(topScores)
+                    .build();
+            })
+            .sorted(Comparator.comparingInt(BoxRankingDto::getParticipantCount).reversed())
+            .toList();
     }
 
     @Transactional
@@ -72,5 +135,13 @@ public class WodRecordService {
             throw new BusinessException(ErrorCode.FORBIDDEN);
         }
         wodRecordRepository.delete(record);
+    }
+
+    // WodRecordDto 변환 + 박스명 포함
+    private WodRecordDto toDto(WodRecord r) {
+        WodRecordDto dto = WodRecordDto.from(r);
+        membershipRepository.findByUserAndActiveTrue(r.getUser())
+            .ifPresent(m -> dto.setBoxName(m.getBox().getName()));
+        return dto;
     }
 }

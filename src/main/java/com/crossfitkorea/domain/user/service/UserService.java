@@ -66,6 +66,11 @@ public class UserService {
             .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
     }
 
+    public User getUserById(Long id) {
+        return userRepository.findById(id)
+            .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+    }
+
     public com.crossfitkorea.domain.user.dto.UserDto getMyInfo(String email) {
         return com.crossfitkorea.domain.user.dto.UserDto.from(getUserByEmail(email));
     }

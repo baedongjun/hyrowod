@@ -3,8 +3,9 @@
 import { useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { boxApi } from "@/lib/api";
+import { boxApi, membershipApi, uploadApi } from "@/lib/api";
 import BoxDetailMap from "@/components/box/BoxDetailMap";
 import { Box, Coach, Schedule, Review, Page } from "@/types";
 import { isLoggedIn, getUser } from "@/lib/auth";
@@ -35,7 +36,9 @@ export default function BoxDetailPage() {
 
   // Coach form state
   const [showCoachForm, setShowCoachForm] = useState(false);
-  const [coachForm, setCoachForm] = useState({ name: "", bio: "", experienceYears: "", certifications: "" });
+  const [coachForm, setCoachForm] = useState({ name: "", bio: "", experienceYears: "", certifications: "", imageUrl: "" });
+  const [coachImageUploading, setCoachImageUploading] = useState(false);
+  const [coachImagePreview, setCoachImagePreview] = useState<string | null>(null);
 
   // Schedule form state
   const [showScheduleForm, setShowScheduleForm] = useState(false);
@@ -43,10 +46,17 @@ export default function BoxDetailPage() {
     dayOfWeek: "MONDAY", startTime: "06:00", endTime: "07:00", className: "CrossFit", maxCapacity: "20",
   });
 
+  // Review inline edit state
+  const [editingReviewId, setEditingReviewId] = useState<number | null>(null);
+  const [editRating, setEditRating] = useState(0);
+  const [editHoverRating, setEditHoverRating] = useState(0);
+  const [editContent, setEditContent] = useState("");
+
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [reviewContent, setReviewContent] = useState("");
   const [favorited, setFavorited] = useState(false);
+  const [isMember, setIsMember] = useState(false);
   const [reviewPage, setReviewPage] = useState(0);
 
   const { data: box, isLoading } = useQuery({
@@ -78,11 +88,31 @@ export default function BoxDetailPage() {
     enabled: isLoggedIn(),
   });
 
+  const { data: membershipData } = useQuery({
+    queryKey: ["box", boxId, "membership"],
+    queryFn: async () => (await membershipApi.checkMembership(boxId)).data.data as { member: boolean },
+    enabled: isLoggedIn(),
+  });
+
+  const { data: memberCount } = useQuery({
+    queryKey: ["box", boxId, "memberCount"],
+    queryFn: async () => {
+      const res = (await membershipApi.getMemberCount(boxId)).data.data as { count: number } | number;
+      return typeof res === "number" ? res : (res as { count: number }).count;
+    },
+  });
+
   useEffect(() => {
     if (favoriteData !== undefined) {
       setFavorited(favoriteData.favorited);
     }
   }, [favoriteData]);
+
+  useEffect(() => {
+    if (membershipData !== undefined) {
+      setIsMember(membershipData.member);
+    }
+  }, [membershipData]);
 
   const favoriteMutation = useMutation({
     mutationFn: () => boxApi.toggleFavorite(boxId),
@@ -92,6 +122,28 @@ export default function BoxDetailPage() {
       toast.success(isFav ? "즐겨찾기에 추가되었습니다." : "즐겨찾기에서 해제되었습니다.");
     },
     onError: () => toast.error("처리에 실패했습니다."),
+  });
+
+  const joinMutation = useMutation({
+    mutationFn: () => membershipApi.join(boxId),
+    onSuccess: () => {
+      setIsMember(true);
+      toast.success("박스에 가입되었습니다!");
+      queryClient.invalidateQueries({ queryKey: ["box", boxId, "memberCount"] });
+      queryClient.invalidateQueries({ queryKey: ["box", boxId, "membership"] });
+    },
+    onError: () => toast.error("가입에 실패했습니다."),
+  });
+
+  const leaveMutation = useMutation({
+    mutationFn: () => membershipApi.leave(boxId),
+    onSuccess: () => {
+      setIsMember(false);
+      toast.success("박스를 탈퇴했습니다.");
+      queryClient.invalidateQueries({ queryKey: ["box", boxId, "memberCount"] });
+      queryClient.invalidateQueries({ queryKey: ["box", boxId, "membership"] });
+    },
+    onError: () => toast.error("탈퇴에 실패했습니다."),
   });
 
   const { data: relatedBoxes } = useQuery({
@@ -106,10 +158,12 @@ export default function BoxDetailPage() {
       bio: coachForm.bio || undefined,
       experienceYears: coachForm.experienceYears ? parseInt(coachForm.experienceYears) : undefined,
       certifications: coachForm.certifications ? coachForm.certifications.split(",").map((c) => c.trim()).filter(Boolean) : [],
+      imageUrl: coachForm.imageUrl || undefined,
     }),
     onSuccess: () => {
       toast.success("코치가 추가되었습니다.");
-      setCoachForm({ name: "", bio: "", experienceYears: "", certifications: "" });
+      setCoachForm({ name: "", bio: "", experienceYears: "", certifications: "", imageUrl: "" });
+      setCoachImagePreview(null);
       setShowCoachForm(false);
       queryClient.invalidateQueries({ queryKey: ["box", boxId, "coaches"] });
     },
@@ -174,6 +228,18 @@ export default function BoxDetailPage() {
     onError: () => toast.error("삭제에 실패했습니다."),
   });
 
+  const updateReviewMutation = useMutation({
+    mutationFn: ({ reviewId, rating, content }: { reviewId: number; rating: number; content: string }) =>
+      boxApi.updateReview(reviewId, { rating, content }),
+    onSuccess: () => {
+      toast.success("후기가 수정되었습니다.");
+      setEditingReviewId(null);
+      queryClient.invalidateQueries({ queryKey: ["box", boxId, "reviews"] });
+      queryClient.invalidateQueries({ queryKey: ["box", boxId] });
+    },
+    onError: () => toast.error("수정에 실패했습니다."),
+  });
+
   const handleShare = () => {
     if (typeof navigator !== "undefined" && "share" in navigator) {
       (navigator as Navigator).share({ title: box?.name, text: `${box?.name} - ${box?.city} ${box?.district}`, url: window.location.href }).catch(() => {});
@@ -208,7 +274,7 @@ export default function BoxDetailPage() {
       {/* Hero */}
       <div className={s.hero}>
         {box.imageUrls?.[0] ? (
-          <img src={box.imageUrls[currentImgIdx] || box.imageUrls[0]} alt={box.name} className={s.heroImg} />
+          <Image src={box.imageUrls[currentImgIdx] || box.imageUrls[0]} alt={box.name} fill style={{ objectFit: "cover" }} priority />
         ) : (
           <div className={s.heroNoImg}>CROSSFIT</div>
         )}
@@ -283,6 +349,21 @@ export default function BoxDetailPage() {
                 </svg>
                 링크 복사
               </button>
+              {isLoggedIn() && currentUser?.role === "ROLE_USER" && (
+                <button
+                  className={isMember ? s.leaveBtn : s.joinBtn}
+                  onClick={() => {
+                    if (isMember) {
+                      if (window.confirm("이 박스를 탈퇴하시겠습니까?")) leaveMutation.mutate();
+                    } else {
+                      joinMutation.mutate();
+                    }
+                  }}
+                  disabled={joinMutation.isPending || leaveMutation.isPending}
+                >
+                  {isMember ? "박스 탈퇴" : "박스 가입"}
+                </button>
+              )}
               {(currentUser?.role === "ROLE_ADMIN" ||
                 (currentUser?.role === "ROLE_BOX_OWNER" && box.ownerName === currentUser?.name)) && (
                 <Link href={`/boxes/${boxId}/edit`} className={s.editBtn}>
@@ -391,7 +472,42 @@ export default function BoxDetailPage() {
                     <label className={s.addLabel}>자격증 (쉼표로 구분)</label>
                     <input className="input-field" placeholder="CF-L1, CF-L2, Olympic Lifting" value={coachForm.certifications} onChange={(e) => setCoachForm((f) => ({ ...f, certifications: e.target.value }))} />
                   </div>
-                  <button className="btn-primary" disabled={addCoachMutation.isPending || !coachForm.name} onClick={() => addCoachMutation.mutate()} style={{ padding: "10px 24px", fontSize: 13 }}>
+                  <div className={s.addField}>
+                    <label className={s.addLabel}>프로필 이미지</label>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className={s.coachFileInput}
+                      disabled={coachImageUploading}
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        setCoachImageUploading(true);
+                        try {
+                          const res = await uploadApi.uploadImage(file, "coaches");
+                          const url = res.data.data as string;
+                          setCoachForm((f) => ({ ...f, imageUrl: url }));
+                          setCoachImagePreview(url);
+                        } catch {
+                          toast.error("이미지 업로드에 실패했습니다.");
+                        } finally {
+                          setCoachImageUploading(false);
+                        }
+                      }}
+                    />
+                    {coachImageUploading && <span style={{ fontSize: 12, color: "var(--muted)" }}>업로드 중...</span>}
+                    {coachImagePreview && (
+                      <div className={s.coachImgPreviewWrap}>
+                        <img src={coachImagePreview} alt="미리보기" className={s.coachImgPreview} />
+                        <button
+                          type="button"
+                          className={s.coachImgRemove}
+                          onClick={() => { setCoachImagePreview(null); setCoachForm((f) => ({ ...f, imageUrl: "" })); }}
+                        >✕ 제거</button>
+                      </div>
+                    )}
+                  </div>
+                  <button className="btn-primary" disabled={addCoachMutation.isPending || coachImageUploading || !coachForm.name} onClick={() => addCoachMutation.mutate()} style={{ padding: "10px 24px", fontSize: 13 }}>
                     {addCoachMutation.isPending ? "추가 중..." : "추가"}
                   </button>
                 </div>
@@ -402,7 +518,7 @@ export default function BoxDetailPage() {
                     <div key={coach.id} className={s.coachCard}>
                       <div className={s.coachAvatar}>
                         {coach.imageUrl
-                          ? <img src={coach.imageUrl} alt={coach.name} className={s.coachImg} />
+                          ? <Image src={coach.imageUrl} alt={coach.name} fill style={{ objectFit: "cover" }} />
                           : coach.name[0]
                         }
                       </div>
@@ -546,21 +662,70 @@ export default function BoxDetailPage() {
                   <div className={s.reviewList}>
                     {reviewData.content.map((rev: Review) => (
                       <div key={rev.id} className={s.reviewItem}>
-                        <div className={s.reviewHeader}>
-                          <span className={s.reviewUser}>{rev.userName}</span>
-                          <span className={s.reviewDate}>{dayjs(rev.createdAt).format("YYYY.MM.DD")}</span>
-                          {currentUser && (currentUser.name === rev.userName || currentUser.role === "ROLE_ADMIN") && (
-                            <button
-                              className={s.reviewDeleteBtn}
-                              onClick={() => { if (window.confirm("후기를 삭제하시겠습니까?")) deleteReviewMutation.mutate(rev.id); }}
-                              disabled={deleteReviewMutation.isPending}
-                            >삭제</button>
-                          )}
-                        </div>
-                        <div className={s.reviewStars}>
-                          {"★".repeat(rev.rating)}{"☆".repeat(5 - rev.rating)}
-                        </div>
-                        <p className={s.reviewContent}>{rev.content}</p>
+                        {editingReviewId === rev.id ? (
+                          <div className={s.reviewEditForm}>
+                            <div className={s.ratingSelect}>
+                              {[1, 2, 3, 4, 5].map((n) => (
+                                <button
+                                  key={n}
+                                  className={`${s.ratingStar} ${n <= (editHoverRating || editRating) ? s.ratingStarOn : ""}`}
+                                  onMouseEnter={() => setEditHoverRating(n)}
+                                  onMouseLeave={() => setEditHoverRating(0)}
+                                  onClick={() => setEditRating(n)}
+                                >★</button>
+                              ))}
+                            </div>
+                            <textarea
+                              className={s.reviewTextarea}
+                              value={editContent}
+                              onChange={(e) => setEditContent(e.target.value)}
+                            />
+                            <div className={s.reviewEditActions}>
+                              <button
+                                className="btn-primary"
+                                style={{ padding: "7px 20px", fontSize: 13 }}
+                                disabled={editRating === 0 || !editContent.trim() || updateReviewMutation.isPending}
+                                onClick={() => updateReviewMutation.mutate({ reviewId: rev.id, rating: editRating, content: editContent })}
+                              >
+                                {updateReviewMutation.isPending ? "저장 중..." : "저장"}
+                              </button>
+                              <button
+                                className="btn-secondary"
+                                style={{ padding: "7px 20px", fontSize: 13 }}
+                                onClick={() => { setEditingReviewId(null); setEditHoverRating(0); }}
+                              >취소</button>
+                            </div>
+                          </div>
+                        ) : (
+                          <>
+                            <div className={s.reviewHeader}>
+                              <span className={s.reviewUser}>{rev.userName}</span>
+                              <span className={s.reviewDate}>{dayjs(rev.createdAt).format("YYYY.MM.DD")}</span>
+                              {currentUser && (currentUser.name === rev.userName || currentUser.role === "ROLE_ADMIN") && (
+                                <div className={s.reviewActions}>
+                                  <button
+                                    className={s.reviewEditBtn}
+                                    onClick={() => {
+                                      setEditingReviewId(rev.id);
+                                      setEditRating(rev.rating);
+                                      setEditContent(rev.content);
+                                      setEditHoverRating(0);
+                                    }}
+                                  >수정</button>
+                                  <button
+                                    className={s.reviewDeleteBtn}
+                                    onClick={() => { if (window.confirm("후기를 삭제하시겠습니까?")) deleteReviewMutation.mutate(rev.id); }}
+                                    disabled={deleteReviewMutation.isPending}
+                                  >삭제</button>
+                                </div>
+                              )}
+                            </div>
+                            <div className={s.reviewStars}>
+                              {"★".repeat(rev.rating)}{"☆".repeat(5 - rev.rating)}
+                            </div>
+                            <p className={s.reviewContent}>{rev.content}</p>
+                          </>
+                        )}
                       </div>
                     ))}
                   </div>
@@ -592,6 +757,20 @@ export default function BoxDetailPage() {
 
         {/* Sidebar */}
         <div className={s.sidebar}>
+          <div className={s.sideCard}>
+            <div className={s.memberCountRow}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: "var(--red)", flexShrink: 0 }}>
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+              <span className={s.memberCountLabel}>멤버</span>
+              <span className={s.memberCountValue}>{memberCount ?? 0}명</span>
+            </div>
+            {isMember && (
+              <div className={s.memberBadge}>내 박스</div>
+            )}
+          </div>
+
           {box.monthlyFee > 0 && (
             <div className={s.sideCard}>
               <p className={s.sideTitle}>월 회비</p>
@@ -674,7 +853,7 @@ export default function BoxDetailPage() {
                     <Link key={b.id} href={`/boxes/${b.id}`} className={s.relatedItem}>
                       <div className={s.relatedImg}>
                         {b.imageUrls?.[0]
-                          ? <img src={b.imageUrls[0]} alt={b.name} />
+                          ? <Image src={b.imageUrls[0]} alt={b.name} fill style={{ objectFit: "cover" }} />
                           : <div className={s.relatedPlaceholder}>CF</div>
                         }
                       </div>

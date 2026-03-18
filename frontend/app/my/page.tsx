@@ -4,9 +4,9 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { userApi, communityApi, uploadApi, boxApi } from "@/lib/api";
+import { userApi, communityApi, uploadApi, boxApi, membershipApi, badgeApi } from "@/lib/api";
 import { clearAuth } from "@/lib/auth";
-import { Review, Box } from "@/types";
+import { Review, Box, BoxMembership, Badge } from "@/types";
 import { isLoggedIn, getUser } from "@/lib/auth";
 import { Post } from "@/types";
 import { toast } from "react-toastify";
@@ -69,6 +69,18 @@ export default function MyPage() {
   const { data: myComments } = useQuery({
     queryKey: ["comments", "mine"],
     queryFn: async () => (await userApi.getMyComments()).data.data,
+    enabled: isLoggedIn(),
+  });
+
+  const { data: myBox } = useQuery({
+    queryKey: ["membership", "myBox"],
+    queryFn: async () => (await membershipApi.getMyBox()).data.data as BoxMembership | null,
+    enabled: isLoggedIn(),
+  });
+
+  const { data: myBadges } = useQuery({
+    queryKey: ["badges", "mine"],
+    queryFn: async () => (await badgeApi.getMyBadges()).data.data as Badge[],
     enabled: isLoggedIn(),
   });
 
@@ -206,11 +218,29 @@ export default function MyPage() {
         <div className={s.linksCard}>
           <p className={s.cardTitle}>바로가기</p>
           <div className={s.linksList}>
+            <Link href="/my/profile" className={s.linkItem}>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+              </svg>
+              프로필 수정
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginLeft: "auto" }}>
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </Link>
             <Link href="/my/password" className={s.linkItem}>
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <rect x="3" y="11" width="18" height="11" rx="0" ry="0"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
               </svg>
               비밀번호 변경
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginLeft: "auto" }}>
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </Link>
+            <Link href="/my/competitions" className={s.linkItem}>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <polyline points="8 6 2 12 8 18"/><path d="M2 12h20"/><polyline points="16 6 22 12 16 18"/>
+              </svg>
+              신청한 대회
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginLeft: "auto" }}>
                 <polyline points="9 18 15 12 9 6"/>
               </svg>
@@ -349,6 +379,60 @@ export default function MyPage() {
             <div className={s.empty}>아직 작성한 후기가 없습니다</div>
           )}
         </div>
+
+        {/* 내 박스 */}
+        {myBox && (
+          <div className={s.postsCard}>
+            <p className={s.postsHeader}>내 박스</p>
+            <Link href={`/boxes/${myBox.boxId}`} className={s.myBoxCard}>
+              <div className={s.myBoxInfo}>
+                <p className={s.myBoxName}>{myBox.boxName}</p>
+                <p className={s.myBoxMeta}>{myBox.boxCity} {myBox.boxDistrict} · {myBox.boxAddress}</p>
+                <div className={s.myBoxStats}>
+                  <span className={s.myBoxStatItem}>
+                    <span className={s.myBoxStatLabel}>멤버 수</span>
+                    <span className={s.myBoxStatValue}>{myBox.memberCount}명</span>
+                  </span>
+                  <span className={s.myBoxStatItem}>
+                    <span className={s.myBoxStatLabel}>가입 후</span>
+                    <span className={s.myBoxStatValue}>{myBox.daysInBox}일</span>
+                  </span>
+                  <span className={s.myBoxStatItem}>
+                    <span className={s.myBoxStatLabel}>가입일</span>
+                    <span className={s.myBoxStatValue}>{dayjs(myBox.joinedAt).format("YYYY.MM.DD")}</span>
+                  </span>
+                </div>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ flexShrink: 0, color: "var(--muted)" }}>
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </Link>
+          </div>
+        )}
+
+        {/* 배지 */}
+        {myBadges && myBadges.length > 0 && (
+          <div className={s.postsCard}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+              <p className={s.postsHeader} style={{ margin: 0 }}>획득한 배지</p>
+              <span style={{ fontSize: 12, color: "var(--muted)" }}>{myBadges.length}개</span>
+            </div>
+            <div className={s.badgeGrid}>
+              {myBadges.map((badge: Badge) => (
+                <div key={badge.id} className={`${s.badgeItem} ${s[`badgeTier${badge.tier}`]}`}>
+                  <div className={s.badgeIcon}>{
+                    badge.tier === "PLATINUM" ? "💠" :
+                    badge.tier === "GOLD" ? "🥇" :
+                    badge.tier === "SILVER" ? "🥈" : "🥉"
+                  }</div>
+                  <p className={s.badgeName}>{badge.name}</p>
+                  <p className={s.badgeDesc}>{badge.description}</p>
+                  <p className={s.badgeDate}>{dayjs(badge.awardedAt).format("YYYY.MM.DD")}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* 즐겨찾기 */}
         <div className={s.postsCard}>

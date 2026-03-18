@@ -16,6 +16,10 @@ export const clearAuth = () => {
   localStorage.removeItem("user");
 };
 
+export const setUser = (user: Partial<User> & { email?: string; name: string; role?: string }) => {
+  localStorage.setItem("user", JSON.stringify(user));
+};
+
 export const getUser = (): User | null => {
   if (typeof window === "undefined") return null;
   const user = localStorage.getItem("user");

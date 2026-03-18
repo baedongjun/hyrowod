@@ -1,14 +1,19 @@
 package com.crossfitkorea.domain.user.controller;
 
 import com.crossfitkorea.common.ApiResponse;
+import com.crossfitkorea.domain.badge.dto.BadgeDto;
+import com.crossfitkorea.domain.badge.service.BadgeService;
 import com.crossfitkorea.domain.box.dto.BoxDto;
+import com.crossfitkorea.domain.box.dto.BoxMembershipDto;
 import com.crossfitkorea.domain.box.service.BoxFavoriteService;
+import com.crossfitkorea.domain.box.service.BoxMembershipService;
 import com.crossfitkorea.domain.community.entity.Comment;
 import com.crossfitkorea.domain.community.repository.CommentRepository;
 import com.crossfitkorea.domain.review.dto.ReviewDto;
 import com.crossfitkorea.domain.review.service.ReviewService;
 import com.crossfitkorea.domain.user.dto.PasswordChangeRequest;
 import com.crossfitkorea.domain.user.dto.UserDto;
+import com.crossfitkorea.domain.user.entity.User;
 import com.crossfitkorea.domain.user.dto.UserUpdateRequest;
 import com.crossfitkorea.domain.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,6 +43,8 @@ public class UserController {
     private final UserService userService;
     private final ReviewService reviewService;
     private final BoxFavoriteService boxFavoriteService;
+    private final BoxMembershipService boxMembershipService;
+    private final BadgeService badgeService;
     private final CommentRepository commentRepository;
 
     @Operation(summary = "내 정보 조회")
@@ -113,5 +120,36 @@ public class UserController {
             "createdAt", c.getCreatedAt().toString()
         ));
         return ResponseEntity.ok(ApiResponse.success(result));
+    }
+
+    @Operation(summary = "내 박스 (가입된 박스)")
+    @GetMapping("/me/box")
+    public ResponseEntity<ApiResponse<BoxMembershipDto>> getMyBox(
+        @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        return ResponseEntity.ok(ApiResponse.success(
+            boxMembershipService.getMyBox(userDetails.getUsername()).orElse(null)));
+    }
+
+    @Operation(summary = "내 배지 목록")
+    @GetMapping("/me/badges")
+    public ResponseEntity<ApiResponse<List<BadgeDto>>> getMyBadges(
+        @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        return ResponseEntity.ok(ApiResponse.success(
+            badgeService.getMyBadges(userDetails.getUsername())));
+    }
+
+    @Operation(summary = "공개 프로필 조회")
+    @GetMapping("/{id}/profile")
+    public ResponseEntity<ApiResponse<UserDto>> getPublicProfile(@PathVariable Long id) {
+        User user = userService.getUserById(id);
+        UserDto dto = UserDto.builder()
+            .id(user.getId())
+            .name(user.getName())
+            .profileImageUrl(user.getProfileImageUrl())
+            .role(user.getRole().name())
+            .build();
+        return ResponseEntity.ok(ApiResponse.success(dto));
     }
 }

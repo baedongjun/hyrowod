@@ -3,8 +3,10 @@ package com.crossfitkorea.domain.box.controller;
 import com.crossfitkorea.common.ApiResponse;
 import com.crossfitkorea.domain.box.dto.BoxCreateRequest;
 import com.crossfitkorea.domain.box.dto.BoxDto;
+import com.crossfitkorea.domain.box.dto.BoxMembershipDto;
 import com.crossfitkorea.domain.box.dto.BoxSearchRequest;
 import com.crossfitkorea.domain.box.service.BoxFavoriteService;
+import com.crossfitkorea.domain.box.service.BoxMembershipService;
 import com.crossfitkorea.domain.box.service.BoxService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,6 +32,7 @@ public class BoxController {
 
     private final BoxService boxService;
     private final BoxFavoriteService boxFavoriteService;
+    private final BoxMembershipService boxMembershipService;
 
     @Operation(summary = "박스 검색 (지역/키워드 필터)")
     @GetMapping
@@ -116,5 +119,53 @@ public class BoxController {
     ) {
         boolean favorited = boxFavoriteService.isFavorited(id, userDetails.getUsername());
         return ResponseEntity.ok(ApiResponse.success(Map.of("favorited", favorited)));
+    }
+
+    // ── 박스 멤버십 ─────────────────────────────────────────────
+
+    @Operation(summary = "박스 가입")
+    @PostMapping("/{id}/join")
+    public ResponseEntity<ApiResponse<BoxMembershipDto>> joinBox(
+        @PathVariable Long id,
+        @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        return ResponseEntity.ok(ApiResponse.success(
+            boxMembershipService.join(id, userDetails.getUsername())));
+    }
+
+    @Operation(summary = "박스 탈퇴")
+    @DeleteMapping("/{id}/join")
+    public ResponseEntity<ApiResponse<Void>> leaveBox(
+        @PathVariable Long id,
+        @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        boxMembershipService.leave(id, userDetails.getUsername());
+        return ResponseEntity.ok(ApiResponse.success(null));
+    }
+
+    @Operation(summary = "박스 멤버 수")
+    @GetMapping("/{id}/members/count")
+    public ResponseEntity<ApiResponse<Map<String, Long>>> getMemberCount(@PathVariable Long id) {
+        return ResponseEntity.ok(ApiResponse.success(
+            Map.of("count", boxMembershipService.getMemberCount(id))));
+    }
+
+    @Operation(summary = "박스 멤버 목록")
+    @GetMapping("/{id}/members")
+    public ResponseEntity<ApiResponse<java.util.List<BoxMembershipDto>>> getBoxMembers(
+        @PathVariable Long id
+    ) {
+        return ResponseEntity.ok(ApiResponse.success(boxMembershipService.getBoxMembers(id)));
+    }
+
+    @Operation(summary = "내 가입 여부 확인")
+    @GetMapping("/{id}/membership")
+    public ResponseEntity<ApiResponse<Map<String, Boolean>>> checkMembership(
+        @PathVariable Long id,
+        @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        boolean member = userDetails != null &&
+            boxMembershipService.isMember(id, userDetails.getUsername());
+        return ResponseEntity.ok(ApiResponse.success(Map.of("member", member)));
     }
 }

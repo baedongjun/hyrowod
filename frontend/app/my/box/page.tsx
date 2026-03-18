@@ -4,12 +4,15 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { boxApi, wodApi } from "@/lib/api";
+import { boxApi, wodApi, membershipApi } from "@/lib/api";
 import { isLoggedIn, getUser } from "@/lib/auth";
 import { Box, Review } from "@/types";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
 import s from "./box.module.css";
+
+const DAYS = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"];
+const DAY_KOR: Record<string, string> = { MONDAY: "월", TUESDAY: "화", WEDNESDAY: "수", THURSDAY: "목", FRIDAY: "금", SATURDAY: "토", SUNDAY: "일" };
 
 const WOD_TYPES = ["AMRAP", "FOR_TIME", "EMOM", "TABATA", "STRENGTH", "SKILL", "REST_DAY", "CUSTOM"];
 const WOD_COLORS: Record<string, string> = {
@@ -26,6 +29,14 @@ export default function MyBoxPage() {
   const [selectedBoxId, setSelectedBoxId] = useState<number | null>(null);
   const [wodForm, setWodForm] = useState({ title: "", type: "AMRAP", content: "", scoreType: "TIME", wodDate: dayjs().format("YYYY-MM-DD") });
   const [showWodForm, setShowWodForm] = useState(false);
+
+  // Coach management
+  const [showCoachForm, setShowCoachForm] = useState(false);
+  const [coachForm, setCoachForm] = useState({ name: "", bio: "", experienceYears: 1, certifications: "" });
+
+  // Schedule management
+  const [showScheduleForm, setShowScheduleForm] = useState(false);
+  const [scheduleForm, setScheduleForm] = useState({ dayOfWeek: "MONDAY", startTime: "06:00", endTime: "07:00", className: "크로스핏", maxCapacity: 15 });
 
   useEffect(() => {
     if (!isLoggedIn()) { router.replace("/login"); return; }
@@ -70,6 +81,12 @@ export default function MyBoxPage() {
     enabled: !!boxId,
   });
 
+  const { data: members } = useQuery({
+    queryKey: ["box-members", boxId],
+    queryFn: async () => (await membershipApi.getBoxMembers(boxId!)).data.data,
+    enabled: !!boxId,
+  });
+
   const wodMutation = useMutation({
     mutationFn: () =>
       wodApi.createBoxWod(boxId!, wodForm),
@@ -80,6 +97,51 @@ export default function MyBoxPage() {
       queryClient.invalidateQueries({ queryKey: ["wod-today", boxId] });
     },
     onError: () => toast.error("WOD 등록에 실패했습니다."),
+  });
+
+  const addCoachMutation = useMutation({
+    mutationFn: () => boxApi.addCoach(boxId!, {
+      name: coachForm.name,
+      bio: coachForm.bio || undefined,
+      experienceYears: coachForm.experienceYears,
+      certifications: coachForm.certifications ? coachForm.certifications.split(",").map(s => s.trim()).filter(Boolean) : [],
+    }),
+    onSuccess: () => {
+      toast.success("코치가 등록되었습니다.");
+      setShowCoachForm(false);
+      setCoachForm({ name: "", bio: "", experienceYears: 1, certifications: "" });
+      queryClient.invalidateQueries({ queryKey: ["coaches", boxId] });
+    },
+    onError: () => toast.error("코치 등록에 실패했습니다."),
+  });
+
+  const deleteCoachMutation = useMutation({
+    mutationFn: (coachId: number) => boxApi.deleteCoach(coachId),
+    onSuccess: () => {
+      toast.success("코치가 삭제되었습니다.");
+      queryClient.invalidateQueries({ queryKey: ["coaches", boxId] });
+    },
+    onError: () => toast.error("삭제에 실패했습니다."),
+  });
+
+  const addScheduleMutation = useMutation({
+    mutationFn: () => boxApi.addSchedule(boxId!, scheduleForm),
+    onSuccess: () => {
+      toast.success("수업이 등록되었습니다.");
+      setShowScheduleForm(false);
+      setScheduleForm({ dayOfWeek: "MONDAY", startTime: "06:00", endTime: "07:00", className: "크로스핏", maxCapacity: 15 });
+      queryClient.invalidateQueries({ queryKey: ["schedules", boxId] });
+    },
+    onError: () => toast.error("수업 등록에 실패했습니다."),
+  });
+
+  const deleteScheduleMutation = useMutation({
+    mutationFn: (scheduleId: number) => boxApi.deleteSchedule(scheduleId),
+    onSuccess: () => {
+      toast.success("수업이 삭제되었습니다.");
+      queryClient.invalidateQueries({ queryKey: ["schedules", boxId] });
+    },
+    onError: () => toast.error("삭제에 실패했습니다."),
   });
 
   if (!isLoggedIn()) return null;
@@ -259,30 +321,64 @@ export default function MyBoxPage() {
                   )}
                 </div>
 
-                {/* 코치 목록 */}
+                {/* 코치 관리 */}
                 <div className={s.card}>
                   <div className={s.cardHeader}>
                     <h3 className={s.cardTitle}>코치진 ({coaches?.length || 0})</h3>
-                    <Link href={`/boxes/${selectedBox.id}?tab=coaches`} className="btn-secondary" style={{ padding: "8px 16px", fontSize: 13 }}>
-                      관리
-                    </Link>
+                    <button
+                      className="btn-primary"
+                      style={{ padding: "8px 16px", fontSize: 13 }}
+                      onClick={() => setShowCoachForm(!showCoachForm)}
+                    >
+                      {showCoachForm ? "취소" : "+ 코치 추가"}
+                    </button>
                   </div>
+
+                  {showCoachForm && (
+                    <div className={s.manageForm}>
+                      <div className={s.manageFormGrid}>
+                        <div className={s.field}>
+                          <label className={s.label}>이름 *</label>
+                          <input className="input-field" placeholder="코치 이름" value={coachForm.name} onChange={(e) => setCoachForm(f => ({ ...f, name: e.target.value }))} />
+                        </div>
+                        <div className={s.field}>
+                          <label className={s.label}>경력 (년)</label>
+                          <input type="number" className="input-field" min={0} value={coachForm.experienceYears} onChange={(e) => setCoachForm(f => ({ ...f, experienceYears: Number(e.target.value) }))} />
+                        </div>
+                      </div>
+                      <div className={s.field}>
+                        <label className={s.label}>소개</label>
+                        <input className="input-field" placeholder="간단한 소개" value={coachForm.bio} onChange={(e) => setCoachForm(f => ({ ...f, bio: e.target.value }))} />
+                      </div>
+                      <div className={s.field}>
+                        <label className={s.label}>자격증 (쉼표로 구분)</label>
+                        <input className="input-field" placeholder="CrossFit L1, CrossFit L2" value={coachForm.certifications} onChange={(e) => setCoachForm(f => ({ ...f, certifications: e.target.value }))} />
+                      </div>
+                      <button className="btn-primary" style={{ padding: "10px 24px" }} disabled={!coachForm.name.trim() || addCoachMutation.isPending} onClick={() => addCoachMutation.mutate()}>
+                        {addCoachMutation.isPending ? "등록 중..." : "코치 등록"}
+                      </button>
+                    </div>
+                  )}
+
                   {coaches?.length > 0 ? (
                     <div className={s.coachList}>
-                      {coaches.map((c: { id: number; name: string; imageUrl: string | null; experienceYears: number }) => (
-                        <div key={c.id} className={s.coachItem}>
+                      {coaches.map((c: { id: number; name: string; imageUrl: string | null; experienceYears: number; bio?: string }) => (
+                        <div key={c.id} className={s.coachItemRow}>
                           <div className={s.coachAvatar}>
                             {c.imageUrl ? <img src={c.imageUrl} alt="" /> : c.name[0]}
                           </div>
-                          <div>
+                          <div style={{ flex: 1 }}>
                             <p className={s.coachName}>{c.name}</p>
-                            <p className={s.coachExp}>경력 {c.experienceYears}년</p>
+                            <p className={s.coachExp}>경력 {c.experienceYears}년{c.bio ? ` · ${c.bio}` : ""}</p>
                           </div>
+                          <button className={s.deleteRowBtn} onClick={() => { if (confirm(`'${c.name}' 코치를 삭제하시겠습니까?`)) deleteCoachMutation.mutate(c.id); }} disabled={deleteCoachMutation.isPending}>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+                          </button>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <p className={s.emptyText}>등록된 코치가 없습니다.</p>
+                    <p className={s.emptyText}>등록된 코치가 없습니다. 코치를 추가해보세요!</p>
                   )}
                 </div>
 
@@ -336,30 +432,94 @@ export default function MyBoxPage() {
                   })()}
                 </div>
 
-                {/* 수업 시간표 */}
+                {/* 멤버 목록 */}
                 <div className={s.card}>
                   <div className={s.cardHeader}>
-                    <h3 className={s.cardTitle}>수업 시간표 ({schedules?.length || 0})</h3>
-                    <Link href={`/boxes/${selectedBox.id}?tab=schedules`} className="btn-secondary" style={{ padding: "8px 16px", fontSize: 13 }}>
-                      관리
-                    </Link>
+                    <h3 className={s.cardTitle}>박스 멤버 ({members?.length || 0})</h3>
                   </div>
-                  {schedules?.length > 0 ? (
-                    <div className={s.scheduleList}>
-                      {schedules.slice(0, 5).map((sc: { id: number; dayOfWeekKorean: string; startTime: string; endTime: string; className: string; maxCapacity: number }) => (
-                        <div key={sc.id} className={s.scheduleItem}>
-                          <span className={s.scheduleDay}>{sc.dayOfWeekKorean}</span>
-                          <span className={s.scheduleTime}>{sc.startTime} – {sc.endTime}</span>
-                          <span className={s.scheduleName}>{sc.className}</span>
-                          <span className={s.scheduleCap}>최대 {sc.maxCapacity}명</span>
+                  {members && members.length > 0 ? (
+                    <div className={s.coachList}>
+                      {members.slice(0, 10).map((m: { id: number; boxId: number; boxName: string; joinedAt: string; daysInBox: number }) => (
+                        <div key={m.id} className={s.coachItem}>
+                          <div className={s.coachAvatar} style={{ fontSize: 12, background: "var(--bg-card-2)" }}>
+                            👤
+                          </div>
+                          <div>
+                            <p className={s.coachName}>{dayjs(m.joinedAt).format("YYYY.MM.DD")} 가입</p>
+                            <p className={s.coachExp}>{m.daysInBox}일째 멤버</p>
+                          </div>
                         </div>
                       ))}
-                      {schedules.length > 5 && (
-                        <p className={s.moreText}>+{schedules.length - 5}개 더</p>
+                      {members.length > 10 && (
+                        <p className={s.moreText}>+{members.length - 10}명 더</p>
                       )}
                     </div>
                   ) : (
-                    <p className={s.emptyText}>등록된 수업이 없습니다.</p>
+                    <p className={s.emptyText}>아직 가입한 멤버가 없습니다.</p>
+                  )}
+                </div>
+
+                {/* 수업 시간표 관리 */}
+                <div className={s.card}>
+                  <div className={s.cardHeader}>
+                    <h3 className={s.cardTitle}>수업 시간표 ({schedules?.length || 0})</h3>
+                    <button
+                      className="btn-primary"
+                      style={{ padding: "8px 16px", fontSize: 13 }}
+                      onClick={() => setShowScheduleForm(!showScheduleForm)}
+                    >
+                      {showScheduleForm ? "취소" : "+ 수업 추가"}
+                    </button>
+                  </div>
+
+                  {showScheduleForm && (
+                    <div className={s.manageForm}>
+                      <div className={s.manageFormGrid}>
+                        <div className={s.field}>
+                          <label className={s.label}>요일</label>
+                          <select className={s.select} value={scheduleForm.dayOfWeek} onChange={(e) => setScheduleForm(f => ({ ...f, dayOfWeek: e.target.value }))}>
+                            {DAYS.map(d => <option key={d} value={d}>{DAY_KOR[d]}요일</option>)}
+                          </select>
+                        </div>
+                        <div className={s.field}>
+                          <label className={s.label}>수업명</label>
+                          <input className="input-field" placeholder="크로스핏" value={scheduleForm.className} onChange={(e) => setScheduleForm(f => ({ ...f, className: e.target.value }))} />
+                        </div>
+                        <div className={s.field}>
+                          <label className={s.label}>시작 시간</label>
+                          <input type="time" className="input-field" value={scheduleForm.startTime} onChange={(e) => setScheduleForm(f => ({ ...f, startTime: e.target.value }))} />
+                        </div>
+                        <div className={s.field}>
+                          <label className={s.label}>종료 시간</label>
+                          <input type="time" className="input-field" value={scheduleForm.endTime} onChange={(e) => setScheduleForm(f => ({ ...f, endTime: e.target.value }))} />
+                        </div>
+                        <div className={s.field}>
+                          <label className={s.label}>최대 인원</label>
+                          <input type="number" className="input-field" min={1} value={scheduleForm.maxCapacity} onChange={(e) => setScheduleForm(f => ({ ...f, maxCapacity: Number(e.target.value) }))} />
+                        </div>
+                      </div>
+                      <button className="btn-primary" style={{ padding: "10px 24px" }} disabled={!scheduleForm.className.trim() || addScheduleMutation.isPending} onClick={() => addScheduleMutation.mutate()}>
+                        {addScheduleMutation.isPending ? "등록 중..." : "수업 등록"}
+                      </button>
+                    </div>
+                  )}
+
+                  {schedules?.length > 0 ? (
+                    <div className={s.scheduleList}>
+                      {schedules.map((sc: { id: number; dayOfWeek?: string; dayOfWeekKorean: string; startTime: string; endTime: string; className: string; maxCapacity: number }) => (
+                        <div key={sc.id} className={s.scheduleItemRow}>
+                          <span className={s.scheduleDay}>{sc.dayOfWeekKorean || DAY_KOR[sc.dayOfWeek || ""] || sc.dayOfWeek}</span>
+                          <span className={s.scheduleTime}>{sc.startTime} – {sc.endTime}</span>
+                          <span className={s.scheduleName}>{sc.className}</span>
+                          <span className={s.scheduleCap}>최대 {sc.maxCapacity}명</span>
+                          <button className={s.deleteRowBtn} onClick={() => { if (confirm("이 수업을 삭제하시겠습니까?")) deleteScheduleMutation.mutate(sc.id); }} disabled={deleteScheduleMutation.isPending}>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className={s.emptyText}>등록된 수업이 없습니다. 수업을 추가해보세요!</p>
                   )}
                 </div>
               </div>

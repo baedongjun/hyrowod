@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.crossfitkorea.domain.competition.dto.CompetitionDto;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -55,6 +57,13 @@ public class CompetitionRegistrationService {
             .competition(competition)
             .user(user)
             .build()));
+    }
+
+    public List<CompetitionDto> getMyRegistrations(String email) {
+        return registrationRepository.findByUserEmailAndCancelledFalseOrderByCreatedAtDesc(email)
+            .stream()
+            .map(r -> CompetitionDto.from(r.getCompetition()))
+            .toList();
     }
 
     @Transactional

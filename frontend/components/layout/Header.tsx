@@ -138,14 +138,19 @@ export default function Header() {
                     <div className={s.notifDropdown}>
                       <div className={s.notifHeader}>
                         <span className={s.notifTitle}>알림</span>
-                        {unreadCount > 0 && (
-                          <button
-                            className={s.notifReadAll}
-                            onClick={() => markAllMutation.mutate()}
-                          >
-                            모두 읽음
-                          </button>
-                        )}
+                        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                          {unreadCount > 0 && (
+                            <button
+                              className={s.notifReadAll}
+                              onClick={() => markAllMutation.mutate()}
+                            >
+                              모두 읽음
+                            </button>
+                          )}
+                          <Link href="/notifications" className={s.notifReadAll} onClick={() => setShowNotif(false)}>
+                            전체 보기
+                          </Link>
+                        </div>
                       </div>
                       <div className={s.notifList}>
                         {!notifications || (notifications as unknown as Notif[]).length === 0 ? (

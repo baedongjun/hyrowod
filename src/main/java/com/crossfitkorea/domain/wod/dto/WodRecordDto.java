@@ -3,10 +3,12 @@ package com.crossfitkorea.domain.wod.dto;
 import com.crossfitkorea.domain.wod.entity.WodRecord;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
 @Getter
+@Setter
 @Builder
 public class WodRecordDto {
 
@@ -16,6 +18,7 @@ public class WodRecordDto {
     private String notes;
     private boolean rx;
     private String userName;
+    private String boxName; // 유저의 소속 박스명 (없으면 null)
 
     public static WodRecordDto from(WodRecord record) {
         return WodRecordDto.builder()
@@ -25,6 +28,7 @@ public class WodRecordDto {
             .notes(record.getNotes())
             .rx(record.isRx())
             .userName(record.getUser().getName())
+            .boxName(null) // WodRecordService에서 별도 설정
             .build();
     }
 }

@@ -30,5 +30,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     List<Post> findTop5ByActiveTrueOrderByLikeCountDesc();
 
+    long countByUserEmailAndActiveTrue(String email);
+
     Page<Post> findByActiveTrueOrderByPinnedDescCreatedAtDesc(Pageable pageable);
 }

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { wodApi, wodRecordApi, leaderboardApi } from "@/lib/api";
-import { Wod, WodRecord } from "@/types";
+import { Wod, WodRecord, BoxRanking } from "@/types";
 import { isLoggedIn } from "@/lib/auth";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
@@ -85,6 +85,12 @@ export default function WodPage() {
   const { data: leaderboard } = useQuery({
     queryKey: ["wod", "leaderboard", todayDate],
     queryFn: async () => (await leaderboardApi.getLeaderboard(todayDate)).data.data as WodRecord[],
+    enabled: !!todayWod,
+  });
+
+  const { data: boxRanking } = useQuery({
+    queryKey: ["wod", "boxRanking", todayDate],
+    queryFn: async () => (await leaderboardApi.getBoxRanking(todayDate)).data.data as BoxRanking[],
     enabled: !!todayWod,
   });
 
@@ -334,9 +340,41 @@ export default function WodPage() {
           </div>
         )}
 
+        {/* 박스 랭킹 */}
+        {todayWod && boxRanking && boxRanking.length > 0 && (
+          <div className={s.leaderboard}>
+            <p className={s.leaderboardTitle}>박스 랭킹</p>
+            <p className={s.boxRankingDesc}>오늘 WOD에 참여한 박스별 현황</p>
+            <div className={s.leaderboardList}>
+              {boxRanking.map((box, idx) => (
+                <div key={box.boxId} className={`${s.leaderboardItem} ${idx === 0 ? s.leaderboardFirst : ""}`}>
+                  <span className={s.leaderboardRank}>{idx + 1}</span>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <span className={s.leaderboardName}>{box.boxName}</span>
+                    <span className={s.boxCity}>{box.boxCity}</span>
+                  </div>
+                  <div className={s.boxRankStats}>
+                    <span className={s.boxRankStatItem}>
+                      <span className={s.boxRankStatLabel}>참여</span>
+                      <span className={s.boxRankStatValue}>{box.participantCount}명</span>
+                    </span>
+                    <span className={s.boxRankStatItem}>
+                      <span className={s.boxRankStatLabel}>RX</span>
+                      <span className={s.boxRankStatValue} style={{ color: "var(--red)" }}>{box.rxCount}명</span>
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* View Toggle */}
         <div className={s.viewToggle}>
           <p className={s.historyTitle}>WOD 기록</p>
+          <Link href="/wod/history" style={{ fontSize: 12, color: "var(--muted)", textDecoration: "none", marginRight: "auto", marginLeft: 16, alignSelf: "center", flexShrink: 0 }}>
+            전체 히스토리 →
+          </Link>
           <div className={s.viewBtns}>
             <button
               className={`${s.viewBtn} ${viewMode === "list" ? s.viewBtnActive : ""}`}

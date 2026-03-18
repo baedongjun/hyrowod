@@ -16,6 +16,107 @@ INSERT INTO boxes (name, address, city, district, latitude, longitude, phone, we
 ('크로스핏 용인기흥', '경기도 용인시 기흥구 동백중앙로 55', '경기', '용인시', 37.2742, 127.1151, '031-9012-3456', 'https://cfyongin.com', '@cfyongin', '동백 신도시의 크로스핏 박스. 가족 모두가 함께할 수 있는 키즈 크로스핏 프로그램 운영 중. 온가족 건강을 책임집니다.', 115000, '06:30', '21:30', 4.2, 15, false, false, true, NOW(), NOW()),
 ('크로스핏 제주', '제주특별자치도 제주시 노형로 22', '제주', '제주시', 33.4890, 126.4983, '064-0123-4567', 'https://cfjeju.com', '@cfjeju', '아름다운 제주에서 즐기는 크로스핏. 자연 속에서 운동하는 특별한 경험, 제주 여행 중에도 WOD를 즐겨보세요.', 120000, '07:00', '20:00', 4.9, 47, true, true, true, NOW(), NOW());
 
+-- 박스 이미지
+INSERT INTO box_images (box_id, image_url)
+SELECT id, 'https://images.unsplash.com/photo-1534438327788-c6c9f58a3d27?w=800&auto=format&fit=crop'
+FROM boxes WHERE name = '크로스핏 강남'
+AND NOT EXISTS (SELECT 1 FROM box_images WHERE box_id = (SELECT id FROM boxes WHERE name = '크로스핏 강남'));
+
+INSERT INTO box_images (box_id, image_url)
+SELECT id, 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=800&auto=format&fit=crop'
+FROM boxes WHERE name = '크로스핏 강남'
+AND NOT EXISTS (SELECT 1 FROM box_images bi2 JOIN boxes b2 ON bi2.box_id = b2.id WHERE b2.name = '크로스핏 강남' AND bi2.image_url LIKE '%1571019614242%');
+
+INSERT INTO box_images (box_id, image_url)
+SELECT id, 'https://images.unsplash.com/photo-1517836477839-7072a3d87c86?w=800&auto=format&fit=crop'
+FROM boxes WHERE name = '크로스핏 마포'
+AND NOT EXISTS (SELECT 1 FROM box_images WHERE box_id = (SELECT id FROM boxes WHERE name = '크로스핏 마포'));
+
+INSERT INTO box_images (box_id, image_url)
+SELECT id, 'https://images.unsplash.com/photo-1549060279-7e168fcee0c2?w=800&auto=format&fit=crop'
+FROM boxes WHERE name = '크로스핏 마포'
+AND NOT EXISTS (SELECT 1 FROM box_images bi2 JOIN boxes b2 ON bi2.box_id = b2.id WHERE b2.name = '크로스핏 마포' AND bi2.image_url LIKE '%1549060279%');
+
+INSERT INTO box_images (box_id, image_url)
+SELECT id, 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=800&auto=format&fit=crop'
+FROM boxes WHERE name = '크로스핏 해운대'
+AND NOT EXISTS (SELECT 1 FROM box_images WHERE box_id = (SELECT id FROM boxes WHERE name = '크로스핏 해운대'));
+
+INSERT INTO box_images (box_id, image_url)
+SELECT id, 'https://images.unsplash.com/photo-1580086319619-3ed498161c77?w=800&auto=format&fit=crop'
+FROM boxes WHERE name = '크로스핏 해운대'
+AND NOT EXISTS (SELECT 1 FROM box_images bi2 JOIN boxes b2 ON bi2.box_id = b2.id WHERE b2.name = '크로스핏 해운대' AND bi2.image_url LIKE '%1580086319619%');
+
+INSERT INTO box_images (box_id, image_url)
+SELECT id, 'https://images.unsplash.com/photo-1544033527-b192dacd41af?w=800&auto=format&fit=crop'
+FROM boxes WHERE name = '크로스핏 판교'
+AND NOT EXISTS (SELECT 1 FROM box_images WHERE box_id = (SELECT id FROM boxes WHERE name = '크로스핏 판교'));
+
+INSERT INTO box_images (box_id, image_url)
+SELECT id, 'https://images.unsplash.com/photo-1487088678257-3a541e6d3cf1?w=800&auto=format&fit=crop'
+FROM boxes WHERE name = '크로스핏 판교'
+AND NOT EXISTS (SELECT 1 FROM box_images bi2 JOIN boxes b2 ON bi2.box_id = b2.id WHERE b2.name = '크로스핏 판교' AND bi2.image_url LIKE '%1487088678257%');
+
+INSERT INTO box_images (box_id, image_url)
+SELECT id, 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&auto=format&fit=crop'
+FROM boxes WHERE name = '크로스핏 송파'
+AND NOT EXISTS (SELECT 1 FROM box_images WHERE box_id = (SELECT id FROM boxes WHERE name = '크로스핏 송파'));
+
+INSERT INTO box_images (box_id, image_url)
+SELECT id, 'https://images.unsplash.com/photo-1534438327788-c6c9f58a3d27?w=800&auto=format&fit=crop'
+FROM boxes WHERE name = '크로스핏 송파'
+AND NOT EXISTS (SELECT 1 FROM box_images bi2 JOIN boxes b2 ON bi2.box_id = b2.id WHERE b2.name = '크로스핏 송파' AND bi2.image_url LIKE '%1534438327788%');
+
+INSERT INTO box_images (box_id, image_url)
+SELECT id, 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=800&auto=format&fit=crop'
+FROM boxes WHERE name = '크로스핏 인천연수'
+AND NOT EXISTS (SELECT 1 FROM box_images WHERE box_id = (SELECT id FROM boxes WHERE name = '크로스핏 인천연수'));
+
+INSERT INTO box_images (box_id, image_url)
+SELECT id, 'https://images.unsplash.com/photo-1517836477839-7072a3d87c86?w=800&auto=format&fit=crop'
+FROM boxes WHERE name = '크로스핏 인천연수'
+AND NOT EXISTS (SELECT 1 FROM box_images bi2 JOIN boxes b2 ON bi2.box_id = b2.id WHERE b2.name = '크로스핏 인천연수' AND bi2.image_url LIKE '%1517836477839%');
+
+INSERT INTO box_images (box_id, image_url)
+SELECT id, 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=800&auto=format&fit=crop'
+FROM boxes WHERE name = '크로스핏 대구수성'
+AND NOT EXISTS (SELECT 1 FROM box_images WHERE box_id = (SELECT id FROM boxes WHERE name = '크로스핏 대구수성'));
+
+INSERT INTO box_images (box_id, image_url)
+SELECT id, 'https://images.unsplash.com/photo-1544033527-b192dacd41af?w=800&auto=format&fit=crop'
+FROM boxes WHERE name = '크로스핏 대구수성'
+AND NOT EXISTS (SELECT 1 FROM box_images bi2 JOIN boxes b2 ON bi2.box_id = b2.id WHERE b2.name = '크로스핏 대구수성' AND bi2.image_url LIKE '%1544033527%');
+
+INSERT INTO box_images (box_id, image_url)
+SELECT id, 'https://images.unsplash.com/photo-1549060279-7e168fcee0c2?w=800&auto=format&fit=crop'
+FROM boxes WHERE name = '크로스핏 광주상무'
+AND NOT EXISTS (SELECT 1 FROM box_images WHERE box_id = (SELECT id FROM boxes WHERE name = '크로스핏 광주상무'));
+
+INSERT INTO box_images (box_id, image_url)
+SELECT id, 'https://images.unsplash.com/photo-1580086319619-3ed498161c77?w=800&auto=format&fit=crop'
+FROM boxes WHERE name = '크로스핏 광주상무'
+AND NOT EXISTS (SELECT 1 FROM box_images bi2 JOIN boxes b2 ON bi2.box_id = b2.id WHERE b2.name = '크로스핏 광주상무' AND bi2.image_url LIKE '%1580086319619%');
+
+INSERT INTO box_images (box_id, image_url)
+SELECT id, 'https://images.unsplash.com/photo-1487088678257-3a541e6d3cf1?w=800&auto=format&fit=crop'
+FROM boxes WHERE name = '크로스핏 용인기흥'
+AND NOT EXISTS (SELECT 1 FROM box_images WHERE box_id = (SELECT id FROM boxes WHERE name = '크로스핏 용인기흥'));
+
+INSERT INTO box_images (box_id, image_url)
+SELECT id, 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&auto=format&fit=crop'
+FROM boxes WHERE name = '크로스핏 용인기흥'
+AND NOT EXISTS (SELECT 1 FROM box_images bi2 JOIN boxes b2 ON bi2.box_id = b2.id WHERE b2.name = '크로스핏 용인기흥' AND bi2.image_url LIKE '%1558618666%');
+
+INSERT INTO box_images (box_id, image_url)
+SELECT id, 'https://images.unsplash.com/photo-1534438327788-c6c9f58a3d27?w=800&auto=format&fit=crop'
+FROM boxes WHERE name = '크로스핏 제주'
+AND NOT EXISTS (SELECT 1 FROM box_images WHERE box_id = (SELECT id FROM boxes WHERE name = '크로스핏 제주'));
+
+INSERT INTO box_images (box_id, image_url)
+SELECT id, 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=800&auto=format&fit=crop'
+FROM boxes WHERE name = '크로스핏 제주'
+AND NOT EXISTS (SELECT 1 FROM box_images bi2 JOIN boxes b2 ON bi2.box_id = b2.id WHERE b2.name = '크로스핏 제주' AND bi2.image_url LIKE '%1571019614242%');
+
 -- 커뮤니티 자유게시판 게시물 10개
 INSERT INTO posts (user_id, title, content, category, view_count, like_count, comment_count, pinned, active, created_at, updated_at)
 VALUES
@@ -253,15 +354,15 @@ WHERE NOT EXISTS (SELECT 1 FROM wods WHERE wod_date = '2026-03-02' AND box_id IS
 INSERT INTO wods (box_id, wod_date, title, type, content, score_type, active, created_at, updated_at)
 SELECT NULL, '2026-03-03', 'Fran', 'FOR_TIME',
 '21-15-9 for time:
-- Thruster 42.5/30kg
+- Thruster 95/65 lb
 - Pull-up
 
 ★ CrossFit 벤치마크 WOD
 목표 시간: 서브 10분
 엘리트: 서브 5분
 
-RX: 42.5kg(남) / 30kg(여)
-Scaled: 30kg(남) / 20kg(여) + Ring Row
+RX: 95 lb(남) / 65 lb(여)
+Scaled: 65 lb(남) / 45 lb(여) + Ring Row
 
 포인트:
 - 스쿼트 바텀에서 폭발적인 드라이브로 프레스 연결
@@ -289,12 +390,12 @@ WHERE NOT EXISTS (SELECT 1 FROM wods WHERE wod_date = '2026-03-04' AND box_id IS
 INSERT INTO wods (box_id, wod_date, title, type, content, score_type, active, created_at, updated_at)
 SELECT NULL, '2026-03-05', 'AMRAP 15 — Triple Threat', 'AMRAP',
 '15분 AMRAP:
-- Wall Ball 14회 (9/6kg, 10ft/9ft 타겟)
-- KB Swing 14회 (24/16kg)
+- Wall Ball 14회 (20/14 lb, 10ft/9ft 타겟)
+- KB Swing 14회 (53/35 lb)
 - Burpee 7회
 
-RX: 9kg Wall Ball, 24kg KB
-Scaled: 6kg Wall Ball, 16kg KB
+RX: 20 lb Wall Ball, 53 lb KB
+Scaled: 14 lb Wall Ball, 35 lb KB
 
 목표: 5라운드 이상
 
@@ -309,12 +410,12 @@ INSERT INTO wods (box_id, wod_date, title, type, content, score_type, active, cr
 SELECT NULL, '2026-03-06', '5 RFT — Run & Deadlift', 'FOR_TIME',
 '5 Rounds for time:
 - 400m Run
-- Deadlift 15회 (102.5/70kg)
+- Deadlift 15회 (225/155 lb)
 
 Time cap: 25분
 
-RX: 102.5kg(남) / 70kg(여)
-Scaled: 70kg(남) / 47.5kg(여)
+RX: 225 lb(남) / 155 lb(여)
+Scaled: 155 lb(남) / 105 lb(여)
 
 포인트:
 - 데드리프트: 허리 중립, 바를 몸에 붙여서
@@ -380,11 +481,11 @@ WHERE NOT EXISTS (SELECT 1 FROM wods WHERE wod_date = '2026-03-09' AND box_id IS
 INSERT INTO wods (box_id, wod_date, title, type, content, score_type, active, created_at, updated_at)
 SELECT NULL, '2026-03-10', 'AMRAP 12 — Snatch Combo', 'AMRAP',
 '12분 AMRAP:
-- Hang Power Snatch 5회 (52.5/35kg)
-- Box Jump Over 10회 (60/50cm)
+- Hang Power Snatch 5회 (115/75 lb)
+- Box Jump Over 10회 (24/20 in)
 - Double Under 30회
 
-Scaled: 35/25kg, Step Over, Single Under 60회
+Scaled: 75/55 lb, Step Over, Single Under 60회
 
 목표: 4라운드 이상
 
@@ -416,15 +517,15 @@ INSERT INTO wods (box_id, wod_date, title, type, content, score_type, active, cr
 SELECT NULL, '2026-03-12', 'Helen', 'FOR_TIME',
 '3 Rounds for time:
 - 400m Run
-- KB Swing 21회 (24/16kg)
+- KB Swing 21회 (53/35 lb)
 - Pull-up 12회
 
 ★ CrossFit 벤치마크 WOD
 목표 시간: 서브 12분
 엘리트: 서브 8분
 
-RX: 24kg(남) / 16kg(여)
-Scaled: 16/12kg KB, Ring Row
+RX: 53 lb(남) / 35 lb(여)
+Scaled: 35/26 lb KB, Ring Row
 
 포인트:
 - 런 페이스: 3라운드까지 유지할 수 있는 속도로
@@ -496,11 +597,11 @@ INSERT INTO wods (box_id, wod_date, title, type, content, score_type, active, cr
 SELECT NULL, '2026-03-16', 'Cindy + Dumbbell', 'AMRAP',
 '20분 AMRAP:
 - Pull-up 5회
-- DB Push Press 10회 (22.5/15kg 각)
+- DB Push Press 10회 (50/35 lb 각)
 - Air Squat 15회
 
-RX: 22.5kg 덤벨 각 손
-Scaled: Ring Row, 15kg 덤벨
+RX: 50 lb 덤벨 각 손
+Scaled: Ring Row, 35 lb 덤벨
 
 목표: 18라운드 이상
 
@@ -533,13 +634,13 @@ WHERE NOT EXISTS (SELECT 1 FROM wods WHERE wod_date = '2026-03-17' AND box_id IS
 INSERT INTO wods (box_id, wod_date, title, type, content, score_type, active, created_at, updated_at)
 SELECT NULL, '2026-03-18', '21-15-9 — Snatch & Burpee', 'FOR_TIME',
 '21-15-9 for time:
-- Hang Power Snatch (52.5/35kg)
+- Hang Power Snatch (115/75 lb)
 - Burpee Over Bar
 
 Time cap: 15분
 
-RX: 52.5kg(남) / 35kg(여)
-Scaled: 35/25kg + 스텝 오버
+RX: 115 lb(남) / 75 lb(여)
+Scaled: 75/55 lb + 스텝 오버
 
 목표 시간: 서브 10분
 
@@ -555,10 +656,10 @@ INSERT INTO wods (box_id, wod_date, title, type, content, score_type, active, cr
 SELECT NULL, '2026-03-19', 'EMOM 18 — HSPU & Heavy Swings', 'EMOM',
 '18분 EMOM (홀수/짝수 분 교대):
 홀수 분: Strict HSPU 5회
-짝수 분: Heavy KB Swing 10회 (32/24kg)
+짝수 분: Heavy KB Swing 10회 (70/53 lb)
 
 Scaled HSPU: 파이크 푸시업 또는 박스 HSPU
-Scaled KB: 24/16kg
+Scaled KB: 53/35 lb
 
 포인트:
 - HSPU: 전두부 바닥 닿고 완전 록아웃 확인
@@ -571,11 +672,11 @@ WHERE NOT EXISTS (SELECT 1 FROM wods WHERE wod_date = '2026-03-19' AND box_id IS
 INSERT INTO wods (box_id, wod_date, title, type, content, score_type, active, created_at, updated_at)
 SELECT NULL, '2026-03-20', 'AMRAP 14 — Skill Combo', 'AMRAP',
 '14분 AMRAP:
-- Wall Ball 10회 (9/6kg)
+- Wall Ball 10회 (20/14 lb)
 - Toes-to-Bar 10회
 - Double Under 50회
 
-Scaled: 6kg Wall Ball, Knee-to-Elbow, Single Under 100회
+Scaled: 14 lb Wall Ball, Knee-to-Elbow, Single Under 100회
 
 목표: 5라운드 이상
 
@@ -647,15 +748,15 @@ WHERE NOT EXISTS (SELECT 1 FROM wods WHERE wod_date = '2026-03-23' AND box_id IS
 INSERT INTO wods (box_id, wod_date, title, type, content, score_type, active, created_at, updated_at)
 SELECT NULL, '2026-03-24', 'Diane', 'FOR_TIME',
 '21-15-9 for time:
-- Deadlift (102.5/70kg)
+- Deadlift (225/155 lb)
 - Handstand Push-up
 
 ★ CrossFit 벤치마크 WOD
 목표 시간: 서브 8분
 엘리트: 서브 4분
 
-RX: 102.5kg(남) / 70kg(여)
-Scaled: 70/47.5kg + 파이크 푸시업 or 박스 HSPU
+RX: 225 lb(남) / 155 lb(여)
+Scaled: 155/105 lb + 파이크 푸시업 or 박스 HSPU
 
 포인트:
 - 데드리프트: 세트 사이 호흡 관리
@@ -688,11 +789,11 @@ WHERE NOT EXISTS (SELECT 1 FROM wods WHERE wod_date = '2026-03-25' AND box_id IS
 INSERT INTO wods (box_id, wod_date, title, type, content, score_type, active, created_at, updated_at)
 SELECT NULL, '2026-03-26', 'AMRAP 16 — Power Combo', 'AMRAP',
 '16분 AMRAP:
-- Power Clean 5회 (70/47.5kg)
+- Power Clean 5회 (155/105 lb)
 - Ring Dip 7회
 - Assault Bike 10 Cal
 
-Scaled: 52.5/35kg, Box Dip, 에어바이크 7 Cal
+Scaled: 115/75 lb, Box Dip, 에어바이크 7 Cal
 
 목표: 6라운드 이상
 
@@ -727,14 +828,14 @@ WHERE NOT EXISTS (SELECT 1 FROM wods WHERE wod_date = '2026-03-27' AND box_id IS
 INSERT INTO wods (box_id, wod_date, title, type, content, score_type, active, created_at, updated_at)
 SELECT NULL, '2026-03-28', 'Grace', 'FOR_TIME',
 'For time:
-30 Clean & Jerk (61/43kg)
+30 Clean & Jerk (135/95 lb)
 
 ★ CrossFit 벤치마크 WOD
 목표 시간: 서브 5분
 엘리트: 서브 3분
 
-RX: 61kg(남) / 43kg(여)
-Scaled: 43/30kg
+RX: 135 lb(남) / 95 lb(여)
+Scaled: 95/65 lb
 
 포인트:
 - 가능하면 바를 내려놓지 않고 진행
@@ -783,14 +884,14 @@ WHERE NOT EXISTS (SELECT 1 FROM wods WHERE wod_date = '2026-03-30' AND box_id IS
 INSERT INTO wods (box_id, wod_date, title, type, content, score_type, active, created_at, updated_at)
 SELECT NULL, '2026-03-31', 'Karen', 'FOR_TIME',
 'For time:
-150 Wall Ball Shots (9/6kg)
+150 Wall Ball Shots (20/14 lb)
 
 ★ CrossFit 벤치마크 WOD
 목표 시간: 서브 10분
 엘리트: 서브 7분
 
-RX: 9kg(남) 10ft 타겟 / 6kg(여) 9ft 타겟
-Scaled: 6/4kg, 타겟 높이 동일
+RX: 20 lb(남) 10ft 타겟 / 14 lb(여) 9ft 타겟
+Scaled: 14/10 lb, 타겟 높이 동일
 
 분할 전략 (예시):
 - 30 x 5세트
@@ -859,6 +960,7 @@ WHERE NOT EXISTS (SELECT 1 FROM competitions WHERE name = '대전 CrossFit Champ
 SELECT '=== 결과 ===' AS result;
 SELECT 'users: ' || COUNT(*) FROM users;
 SELECT 'boxes: ' || COUNT(*) FROM boxes;
+SELECT 'box_images: ' || COUNT(*) FROM box_images;
 SELECT 'posts: ' || COUNT(*) FROM posts;
 SELECT 'wods: ' || COUNT(*) FROM wods;
 SELECT 'competitions: ' || COUNT(*) FROM competitions;
