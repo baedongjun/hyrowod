@@ -63,6 +63,7 @@ crossfitkorea/                        ← Spring Boot 루트
 │   │   ├── community/                ← Post, Comment, PostController
 │   │   ├── notification/             ← Notification, NotificationService, NotificationController
 │   │   ├── badge/                    ← BadgeType, Badge, BadgeService
+│   │   ├── advertisement/            ← Advertisement, AdPosition, AdvertisementService, AdvertisementController
 │   │   └── payment/                  ← Payment, PaymentService, PaymentController
 │   └── admin/                        ← AdminDashboardController, AdminBoxController, AdminUserController, AdminPostController
 │
@@ -70,8 +71,8 @@ crossfitkorea/                        ← Spring Boot 루트
     ├── app/                          ← App Router 페이지
     ├── components/
     │   ├── layout/Header.tsx, Footer.tsx
-    │   ├── box/BoxCard.tsx, BoxMap.tsx, BoxDetailMap.tsx
-    │   ├── common/FadeInObserver.tsx
+    │   ├── box/BoxCard.tsx, BoxMap.tsx (마커 클러스터링), BoxDetailMap.tsx
+    │   ├── common/FadeInObserver.tsx, AdBanner.tsx
     │   └── providers/QueryProvider.tsx
     ├── lib/
     │   ├── api.ts                    ← 모든 API 함수 (axios 인스턴스 포함)
@@ -227,9 +228,19 @@ POST /api/v1/payments/toss/confirm    ← 결제 승인 (paymentKey, orderId, am
 GET /api/v1/stats   ← { totalBoxes, totalUsers, totalPosts, totalCompetitions }
 ```
 
+### Advertisement (광고)
+```
+GET    /api/v1/advertisements?position=          ← 활성 광고 목록 [PUBLIC] (position: BANNER|SIDEBAR|COMMUNITY|BOXES)
+POST   /api/v1/admin/advertisements              ← 광고 등록 [ADMIN]
+PUT    /api/v1/admin/advertisements/{id}         ← 광고 수정 [ADMIN]
+PATCH  /api/v1/admin/advertisements/{id}/active?active= ← 활성화/비활성화 [ADMIN]
+DELETE /api/v1/admin/advertisements/{id}         ← 광고 삭제 [ADMIN]
+```
+AdPosition: `BANNER | SIDEBAR | COMMUNITY | BOXES`
+
 ### Admin (ROLE_ADMIN 전용)
 ```
-GET   /api/v1/admin/dashboard                    ← 통계 + 월별 신규 회원
+GET   /api/v1/admin/dashboard?months=            ← 통계 + 월별 신규 회원 (months 기본값 6, 3/6/12 선택)
 GET   /api/v1/admin/boxes?page=                  ← 박스 목록
 PATCH /api/v1/admin/boxes/{id}/verify?verified=  ← 인증 처리
 PATCH /api/v1/admin/boxes/{id}/premium?premium=  ← 프리미엄 설정
@@ -243,6 +254,7 @@ PATCH /api/v1/admin/users/{id}/role?role=        ← 역할 변경
 GET   /api/v1/admin/posts?page=                  ← 게시글 목록
 DELETE /api/v1/admin/posts/{id}                  ← 게시글 삭제
 DELETE /api/v1/admin/comments/{id}               ← 댓글 삭제
+POST   /api/v1/admin/advertisements              ← (광고 섹션 참조)
 ```
 
 ---
@@ -253,7 +265,7 @@ DELETE /api/v1/admin/comments/{id}               ← 댓글 삭제
 /                          ← 홈 (Hero, 퀵링크, 통계, WOD미리보기, 대회, 커뮤니티, 박스랭킹, 내박스)
 /boxes                     ← 박스 검색 (목록/지도, 도시/키워드 필터, 즐겨찾기)
 /boxes/create              ← 박스 등록 (이미지 업로드 포함) [BOX_OWNER/ADMIN]
-/boxes/[id]                ← 박스 상세 (정보/코치/시간표/후기 탭, 가입/탈퇴, 즐겨찾기)
+/boxes/[id]                ← 박스 상세 (정보/코치/시간표/후기 탭, 가입/탈퇴, 즐겨찾기, 후기 인라인 수정, 코치 이미지 업로드)
 /boxes/[id]/edit           ← 박스 수정 [BOX_OWNER/ADMIN]
 /wod                       ← WOD (오늘WOD, 기록입력, 목록/캘린더, 리더보드, 박스랭킹, 히스토리링크)
 /wod/records               ← 내 WOD 기록 (히트맵, 바차트, 목록/캘린더, 인라인 수정)
@@ -261,7 +273,7 @@ DELETE /api/v1/admin/comments/{id}               ← 댓글 삭제
 /wod/history               ← WOD 전체 히스토리 (페이지네이션)
 /competitions              ← 대회 일정 (필터, 캘린더/목록 뷰)
 /competitions/[id]         ← 대회 상세 (신청/취소, 결제, 구글캘린더 추가)
-/community                 ← 커뮤니티 (카테고리 필터, 검색 디바운스 300ms, 인기글 사이드바)
+/community                 ← 커뮤니티 (카테고리 필터, 검색 디바운스 300ms, 인기글 사이드바, 무한 스크롤, 광고 배너)
 /community/write           ← 글쓰기 (이미지 업로드)
 /community/[id]            ← 게시글 상세 (댓글, 대댓글, 좋아요, 수정/삭제)
 /community/[id]/edit       ← 게시글 수정
@@ -283,12 +295,13 @@ DELETE /api/v1/admin/comments/{id}               ← 댓글 삭제
 /advertise
 /terms
 /privacy
-/admin                     ← 어드민 대시보드 (통계, 월별 신규회원 바차트)
+/admin                     ← 어드민 대시보드 (통계, 월별 신규회원 바차트 + 기간 필터 3/6/12개월)
 /admin/boxes               ← 박스 인증/프리미엄 관리
 /admin/users               ← 회원 관리 (역할변경, 비활성화)
 /admin/posts               ← 게시글 관리 (삭제)
 /admin/wod                 ← 공통 WOD 등록
 /admin/competitions        ← 대회 등록/수정/상태변경
+/admin/advertisements      ← 광고 관리 (등록/수정/활성화토글/삭제)
 ```
 
 ---
@@ -300,7 +313,8 @@ DELETE /api/v1/admin/comments/{id}               ← 댓글 삭제
 // 모든 API 함수는 lib/api.ts에 정의됨
 import { boxApi, wodApi, communityApi, competitionApi, membershipApi,
          badgeApi, wodRecordApi, leaderboardApi, notificationApi,
-         userApi, authApi, uploadApi, statsApi, paymentApi, adminApi } from "@/lib/api";
+         userApi, authApi, uploadApi, statsApi, paymentApi, adminApi,
+         advertisementApi } from "@/lib/api";
 
 // 자동 토큰 갱신: 401 시 refreshToken으로 재발급 → 원본 요청 재시도
 // 갱신 실패 시 → /login 리다이렉트
@@ -419,7 +433,8 @@ Box (1) ──── (N) BoxMembership
 | 이벤트 | 자동 알림 발행 위치 |
 |--------|-------------------|
 | 배지 획득 | `BadgeService.award()` |
-| 박스 가입 | `BoxMembershipService.joinBox()` |
+| 박스 가입 | `BoxMembershipService.join()` |
+| 박스 탈퇴 | `BoxMembershipService.leave()` |
 | 댓글 달림 | `PostService.createComment()` |
 | 대댓글 달림 | `PostService.createComment()` |
 
@@ -432,25 +447,17 @@ Box (1) ──── (N) BoxMembership
 - [ ] 실시간 알림 (현재 폴링, SSE 또는 WebSocket으로 개선)
 - [ ] 이메일 발송 실제 구현 (현재 forgot-password는 임시 비밀번호 반환)
 - [ ] S3 Presigned URL 기반 직접 업로드 (현재 서버 경유)
-- [ ] 박스 멤버 탈퇴 알림
-- [ ] 광고(Advertisement) 엔티티 — 엔티티만 있고 서비스/컨트롤러 없음
 
 ### 프론트엔드
-- [ ] 코치 추가 시 이미지 업로드 UI (my/box → 코치 폼에 이미지 없음)
-- [ ] 박스 상세 리뷰 섹션 — 내 후기 수정/삭제 인라인 처리
-- [ ] 박스 지도 마커 클러스터링 (많은 마커 겹침 처리)
-- [ ] 무한 스크롤 (현재 모든 목록이 페이지네이션)
-- [ ] Next.js `<Image>` 컴포넌트 적용 (현재 `<img>` 태그 사용)
+- [ ] 무한 스크롤 — 박스 목록, WOD 히스토리 등 (커뮤니티는 완료)
 - [ ] SNS 로그인 (OAuth2 — 카카오/구글)
 - [ ] 앱 푸시 알림 (PWA)
-- [ ] 광고 배너 UI
-- [ ] 어드민 통계 — 기간 필터, 박스별/지역별 상세 차트
+- [ ] 어드민 통계 — 박스별/지역별 상세 차트 (기간 필터는 완료)
 - [ ] 사용자 간 팔로우/팔로잉
 - [ ] WOD 기록 SNS 공유
 
 ### 인프라
 - [ ] 토스페이먼츠 실제 결제 테스트 (현재 sandbox 미검증)
-- [ ] CI/CD GitHub Actions 파이프라인 구성
 - [ ] Docker Compose 프로덕션 설정 분리
 
 ---
