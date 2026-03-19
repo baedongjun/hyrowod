@@ -25,6 +25,8 @@ export default function AdminDashboard() {
         totalPosts: number;
         totalCompetitions: number;
         pendingBoxCount: number;
+        totalWodRecords: number;
+        totalBadgesAwarded: number;
         monthlySignups: { month: string; count: number }[];
         recentUsers: { id: number; name: string; email: string; role: string; createdAt: string }[];
         recentPosts: { id: number; title: string; userName: string; createdAt: string }[];
@@ -77,6 +79,24 @@ export default function AdminDashboard() {
       icon: (
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <polyline points="8 6 2 12 8 18"/><path d="M2 12h20"/><polyline points="16 6 22 12 16 18"/>
+        </svg>
+      ),
+    },
+    {
+      label: "WOD 기록 수",
+      value: data?.totalWodRecords ?? 0,
+      icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+        </svg>
+      ),
+    },
+    {
+      label: "배지 발급 수",
+      value: data?.totalBadgesAwarded ?? 0,
+      icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/>
         </svg>
       ),
     },

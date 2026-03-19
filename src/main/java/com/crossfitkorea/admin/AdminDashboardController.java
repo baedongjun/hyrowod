@@ -2,6 +2,7 @@ package com.crossfitkorea.admin;
 
 import com.crossfitkorea.common.ApiResponse;
 import com.crossfitkorea.domain.box.entity.Box;
+import com.crossfitkorea.domain.badge.repository.UserBadgeRepository;
 import com.crossfitkorea.domain.box.repository.BoxMembershipRepository;
 import com.crossfitkorea.domain.box.repository.BoxRepository;
 import com.crossfitkorea.domain.community.entity.Post;
@@ -9,6 +10,7 @@ import com.crossfitkorea.domain.community.repository.PostRepository;
 import com.crossfitkorea.domain.competition.repository.CompetitionRepository;
 import com.crossfitkorea.domain.user.entity.User;
 import com.crossfitkorea.domain.user.repository.UserRepository;
+import com.crossfitkorea.domain.wod.repository.WodRecordRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +42,8 @@ public class AdminDashboardController {
     private final BoxMembershipRepository boxMembershipRepository;
     private final PostRepository postRepository;
     private final CompetitionRepository competitionRepository;
+    private final WodRecordRepository wodRecordRepository;
+    private final UserBadgeRepository userBadgeRepository;
 
     @Operation(summary = "대시보드 통계")
     @GetMapping("/dashboard")
@@ -63,6 +67,8 @@ public class AdminDashboardController {
         stats.put("totalPosts", postRepository.count());
         stats.put("totalCompetitions", competitionRepository.countByActiveTrue());
         stats.put("pendingBoxCount", boxRepository.countByActiveTrueAndVerifiedFalse());
+        stats.put("totalWodRecords", wodRecordRepository.count());
+        stats.put("totalBadgesAwarded", userBadgeRepository.count());
         stats.put("recentUsers", recentUsers.stream().map(u -> Map.of(
             "id", u.getId(),
             "name", u.getName(),
