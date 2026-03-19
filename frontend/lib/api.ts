@@ -609,6 +609,9 @@ export const checkInApi = {
 
   getBoxCheckIns: (boxId: number, page = 0) =>
     api.get(`/api/v1/boxes/${boxId}/checkins`, { params: { page, size: 30 } }),
+
+  getBoxCheckInStats: (boxId: number) =>
+    api.get(`/api/v1/boxes/${boxId}/checkins/stats`),
 };
 
 // Goal API

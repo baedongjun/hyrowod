@@ -22,4 +22,7 @@ public interface BoxCheckInRepository extends JpaRepository<BoxCheckIn, Long> {
     long countByBoxId(Long boxId);
 
     long countByUserId(Long userId);
+
+    @Query("SELECT COUNT(c) FROM BoxCheckIn c WHERE c.box.id = :boxId AND c.checkedInAt >= :since")
+    long countByBoxIdSince(@Param("boxId") Long boxId, @Param("since") LocalDateTime since);
 }

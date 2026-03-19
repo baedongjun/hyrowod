@@ -32,6 +32,8 @@ public class BoxDto {
     private boolean verified;
     private boolean premium;
     private String ownerName;
+    private Long memberCount;
+    private Long favoriteCount;
 
     public static BoxDto from(Box box) {
         return BoxDto.builder()

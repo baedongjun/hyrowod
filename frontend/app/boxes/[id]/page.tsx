@@ -917,8 +917,17 @@ export default function BoxDetailPage() {
                 <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
               </svg>
               <span className={s.memberCountLabel}>멤버</span>
-              <span className={s.memberCountValue}>{memberCount ?? 0}명</span>
+              <span className={s.memberCountValue}>{(box as { memberCount?: number })?.memberCount ?? memberCount ?? 0}명</span>
             </div>
+            {(box as { favoriteCount?: number })?.favoriteCount !== undefined && (
+              <div className={s.memberCountRow}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: "var(--red)", flexShrink: 0 }}>
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                </svg>
+                <span className={s.memberCountLabel}>즐겨찾기</span>
+                <span className={s.memberCountValue}>{(box as { favoriteCount?: number })?.favoriteCount ?? 0}명</span>
+              </div>
+            )}
             {isMember && (
               <div className={s.memberBadge}>내 박스</div>
             )}

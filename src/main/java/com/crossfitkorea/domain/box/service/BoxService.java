@@ -6,6 +6,8 @@ import com.crossfitkorea.domain.box.dto.BoxCreateRequest;
 import com.crossfitkorea.domain.box.dto.BoxDto;
 import com.crossfitkorea.domain.box.dto.BoxSearchRequest;
 import com.crossfitkorea.domain.box.entity.Box;
+import com.crossfitkorea.domain.box.repository.BoxFavoriteRepository;
+import com.crossfitkorea.domain.box.repository.BoxMembershipRepository;
 import com.crossfitkorea.domain.box.repository.BoxRepository;
 import com.crossfitkorea.domain.user.entity.User;
 import com.crossfitkorea.domain.user.service.UserService;
@@ -25,6 +27,8 @@ public class BoxService {
 
     private final BoxRepository boxRepository;
     private final UserService userService;
+    private final BoxMembershipRepository membershipRepository;
+    private final BoxFavoriteRepository favoriteRepository;
 
     public Page<BoxDto> searchBoxes(BoxSearchRequest request, Pageable pageable) {
         BigDecimal minRating = request.getMinRating() != null
@@ -43,7 +47,32 @@ public class BoxService {
 
     public BoxDto getBox(Long id) {
         Box box = findActiveBox(id);
-        return BoxDto.from(box);
+        BoxDto dto = BoxDto.from(box);
+        return BoxDto.builder()
+            .id(dto.getId())
+            .name(dto.getName())
+            .address(dto.getAddress())
+            .city(dto.getCity())
+            .district(dto.getDistrict())
+            .latitude(dto.getLatitude())
+            .longitude(dto.getLongitude())
+            .phone(dto.getPhone())
+            .website(dto.getWebsite())
+            .instagram(dto.getInstagram())
+            .youtube(dto.getYoutube())
+            .description(dto.getDescription())
+            .monthlyFee(dto.getMonthlyFee())
+            .openTime(dto.getOpenTime())
+            .closeTime(dto.getCloseTime())
+            .imageUrls(dto.getImageUrls())
+            .rating(dto.getRating())
+            .reviewCount(dto.getReviewCount())
+            .verified(dto.isVerified())
+            .premium(dto.isPremium())
+            .ownerName(dto.getOwnerName())
+            .memberCount(membershipRepository.countByBoxIdAndActiveTrue(id))
+            .favoriteCount(favoriteRepository.countByBoxId(id))
+            .build();
     }
 
     public Page<BoxDto> getMyBoxes(String ownerEmail, Pageable pageable) {

@@ -90,6 +90,19 @@ public class BoxCheckInController {
         return ResponseEntity.ok(ApiResponse.success("조회 성공", result));
     }
 
+    /** GET /api/v1/boxes/{id}/checkins/stats — 박스 체크인 통계 [BOX_OWNER/ADMIN] */
+    @GetMapping("/boxes/{id}/checkins/stats")
+    public ResponseEntity<ApiResponse<Map<String, Object>>> getBoxCheckInStats(@PathVariable Long id) {
+        LocalDateTime now = LocalDateTime.now();
+        long today = checkInRepository.countByBoxIdSince(id, now.toLocalDate().atStartOfDay());
+        long thisWeek = checkInRepository.countByBoxIdSince(id, now.minusDays(7));
+        long thisMonth = checkInRepository.countByBoxIdSince(id, now.minusDays(30));
+        long total = checkInRepository.countByBoxId(id);
+        return ResponseEntity.ok(ApiResponse.success(Map.of(
+            "today", today, "thisWeek", thisWeek, "thisMonth", thisMonth, "total", total
+        )));
+    }
+
     /** GET /api/v1/users/me/checkins — 내 체크인 기록 [AUTH] */
     @GetMapping("/users/me/checkins")
     public ResponseEntity<ApiResponse<Page<Map<String, Object>>>> getMyCheckIns(

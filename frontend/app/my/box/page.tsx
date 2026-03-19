@@ -203,6 +203,12 @@ export default function MyBoxPage() {
   const checkIns: Array<{ id: number; userId: number; userName: string; checkedInAt: string }> =
     checkInsData?.content ?? [];
 
+  const { data: checkInStats } = useQuery({
+    queryKey: ["box-checkins-stats", boxId],
+    queryFn: async () => (await checkInApi.getBoxCheckInStats(boxId!)).data.data as { today: number; thisWeek: number; thisMonth: number; total: number },
+    enabled: !!boxId && activeBoxTab === "출석 관리",
+  });
+
   // WOD Programming: load WODs for current calendar month
   const monthStart = calendarMonth.format("YYYY-MM-DD");
   const monthEnd = calendarMonth.endOf("month").format("YYYY-MM-DD");
@@ -725,6 +731,22 @@ export default function MyBoxPage() {
 
                 {/* 출석 관리 탭 */}
                 {activeBoxTab === "출석 관리" && (
+                  <>
+                  {checkInStats && (
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 2, marginBottom: 8 }}>
+                      {[
+                        { label: "오늘", value: checkInStats.today },
+                        { label: "이번 주", value: checkInStats.thisWeek },
+                        { label: "이번 달", value: checkInStats.thisMonth },
+                        { label: "전체", value: checkInStats.total },
+                      ].map((stat) => (
+                        <div key={stat.label} style={{ background: "var(--bg-card)", border: "1px solid var(--border)", padding: "16px 12px", textAlign: "center" }}>
+                          <p style={{ fontSize: 24, fontFamily: "'Bebas Neue', sans-serif", color: "var(--red)", lineHeight: 1 }}>{stat.value}</p>
+                          <p style={{ fontSize: 11, color: "var(--muted)", marginTop: 4 }}>{stat.label}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                   <div className={s.card}>
                     <div className={s.cardHeader}>
                       <h3 className={s.cardTitle}>출석 기록</h3>
@@ -753,6 +775,7 @@ export default function MyBoxPage() {
                       </div>
                     )}
                   </div>
+                  </>
                 )}
 
                 {/* WOD 프로그래밍 탭 */}

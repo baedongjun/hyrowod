@@ -271,15 +271,15 @@ export default function HomePage() {
             <p className={s.statLabel}>{STATS[0].label}</p>
           </div>
           <div className={`${s.statItem} fade-in`}>
-            <p className={s.statNum}>{STATS[1].num}</p>
+            <p className={s.statNum}>{platformStats ? `${platformStats.totalUsers.toLocaleString()}+` : STATS[1].num}</p>
             <p className={s.statLabel}>{STATS[1].label}</p>
           </div>
           <div className={`${s.statItem} fade-in`}>
-            <p className={s.statNum}>{platformStats ? `${platformStats.totalUsers.toLocaleString()}+` : STATS[2].num}</p>
-            <p className={s.statLabel}>{STATS[2].label}</p>
+            <p className={s.statNum}>{platformStats?.totalWodRecords ? `${platformStats.totalWodRecords.toLocaleString()}+` : STATS[2].num}</p>
+            <p className={s.statLabel}>WOD 기록</p>
           </div>
           <div className={`${s.statItem} fade-in`}>
-            <p className={s.statNum}>{STATS[3].num}</p>
+            <p className={s.statNum}>{platformStats?.totalPosts ? `${platformStats.totalPosts.toLocaleString()}+` : STATS[3].num}</p>
             <p className={s.statLabel}>{STATS[3].label}</p>
           </div>
         </div>
