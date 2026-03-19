@@ -23,4 +23,8 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     long countByBoxIdAndActiveTrue(Long boxId);
 
     Page<Review> findByUserEmailAndActiveTrueOrderByCreatedAtDesc(String email, Pageable pageable);
+
+    Page<Review> findByActiveTrueOrderByCreatedAtDesc(Pageable pageable);
+
+    Page<Review> findByActiveTrueAndRatingGreaterThanEqualOrderByCreatedAtDesc(int rating, Pageable pageable);
 }

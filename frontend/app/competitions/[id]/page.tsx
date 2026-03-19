@@ -289,10 +289,30 @@ export default function CompetitionDetailPage() {
           <div className={s.regCard}>
             <p className={s.cardLabel}>참가 신청</p>
             {regStatus && (
-              <p className={s.regCount}>
-                현재 <strong>{regStatus.count}</strong>명 신청
-                {comp.maxParticipants && ` / ${comp.maxParticipants}명`}
-              </p>
+              <>
+                <p className={s.regCount}>
+                  현재 <strong>{regStatus.count}</strong>명 신청
+                  {comp.maxParticipants && ` / ${comp.maxParticipants}명`}
+                </p>
+                {comp.maxParticipants && (
+                  <div className={s.regProgressWrap}>
+                    <div className={s.regProgressBar}>
+                      <div
+                        className={s.regProgressFill}
+                        style={{ width: `${Math.min(100, Math.round((regStatus.count / comp.maxParticipants) * 100))}%` }}
+                      />
+                    </div>
+                    <div className={s.regProgressLabel}>
+                      <span>{Math.round((regStatus.count / comp.maxParticipants) * 100)}% 마감</span>
+                      {regStatus.count >= comp.maxParticipants ? (
+                        <span className={s.regProgressFull}>마감 완료</span>
+                      ) : (
+                        <span>{comp.maxParticipants - regStatus.count}자리 남음</span>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </>
             )}
             {isOpen ? (
               <>

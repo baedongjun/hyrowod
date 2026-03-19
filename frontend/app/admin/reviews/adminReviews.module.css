@@ -1,0 +1,28 @@
+.stars {
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+
+.reviewContent {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: 12px;
+  color: var(--muted);
+  max-width: 320px;
+}
+
+.deleteBtn {
+  background: transparent;
+  border: 1px solid rgba(232,34,10,0.3);
+  color: var(--red);
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: background 0.2s;
+}
+.deleteBtn:hover { background: rgba(232,34,10,0.1); }
+.deleteBtn:disabled { opacity: 0.5; cursor: default; }

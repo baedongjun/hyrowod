@@ -450,6 +450,24 @@ export const adminApi = {
   deleteComment: (id: number) =>
     api.delete(`/api/v1/admin/comments/${id}`),
 
+  getReviews: (page = 0, minRating?: number) =>
+    api.get("/api/v1/admin/reviews", { params: { page, minRating } }),
+
+  deleteReview: (id: number) =>
+    api.delete(`/api/v1/admin/reviews/${id}`),
+
+  getBadges: (page = 0) =>
+    api.get("/api/v1/admin/badges", { params: { page } }),
+
+  getBadgeTypes: () =>
+    api.get("/api/v1/admin/badges/types"),
+
+  awardBadge: (userId: number, badgeType: string) =>
+    api.post("/api/v1/admin/badges/award", { userId, badgeType }),
+
+  revokeBadge: (id: number) =>
+    api.delete(`/api/v1/admin/badges/${id}`),
+
   updateWod: (id: number, data: object) =>
     api.put(`/api/v1/admin/wod/${id}`, data),
 
