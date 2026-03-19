@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { userApi, badgeApi, followApi } from "@/lib/api";
+import { Post } from "@/types";
 import { Badge, FollowUser } from "@/types";
 import { isLoggedIn, getUser } from "@/lib/auth";
 import dayjs from "dayjs";
@@ -24,7 +25,7 @@ const TIER_COLOR: Record<string, string> = {
   PLATINUM: "#0ea5e9",
 };
 
-type TabType = "badges" | "followers" | "following";
+type TabType = "badges" | "posts" | "followers" | "following";
 
 export default function UserProfilePage() {
   const { id } = useParams<{ id: string }>();
@@ -68,6 +69,13 @@ export default function UserProfilePage() {
     queryFn: async () => (await followApi.getFollowing(userId)).data.data as FollowUser[],
     enabled: activeTab === "following",
   });
+
+  const { data: userPostsData } = useQuery({
+    queryKey: ["user", userId, "posts"],
+    queryFn: async () => (await userApi.getUserPosts(userId)).data.data,
+    enabled: activeTab === "posts",
+  });
+  const userPosts: Post[] = userPostsData?.content ?? [];
 
   const toggleFollowMutation = useMutation({
     mutationFn: () => followApi.toggle(userId),
@@ -192,6 +200,12 @@ export default function UserProfilePage() {
             배지 {badges?.length ?? 0}
           </button>
           <button
+            className={activeTab === "posts" ? s.tabActive : s.tab}
+            onClick={() => setActiveTab("posts")}
+          >
+            게시글
+          </button>
+          <button
             className={activeTab === "followers" ? s.tabActive : s.tab}
             onClick={() => setActiveTab("followers")}
           >
@@ -240,6 +254,42 @@ export default function UserProfilePage() {
               </div>
             )}
           </>
+        )}
+
+        {/* 게시글 탭 */}
+        {activeTab === "posts" && (
+          <div className={s.section}>
+            <p className={s.sectionTitle}>작성한 게시글</p>
+            {userPosts.length === 0 ? (
+              <div className={s.empty}>
+                <div className={s.emptyIcon}>📝</div>
+                <p>작성한 게시글이 없습니다</p>
+              </div>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                {userPosts.map((post: Post) => (
+                  <Link
+                    key={post.id}
+                    href={`/community/${post.id}`}
+                    style={{ display: "flex", alignItems: "center", gap: 12, background: "var(--bg-card)", border: "1px solid var(--border)", padding: "14px 16px", textDecoration: "none", transition: "border-color 0.2s" }}
+                    className={s.postItem}
+                  >
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <p style={{ fontSize: 14, fontWeight: 600, color: "var(--text)", margin: "0 0 4px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        {post.title}
+                      </p>
+                      <p style={{ fontSize: 11, color: "var(--muted)", margin: 0 }}>
+                        {dayjs(post.createdAt).format("YYYY.MM.DD")} · 조회 {post.viewCount} · 좋아요 {post.likeCount}
+                      </p>
+                    </div>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" strokeWidth="2">
+                      <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
         )}
 
         {/* 팔로워 탭 */}

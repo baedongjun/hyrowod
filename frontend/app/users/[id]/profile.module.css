@@ -299,6 +299,9 @@
 }
 @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.5; } }
 
+/* Post item */
+.postItem:hover { border-color: rgba(232,34,10,0.3) !important; }
+
 /* Back */
 .backRow { margin-top: 32px; }
 .backLink { font-size: 13px; color: var(--muted); text-decoration: none; transition: color 0.2s; }

@@ -7,8 +7,10 @@ import com.crossfitkorea.domain.box.dto.BoxDto;
 import com.crossfitkorea.domain.box.dto.BoxMembershipDto;
 import com.crossfitkorea.domain.box.service.BoxFavoriteService;
 import com.crossfitkorea.domain.box.service.BoxMembershipService;
+import com.crossfitkorea.domain.community.dto.PostDto;
 import com.crossfitkorea.domain.community.entity.Comment;
 import com.crossfitkorea.domain.community.repository.CommentRepository;
+import com.crossfitkorea.domain.community.repository.PostRepository;
 import com.crossfitkorea.domain.review.dto.ReviewDto;
 import com.crossfitkorea.domain.review.service.ReviewService;
 import com.crossfitkorea.domain.user.dto.PasswordChangeRequest;
@@ -46,6 +48,7 @@ public class UserController {
     private final BoxMembershipService boxMembershipService;
     private final BadgeService badgeService;
     private final CommentRepository commentRepository;
+    private final PostRepository postRepository;
 
     @Operation(summary = "내 정보 조회")
     @GetMapping("/me")
@@ -151,5 +154,16 @@ public class UserController {
             .role(user.getRole().name())
             .build();
         return ResponseEntity.ok(ApiResponse.success(dto));
+    }
+
+    @Operation(summary = "사용자 공개 게시글 목록")
+    @GetMapping("/{id}/posts")
+    public ResponseEntity<ApiResponse<Page<PostDto>>> getUserPosts(
+            @PathVariable Long id,
+            @PageableDefault(size = 10) Pageable pageable) {
+        User user = userService.getUserById(id);
+        Page<PostDto> posts = postRepository.findByUserEmailAndActiveTrueOrderByCreatedAtDesc(user.getEmail(), pageable)
+                .map(PostDto::from);
+        return ResponseEntity.ok(ApiResponse.success(posts));
     }
 }

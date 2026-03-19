@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { boxApi, wodApi, membershipApi, adminApi } from "@/lib/api";
+import { boxApi, wodApi, membershipApi, adminApi, checkInApi } from "@/lib/api";
 import { isLoggedIn, getUser } from "@/lib/auth";
 import { Box, Review } from "@/types";
 import { toast } from "react-toastify";
@@ -22,7 +22,7 @@ const WOD_COLORS: Record<string, string> = {
   REST_DAY: "#888", CUSTOM: "#888",
 };
 
-const BOX_TABS = ["관리", "WOD 프로그래밍", "멤버 통계"] as const;
+const BOX_TABS = ["관리", "WOD 프로그래밍", "멤버 통계", "출석 관리"] as const;
 type BoxTab = typeof BOX_TABS[number];
 
 interface WodEntry {
@@ -194,6 +194,14 @@ export default function MyBoxPage() {
     queryFn: async () => (await membershipApi.getBoxMembers(boxId!)).data.data as MemberEntry[],
     enabled: !!boxId,
   });
+
+  const { data: checkInsData } = useQuery({
+    queryKey: ["box-checkins", boxId],
+    queryFn: async () => (await checkInApi.getBoxCheckIns(boxId!)).data.data,
+    enabled: !!boxId && activeBoxTab === "출석 관리",
+  });
+  const checkIns: Array<{ id: number; userId: number; userName: string; checkedInAt: string }> =
+    checkInsData?.content ?? [];
 
   // WOD Programming: load WODs for current calendar month
   const monthStart = calendarMonth.format("YYYY-MM-DD");
@@ -713,6 +721,38 @@ export default function MyBoxPage() {
                 {/* 멤버 통계 탭 */}
                 {activeBoxTab === "멤버 통계" && (
                   <MemberStats members={members} />
+                )}
+
+                {/* 출석 관리 탭 */}
+                {activeBoxTab === "출석 관리" && (
+                  <div className={s.card}>
+                    <div className={s.cardHeader}>
+                      <h3 className={s.cardTitle}>출석 기록</h3>
+                      <span style={{ fontSize: 12, color: "var(--muted)" }}>총 {checkInsData?.totalElements ?? 0}회</span>
+                    </div>
+                    {checkIns.length === 0 ? (
+                      <p className={s.emptyText}>아직 체크인 기록이 없습니다.</p>
+                    ) : (
+                      <div style={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                        {checkIns.map((c) => (
+                          <div key={c.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 0", borderBottom: "1px solid var(--border)" }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                              <div style={{ width: 28, height: 28, background: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.3)", color: "#22c55e", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                  <polyline points="22 4 12 14.01 9 11.01"/>
+                                </svg>
+                              </div>
+                              <span style={{ fontSize: 13, color: "var(--text)" }}>{c.userName}</span>
+                            </div>
+                            <span style={{ fontSize: 12, color: "var(--muted)" }}>
+                              {dayjs(c.checkedInAt).format("MM.DD HH:mm")}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 )}
 
                 {/* WOD 프로그래밍 탭 */}

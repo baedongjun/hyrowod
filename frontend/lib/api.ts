@@ -389,6 +389,9 @@ export const userApi = {
 
   getPublicProfile: (id: number) =>
     api.get(`/api/v1/users/${id}/profile`),
+
+  getUserPosts: (id: number, page = 0) =>
+    api.get(`/api/v1/users/${id}/posts`, { params: { page, size: 10 } }),
 };
 
 // Stats API
