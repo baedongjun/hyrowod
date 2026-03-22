@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { userApi } from "@/lib/api";
 import Link from "next/link";
@@ -21,7 +20,6 @@ const ROLE_LABEL: Record<string, string> = {
 };
 
 export default function UsersSearchPage() {
-  const router = useRouter();
   const [keyword, setKeyword] = useState("");
   const [search, setSearch] = useState("");
 

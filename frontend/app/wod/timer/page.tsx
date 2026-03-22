@@ -74,7 +74,7 @@ export default function WodTimerPage() {
       gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
       osc.start(ctx.currentTime);
       osc.stop(ctx.currentTime + duration);
-    } catch (_) {}
+    } catch {}
   }, []);
 
   const reset = useCallback(() => {

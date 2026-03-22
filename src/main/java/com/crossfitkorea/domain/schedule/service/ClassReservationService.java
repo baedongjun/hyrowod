@@ -44,7 +44,7 @@ public class ClassReservationService {
 
         if (existing.isPresent()) {
             if (!existing.get().isCancelled()) {
-                throw new BusinessException(ErrorCode.COMMON_BAD_REQUEST);
+                throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE);
             }
             // 취소된 예약 재활성화
             existing.get().setCancelled(false);
@@ -58,7 +58,7 @@ public class ClassReservationService {
         if (schedule.getMaxCapacity() != null) {
             long currentCount = reservationRepository.countByScheduleIdAndClassDateAndCancelledFalse(scheduleId, classDate);
             if (currentCount >= schedule.getMaxCapacity()) {
-                throw new BusinessException(ErrorCode.COMMON_BAD_REQUEST);
+                throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE);
             }
         }
 

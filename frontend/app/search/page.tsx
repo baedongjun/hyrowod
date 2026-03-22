@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { boxApi, competitionApi, communityApi, userApi } from "@/lib/api";
@@ -17,17 +17,6 @@ const STATUS_LABELS: Record<string, string> = {
 
 interface UserResult { id: number; name: string; profileImageUrl?: string; role: string; }
 type TabType = "all" | "boxes" | "competitions" | "community" | "users";
-
-function useDebounce(value: string, delay = 400) {
-  const [debounced, setDebounced] = useState(value);
-  const cb = useCallback((v: string) => {
-    const t = setTimeout(() => setDebounced(v), delay);
-    return () => clearTimeout(t);
-  }, [delay]);
-
-  useState(() => { return cb(value); });
-  return debounced;
-}
 
 export default function SearchPage() {
   const [query, setQuery] = useState("");
@@ -148,7 +137,7 @@ export default function SearchPage() {
               <div className={s.loading}>검색 중...</div>
             ) : totalCount === 0 ? (
               <div className={s.empty}>
-                <p>"{debouncedQuery}"에 대한 검색 결과가 없습니다</p>
+                <p>&quot;{debouncedQuery}&quot;에 대한 검색 결과가 없습니다</p>
               </div>
             ) : (
               <div className={s.results}>
