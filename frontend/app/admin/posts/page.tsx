@@ -5,6 +5,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { adminApi } from "@/lib/api";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
+import Link from "next/link";
 import s from "../users/adminUsers.module.css";
 import ps from "./adminPosts.module.css";
 
@@ -47,7 +48,12 @@ export default function AdminPostsPage() {
 
   return (
     <div>
-      <h1 className={s.pageTitle}>게시글 관리</h1>
+      <div className={s.pageHeader}>
+        <h1 className={s.pageTitle}>게시글 관리</h1>
+        <Link href="/admin/posts/reported" className="btn-secondary" style={{ padding: "8px 16px", fontSize: 12, textDecoration: "none", display: "inline-block", color: "var(--red)" }}>
+          ⚠ 신고된 게시글 보기
+        </Link>
+      </div>
 
       <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
         <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: "var(--muted)", cursor: "pointer" }}>

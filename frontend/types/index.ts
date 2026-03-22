@@ -214,6 +214,16 @@ export interface BoxAnnouncement {
   createdAt: string;
 }
 
+export interface BoxNotice {
+  id: number;
+  boxId: number;
+  title: string;
+  content: string;
+  pinned: boolean;
+  authorName: string;
+  createdAt: string;
+}
+
 export interface CompetitionResult {
   id: number;
   competitionId: number;

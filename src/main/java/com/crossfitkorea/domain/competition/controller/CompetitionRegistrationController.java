@@ -2,6 +2,8 @@ package com.crossfitkorea.domain.competition.controller;
 
 import com.crossfitkorea.common.ApiResponse;
 import com.crossfitkorea.domain.competition.dto.CompetitionDto;
+import com.crossfitkorea.domain.competition.entity.CompetitionRegistration;
+import com.crossfitkorea.domain.competition.repository.CompetitionRegistrationRepository;
 import com.crossfitkorea.domain.competition.service.CompetitionRegistrationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,6 +24,7 @@ import java.util.Map;
 public class CompetitionRegistrationController {
 
     private final CompetitionRegistrationService registrationService;
+    private final CompetitionRegistrationRepository registrationRepository;
 
     @Operation(summary = "내 대회 신청 목록")
     @GetMapping("/my")
@@ -60,5 +63,22 @@ public class CompetitionRegistrationController {
     ) {
         registrationService.cancel(id, userDetails.getUsername());
         return ResponseEntity.ok(ApiResponse.success(null));
+    }
+
+    @Operation(summary = "대회 참가자 목록 [ADMIN]")
+    @GetMapping("/{id}/participants")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<List<Map<String, Object>>>> getParticipants(@PathVariable Long id) {
+        List<CompetitionRegistration> registrations = registrationRepository.findActiveRegistrationsByCompetitionId(id);
+        List<Map<String, Object>> result = registrations.stream()
+            .map(r -> Map.<String, Object>of(
+                "id", r.getId(),
+                "userId", r.getUser().getId(),
+                "userName", r.getUser().getName(),
+                "email", r.getUser().getEmail(),
+                "registeredAt", r.getCreatedAt().toString()
+            ))
+            .toList();
+        return ResponseEntity.ok(ApiResponse.success(result));
     }
 }

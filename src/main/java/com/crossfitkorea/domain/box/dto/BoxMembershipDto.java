@@ -11,6 +11,9 @@ import java.time.LocalDate;
 public class BoxMembershipDto {
 
     private Long id;
+    private Long userId;
+    private String userName;
+    private String userEmail;
     private Long boxId;
     private String boxName;
     private String boxCity;
@@ -26,6 +29,9 @@ public class BoxMembershipDto {
             : 0;
         return BoxMembershipDto.builder()
             .id(m.getId())
+            .userId(m.getUser() != null ? m.getUser().getId() : null)
+            .userName(m.getUser() != null ? m.getUser().getName() : null)
+            .userEmail(m.getUser() != null ? m.getUser().getEmail() : null)
             .boxId(m.getBox().getId())
             .boxName(m.getBox().getName())
             .boxCity(m.getBox().getCity())

@@ -5,7 +5,8 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { boxApi, membershipApi, uploadApi, announcementApi, checkInApi } from "@/lib/api";
+import { boxApi, membershipApi, uploadApi, announcementApi, checkInApi, reservationApi } from "@/lib/api";
+import { BoxNotice } from "@/types";
 import BoxDetailMap from "@/components/box/BoxDetailMap";
 import { Box, Coach, Schedule, Review, Page, BoxAnnouncement } from "@/types";
 import { isLoggedIn, getUser } from "@/lib/auth";
@@ -20,8 +21,9 @@ const DAY_LABEL: Record<string, string> = {
   THURSDAY:"목요일", FRIDAY:"금요일", SATURDAY:"토요일", SUNDAY:"일요일",
 };
 
-const TABS = ["정보", "공지사항", "코치", "시간표", "후기"] as const;
-type Tab = typeof TABS[number];
+const TABS_PUBLIC = ["정보", "공지사항", "코치", "시간표", "후기"] as const;
+const TABS_MEMBER = ["정보", "공지사항", "멤버 공지", "코치", "시간표", "후기"] as const;
+type Tab = typeof TABS_MEMBER[number];
 
 export default function BoxDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -61,6 +63,10 @@ export default function BoxDetailPage() {
   const [showAnnouncementForm, setShowAnnouncementForm] = useState(false);
   const [announcementForm, setAnnouncementForm] = useState({ title: "", content: "", pinned: false });
   const [isMember, setIsMember] = useState(false);
+
+  // Member notices state
+  const [showNoticeForm, setShowNoticeForm] = useState(false);
+  const [noticeForm, setNoticeForm] = useState({ title: "", content: "", pinned: false });
   const [reviewPage, setReviewPage] = useState(0);
 
   const { data: box, isLoading } = useQuery({
@@ -90,6 +96,15 @@ export default function BoxDetailPage() {
     queryKey: ["box", boxId, "announcements"],
     queryFn: async () => (await announcementApi.getByBox(boxId)).data.data as BoxAnnouncement[],
     enabled: tab === "공지사항",
+  });
+
+  const { data: notices } = useQuery({
+    queryKey: ["box", boxId, "notices"],
+    queryFn: async () => {
+      const res = (await boxApi.getNotices(boxId)).data.data;
+      return (res as { content: BoxNotice[] })?.content ?? (res as BoxNotice[]);
+    },
+    enabled: tab === "멤버 공지" && isLoggedIn() && (isMember || isOwner),
   });
 
   const { data: favoriteData } = useQuery({
@@ -285,6 +300,26 @@ export default function BoxDetailPage() {
     onError: () => toast.error("삭제에 실패했습니다."),
   });
 
+  const addNoticeMutation = useMutation({
+    mutationFn: () => boxApi.createNotice(boxId, noticeForm),
+    onSuccess: () => {
+      toast.success("멤버 공지가 등록되었습니다.");
+      setNoticeForm({ title: "", content: "", pinned: false });
+      setShowNoticeForm(false);
+      queryClient.invalidateQueries({ queryKey: ["box", boxId, "notices"] });
+    },
+    onError: () => toast.error("공지 등록에 실패했습니다."),
+  });
+
+  const deleteNoticeMutation = useMutation({
+    mutationFn: (nId: number) => boxApi.deleteNotice(boxId, nId),
+    onSuccess: () => {
+      toast.success("공지가 삭제되었습니다.");
+      queryClient.invalidateQueries({ queryKey: ["box", boxId, "notices"] });
+    },
+    onError: () => toast.error("삭제에 실패했습니다."),
+  });
+
   const handleShare = () => {
     if (typeof navigator !== "undefined" && "share" in navigator) {
       (navigator as Navigator).share({ title: box?.name, text: `${box?.name} - ${box?.city} ${box?.district}`, url: window.location.href }).catch(() => {});
@@ -438,7 +473,7 @@ export default function BoxDetailPage() {
         <div>
           {/* Tabs */}
           <div className={s.tabs}>
-            {TABS.map((t) => (
+            {(isMember || isOwner ? TABS_MEMBER : TABS_PUBLIC).map((t) => (
               <button
                 key={t}
                 onClick={() => setTab(t)}
@@ -555,6 +590,69 @@ export default function BoxDetailPage() {
                 <div className={s.empty}>
                   <div className={s.emptyIcon}>📢</div>
                   <p>등록된 공지사항이 없습니다</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* 멤버 공지 */}
+          {tab === "멤버 공지" && (
+            <div>
+              {isOwner && (
+                <div className={s.ownerBar}>
+                  <button className="btn-primary" style={{ padding: "10px 20px", fontSize: 13 }} onClick={() => setShowNoticeForm(!showNoticeForm)}>
+                    {showNoticeForm ? "취소" : "+ 멤버 공지 등록"}
+                  </button>
+                </div>
+              )}
+              {showNoticeForm && (
+                <div className={s.addForm}>
+                  <div className={s.addField}>
+                    <label className={s.addLabel}>제목</label>
+                    <input className="input-field" value={noticeForm.title} onChange={(e) => setNoticeForm({ ...noticeForm, title: e.target.value })} placeholder="공지 제목" />
+                  </div>
+                  <div className={s.addField}>
+                    <label className={s.addLabel}>내용</label>
+                    <textarea className={s.reviewTextarea} value={noticeForm.content} onChange={(e) => setNoticeForm({ ...noticeForm, content: e.target.value })} placeholder="멤버에게 전달할 내용을 입력하세요" rows={4} />
+                  </div>
+                  <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: "var(--muted)", cursor: "pointer" }}>
+                    <input type="checkbox" checked={noticeForm.pinned} onChange={(e) => setNoticeForm({ ...noticeForm, pinned: e.target.checked })} />
+                    상단 고정
+                  </label>
+                  <div className={s.addFormActions}>
+                    <button className="btn-primary" style={{ padding: "10px 24px", fontSize: 13 }} onClick={() => addNoticeMutation.mutate()} disabled={!noticeForm.title.trim() || !noticeForm.content.trim() || addNoticeMutation.isPending}>
+                      {addNoticeMutation.isPending ? "등록 중..." : "공지 등록"}
+                    </button>
+                  </div>
+                </div>
+              )}
+              <div style={{ marginBottom: 12, padding: "8px 12px", background: "rgba(232,34,10,0.08)", border: "1px solid rgba(232,34,10,0.2)", fontSize: 12, color: "var(--muted)" }}>
+                🔒 멤버 전용 공지입니다. 박스 멤버와 오너만 열람 가능합니다.
+              </div>
+              {notices && notices.length > 0 ? (
+                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                  {notices.map((n: BoxNotice) => (
+                    <div key={n.id} className={s.announcementItem}>
+                      <div className={s.announcementHeader}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                          {n.pinned && <span className="badge badge-default" style={{ fontSize: 10 }}>고정</span>}
+                          <p className={s.announcementTitle}>{n.title}</p>
+                        </div>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                          <span className={s.announcementDate}>{n.authorName} · {dayjs(n.createdAt).format("YYYY.MM.DD")}</span>
+                          {isOwner && (
+                            <button className="btn-secondary" style={{ padding: "4px 10px", fontSize: 11 }} onClick={() => { if (window.confirm("공지를 삭제하시겠습니까?")) deleteNoticeMutation.mutate(n.id); }}>삭제</button>
+                          )}
+                        </div>
+                      </div>
+                      <p className={s.announcementContent}>{n.content}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className={s.empty}>
+                  <div className={s.emptyIcon}>🔔</div>
+                  <p>등록된 멤버 공지가 없습니다</p>
                 </div>
               )}
             </div>
@@ -722,6 +820,22 @@ export default function BoxDetailPage() {
                               <span className={s.scheduleClass}>{sc.className}</span>
                               {sc.coachName && <span className={s.scheduleCoach}>{sc.coachName}</span>}
                               {sc.maxCapacity && <span className={s.scheduleCap}>{sc.maxCapacity}명</span>}
+                              {isMember && isLoggedIn() && (
+                                <button
+                                  style={{ fontSize: 11, padding: "4px 10px", background: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.3)", color: "#22c55e", cursor: "pointer", marginLeft: "auto" }}
+                                  onClick={async () => {
+                                    const today = dayjs().format("YYYY-MM-DD");
+                                    try {
+                                      await reservationApi.reserve(sc.id, today);
+                                      toast.success("예약이 완료되었습니다!");
+                                    } catch {
+                                      toast.error("예약에 실패했습니다.");
+                                    }
+                                  }}
+                                >
+                                  예약
+                                </button>
+                              )}
                               {isOwner && (
                                 <button className={s.deleteBtn} onClick={() => { if (window.confirm("수업을 삭제할까요?")) deleteScheduleMutation.mutate(sc.id); }}>✕</button>
                               )}

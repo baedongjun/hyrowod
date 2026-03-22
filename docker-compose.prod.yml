@@ -23,6 +23,17 @@ services:
     restart: unless-stopped
 
   # ──────────────────────────────────────────
+  # Redis (로컬 캐시)
+  # ──────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: crossfitkorea-redis
+    networks:
+      - crossfitkorea-net
+    restart: unless-stopped
+    command: redis-server --maxmemory 64mb --maxmemory-policy allkeys-lru
+
+  # ──────────────────────────────────────────
   # Spring Boot 백엔드 (ECR 이미지)
   # ──────────────────────────────────────────
   backend:
@@ -38,9 +49,9 @@ services:
       DB_NAME: ${DB_NAME}
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
-      REDIS_HOST: ${REDIS_HOST}
-      REDIS_PORT: ${REDIS_PORT:-6379}
-      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRATION: ${JWT_EXPIRATION:-86400000}
       JWT_REFRESH_EXPIRATION: ${JWT_REFRESH_EXPIRATION:-604800000}
@@ -53,6 +64,8 @@ services:
       JAVA_OPTS: -Xms128m -Xmx384m -XX:MetaspaceSize=96m -XX:MaxMetaspaceSize=192m -XX:+UseG1GC -XX:+ExitOnOutOfMemoryError
     mem_limit: 600m
     memswap_limit: 600m
+    depends_on:
+      - redis
     networks:
       - crossfitkorea-net
     restart: unless-stopped

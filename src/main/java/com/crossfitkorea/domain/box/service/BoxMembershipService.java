@@ -113,6 +113,31 @@ public class BoxMembershipService {
         }
     }
 
+    @Transactional
+    public void removeMember(Long boxId, Long userId, String ownerEmail) {
+        User owner = userService.getUserByEmail(ownerEmail);
+        Box box = getBox(boxId);
+
+        boolean isOwner = box.getOwner() != null && box.getOwner().getId().equals(owner.getId());
+        boolean isAdmin = owner.getRole().name().equals("ROLE_ADMIN");
+        if (!isOwner && !isAdmin) {
+            throw new IllegalStateException("권한이 없습니다.");
+        }
+
+        User member = userService.getUserById(userId);
+        BoxMembership membership = membershipRepository
+            .findByUserAndBoxIdAndActiveTrue(member, boxId)
+            .orElseThrow(() -> new IllegalStateException("해당 멤버를 찾을 수 없습니다."));
+        membership.deactivate();
+
+        notificationService.createNotification(
+            member,
+            NotificationType.MEMBERSHIP,
+            "📢 " + box.getName() + " 박스에서 탈퇴 처리되었습니다.",
+            "/boxes/" + boxId
+        );
+    }
+
     private Box getBox(Long boxId) {
         return boxRepository.findById(boxId)
             .orElseThrow(() -> new IllegalArgumentException("박스를 찾을 수 없습니다."));

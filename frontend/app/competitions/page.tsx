@@ -76,6 +76,8 @@ export default function CompetitionsPage() {
   const [sortBy, setSortBy] = useState("date_asc");
   const [keyword, setKeyword] = useState("");
   const [searchInput, setSearchInput] = useState("");
+  const [viewMode, setViewMode] = useState<"list" | "calendar">("list");
+  const [calendarMonth, setCalendarMonth] = useState(dayjs().startOf("month"));
 
   const { data, isLoading } = useQuery({
     queryKey: ["competitions", selectedStatus, selectedCity],
@@ -224,15 +226,100 @@ export default function CompetitionsPage() {
           </div>
         </div>
 
-        {/* Result count */}
+        {/* Result count + View Toggle */}
         <div className={s.resultRow}>
           <p className={s.resultCount}>
             <strong>{filtered?.length ?? 0}</strong>개 대회
           </p>
+          <div className={s.viewToggle}>
+            <button
+              className={`${s.viewBtn} ${viewMode === "list" ? s.viewBtnActive : ""}`}
+              onClick={() => setViewMode("list")}
+              title="목록 보기"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/>
+                <line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/>
+                <line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
+              </svg>
+              목록
+            </button>
+            <button
+              className={`${s.viewBtn} ${viewMode === "calendar" ? s.viewBtnActive : ""}`}
+              onClick={() => setViewMode("calendar")}
+              title="캘린더 보기"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+              캘린더
+            </button>
+          </div>
         </div>
 
-        {/* List */}
-        {isLoading ? (
+        {/* Calendar View */}
+        {viewMode === "calendar" && (() => {
+          const daysInMonth = calendarMonth.daysInMonth();
+          const startDow = calendarMonth.startOf("month").day();
+          const today = dayjs().format("YYYY-MM-DD");
+          const cells: (string | null)[] = [];
+          for (let i = 0; i < startDow; i++) cells.push(null);
+          for (let d = 1; d <= daysInMonth; d++) {
+            cells.push(calendarMonth.date(d).format("YYYY-MM-DD"));
+          }
+          const compsByDate: Record<string, Competition[]> = {};
+          (filtered ?? []).forEach((comp: Competition) => {
+            if (!comp.startDate) return;
+            const k = dayjs(comp.startDate).format("YYYY-MM-DD");
+            if (!compsByDate[k]) compsByDate[k] = [];
+            compsByDate[k].push(comp);
+          });
+          return (
+            <div className={s.calendarSection}>
+              <div className={s.calendarNav}>
+                <button className={s.calendarNavBtn} onClick={() => setCalendarMonth(calendarMonth.subtract(1, "month"))}>‹</button>
+                <span className={s.calendarMonthTitle}>{calendarMonth.format("YYYY.MM")}</span>
+                <button className={s.calendarNavBtn} onClick={() => setCalendarMonth(calendarMonth.add(1, "month"))}>›</button>
+              </div>
+              <div className={s.calendarDaysHeader}>
+                {["일", "월", "화", "수", "목", "금", "토"].map((d) => (
+                  <div key={d} className={s.calendarDayHeader}>{d}</div>
+                ))}
+              </div>
+              <div className={s.calendarGrid}>
+                {cells.map((cell, i) => (
+                  <div
+                    key={i}
+                    className={`${s.calendarCell} ${!cell ? s.calendarCellEmpty : cell === today ? s.calendarCellToday : ""}`}
+                  >
+                    {cell && (
+                      <>
+                        <p className={`${s.calendarDate} ${cell === today ? s.calendarDateToday : ""}`}>
+                          {dayjs(cell).date()}
+                        </p>
+                        {(compsByDate[cell] ?? []).map((comp) => (
+                          <Link
+                            key={comp.id}
+                            href={`/competitions/${comp.id}`}
+                            className={`${s.calendarEvent} ${comp.status === "OPEN" ? s.calendarEventOpen : comp.status === "UPCOMING" ? s.calendarEventUpcoming : ""}`}
+                            title={comp.name}
+                          >
+                            {comp.name}
+                          </Link>
+                        ))}
+                      </>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })()}
+
+        {/* List View */}
+        {viewMode === "list" && (isLoading ? (
           <div className={s.list}>
             {[...Array(4)].map((_, i) => (
               <div key={i} className={s.skeleton} />
@@ -310,7 +397,7 @@ export default function CompetitionsPage() {
               </Link>
             ))}
           </div>
-        )}
+        ))}
       </div>
     </div>
   );

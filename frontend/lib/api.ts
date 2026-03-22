@@ -245,6 +245,9 @@ export const competitionApi = {
 
   getMyRegistrations: () =>
     api.get("/api/v1/competitions/my"),
+
+  getParticipants: (id: number) =>
+    api.get(`/api/v1/competitions/${id}/participants`),
 };
 
 // Notification API
@@ -338,6 +341,9 @@ export const membershipApi = {
 
   getBoxMembers: (boxId: number) =>
     api.get(`/api/v1/boxes/${boxId}/members`),
+
+  removeMember: (boxId: number, userId: number) =>
+    api.delete(`/api/v1/boxes/${boxId}/members/${userId}`),
 
   getMyBox: () =>
     api.get("/api/v1/users/me/box"),
@@ -612,6 +618,24 @@ export const checkInApi = {
 
   getBoxCheckInStats: (boxId: number) =>
     api.get(`/api/v1/boxes/${boxId}/checkins/stats`),
+};
+
+// Class Reservation API
+export const reservationApi = {
+  reserve: (scheduleId: number, date: string) =>
+    api.post(`/api/v1/schedules/${scheduleId}/reserve`, null, { params: { date } }),
+
+  cancel: (scheduleId: number, date: string) =>
+    api.delete(`/api/v1/schedules/${scheduleId}/reserve`, { params: { date } }),
+
+  getStatus: (scheduleId: number, date: string) =>
+    api.get(`/api/v1/schedules/${scheduleId}/reserve/status`, { params: { date } }),
+
+  getMyReservations: () =>
+    api.get("/api/v1/schedules/my-reservations"),
+
+  getBoxReservations: (boxId: number) =>
+    api.get(`/api/v1/schedules/box/${boxId}/reservations`),
 };
 
 // Goal API

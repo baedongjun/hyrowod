@@ -39,6 +39,7 @@ export default function AdminCompetitionsPage() {
   });
 
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [participantsCompId, setParticipantsCompId] = useState<number | null>(null);
   const [resultCompId, setResultCompId] = useState<number | null>(null);
   const [resultRows, setResultRows] = useState<{ rank: string; userName: string; score: string; notes: string }[]>([
     { rank: "1", userName: "", score: "", notes: "" },
@@ -53,6 +54,12 @@ export default function AdminCompetitionsPage() {
   const { data } = useQuery({
     queryKey: ["competitions", "ALL"],
     queryFn: async () => (await competitionApi.getAll()).data.data,
+  });
+
+  const { data: participants } = useQuery({
+    queryKey: ["competition", participantsCompId, "participants"],
+    queryFn: async () => (await competitionApi.getParticipants(participantsCompId!)).data.data as Array<{ id: number; userId: number; userName: string; email: string; registeredAt: string }>,
+    enabled: !!participantsCompId,
   });
 
   const createMutation = useMutation({
@@ -254,12 +261,22 @@ export default function AdminCompetitionsPage() {
                           <option key={st} value={st}>{STATUS_LABELS[st]}</option>
                         ))}
                       </select>
+                      <button
+                        className={s.editBtn}
+                        style={{ fontSize: 11 }}
+                        onClick={() => {
+                          if (participantsCompId === comp.id) { setParticipantsCompId(null); }
+                          else { setParticipantsCompId(comp.id); setEditingId(null); setResultCompId(null); }
+                        }}
+                      >
+                        {participantsCompId === comp.id ? "참가자 닫기" : "참가자"}
+                      </button>
                       {comp.status === "COMPLETED" && (
                         <button
                           className={s.editBtn}
                           onClick={() => {
                             if (resultCompId === comp.id) { setResultCompId(null); }
-                            else { setResultCompId(comp.id); setEditingId(null); }
+                            else { setResultCompId(comp.id); setEditingId(null); setParticipantsCompId(null); }
                           }}
                         >
                           {resultCompId === comp.id ? "결과 닫기" : "결과 입력"}
@@ -284,6 +301,27 @@ export default function AdminCompetitionsPage() {
                       </button>
                     </div>
                   </div>
+                  {participantsCompId === comp.id && (
+                    <div className={s.editForm}>
+                      <p style={{ fontSize: 13, fontWeight: 600, color: "var(--text)", marginBottom: 12 }}>
+                        참가자 목록 ({participants?.length ?? 0}명)
+                      </p>
+                      {!participants || participants.length === 0 ? (
+                        <p style={{ fontSize: 13, color: "var(--muted)" }}>신청자가 없습니다.</p>
+                      ) : (
+                        <div style={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                          {participants.map((p, idx) => (
+                            <div key={p.id} style={{ display: "flex", alignItems: "center", gap: 12, padding: "8px 0", borderBottom: "1px solid var(--border)", fontSize: 13 }}>
+                              <span style={{ color: "var(--muted)", minWidth: 24 }}>{idx + 1}</span>
+                              <span style={{ color: "var(--text)", flex: 1 }}>{p.userName}</span>
+                              <span style={{ color: "var(--muted)", fontSize: 12 }}>{p.email}</span>
+                              <span style={{ color: "var(--muted)", fontSize: 11 }}>{dayjs(p.registeredAt).format("MM.DD HH:mm")}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
                   {resultCompId === comp.id && (
                     <div className={s.editForm}>
                       <p style={{ fontSize: 13, fontWeight: 600, color: "var(--text)", marginBottom: 16 }}>대회 결과 입력</p>

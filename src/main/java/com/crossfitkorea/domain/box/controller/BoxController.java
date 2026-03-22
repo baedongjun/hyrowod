@@ -173,6 +173,18 @@ public class BoxController {
         return ResponseEntity.ok(ApiResponse.success(Map.of("member", member)));
     }
 
+    @Operation(summary = "멤버 내보내기 (오너/ADMIN)")
+    @DeleteMapping("/{id}/members/{userId}")
+    @PreAuthorize("hasAnyRole('BOX_OWNER', 'ADMIN')")
+    public ResponseEntity<ApiResponse<Void>> removeMember(
+        @PathVariable Long id,
+        @PathVariable Long userId,
+        @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        boxMembershipService.removeMember(id, userId, userDetails.getUsername());
+        return ResponseEntity.ok(ApiResponse.success(null));
+    }
+
     // ── 박스 공지사항 ─────────────────────────────────────────────
 
     @Operation(summary = "공지 목록 (멤버/오너/ADMIN)")

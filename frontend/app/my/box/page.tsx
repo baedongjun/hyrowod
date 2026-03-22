@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { boxApi, wodApi, membershipApi, adminApi, checkInApi } from "@/lib/api";
+import { boxApi, wodApi, membershipApi, adminApi, checkInApi, reservationApi } from "@/lib/api";
 import { isLoggedIn, getUser } from "@/lib/auth";
 import { Box, Review } from "@/types";
 import { toast } from "react-toastify";
@@ -22,7 +22,7 @@ const WOD_COLORS: Record<string, string> = {
   REST_DAY: "#888", CUSTOM: "#888",
 };
 
-const BOX_TABS = ["관리", "WOD 프로그래밍", "멤버 통계", "출석 관리"] as const;
+const BOX_TABS = ["관리", "WOD 프로그래밍", "멤버 통계", "출석 관리", "예약 현황"] as const;
 type BoxTab = typeof BOX_TABS[number];
 
 interface WodEntry {
@@ -34,9 +34,9 @@ interface WodEntry {
   scoreType: string;
 }
 
-interface MemberEntry { id: number; boxId: number; boxName: string; joinedAt: string; daysInBox: number; userName?: string; userEmail?: string; }
+interface MemberEntry { id: number; userId?: number; boxId: number; boxName: string; joinedAt: string; daysInBox: number; userName?: string; userEmail?: string; }
 
-function MemberStats({ members }: { members: MemberEntry[] | undefined }) {
+function MemberStats({ members, onRemove }: { members: MemberEntry[] | undefined; onRemove?: (userId: number, name: string) => void }) {
   const list = members ?? [];
   const now = dayjs();
   const thisMonth = now.format("YYYY-MM");
@@ -110,7 +110,17 @@ function MemberStats({ members }: { members: MemberEntry[] | undefined }) {
                     <p style={{ fontSize: 11, color: "var(--muted)" }}>가입: {dayjs(m.joinedAt).format("YYYY.MM.DD")}</p>
                   </div>
                 </div>
-                <span style={{ fontSize: 12, color: "var(--muted)" }}>{m.daysInBox}일째</span>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ fontSize: 12, color: "var(--muted)" }}>{m.daysInBox}일째</span>
+                  {onRemove && m.userId && (
+                    <button
+                      style={{ background: "transparent", border: "1px solid rgba(232,34,10,0.3)", color: "var(--red)", padding: "3px 8px", fontSize: 11, cursor: "pointer" }}
+                      onClick={() => onRemove(m.userId!, m.userName || `멤버 #${m.id}`)}
+                    >
+                      내보내기
+                    </button>
+                  )}
+                </div>
               </div>
             ))}
           </div>
@@ -207,6 +217,12 @@ export default function MyBoxPage() {
     queryKey: ["box-checkins-stats", boxId],
     queryFn: async () => (await checkInApi.getBoxCheckInStats(boxId!)).data.data as { today: number; thisWeek: number; thisMonth: number; total: number },
     enabled: !!boxId && activeBoxTab === "출석 관리",
+  });
+
+  const { data: boxReservations } = useQuery({
+    queryKey: ["box-reservations", boxId],
+    queryFn: async () => (await reservationApi.getBoxReservations(boxId!)).data.data as Array<{ id: number; userId: number; userName: string; scheduleId: number; className: string; startTime: string; classDate: string }>,
+    enabled: !!boxId && activeBoxTab === "예약 현황",
   });
 
   // WOD Programming: load WODs for current calendar month
@@ -314,6 +330,15 @@ export default function MyBoxPage() {
       queryClient.invalidateQueries({ queryKey: ["schedules", boxId] });
     },
     onError: () => toast.error("삭제에 실패했습니다."),
+  });
+
+  const removeMemberMutation = useMutation({
+    mutationFn: ({ userId }: { userId: number }) => membershipApi.removeMember(boxId!, userId),
+    onSuccess: () => {
+      toast.success("멤버가 내보내졌습니다.");
+      queryClient.invalidateQueries({ queryKey: ["box-members", boxId] });
+    },
+    onError: () => toast.error("처리에 실패했습니다."),
   });
 
   // Calendar helpers
@@ -726,7 +751,14 @@ export default function MyBoxPage() {
 
                 {/* 멤버 통계 탭 */}
                 {activeBoxTab === "멤버 통계" && (
-                  <MemberStats members={members} />
+                  <MemberStats
+                    members={members}
+                    onRemove={(userId, name) => {
+                      if (window.confirm(`"${name}" 멤버를 내보내시겠습니까?`)) {
+                        removeMemberMutation.mutate({ userId });
+                      }
+                    }}
+                  />
                 )}
 
                 {/* 출석 관리 탭 */}
@@ -776,6 +808,33 @@ export default function MyBoxPage() {
                     )}
                   </div>
                   </>
+                )}
+
+                {/* 예약 현황 탭 */}
+                {activeBoxTab === "예약 현황" && (
+                  <div className={s.card}>
+                    <div className={s.cardHeader}>
+                      <h3 className={s.cardTitle}>예약 현황</h3>
+                      <span style={{ fontSize: 12, color: "var(--muted)" }}>오늘 이후 예약 {boxReservations?.length ?? 0}건</span>
+                    </div>
+                    {!boxReservations || boxReservations.length === 0 ? (
+                      <p className={s.emptyText}>예약된 수업이 없습니다.</p>
+                    ) : (
+                      <div style={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                        {boxReservations.map((r) => (
+                          <div key={r.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 0", borderBottom: "1px solid var(--border)" }}>
+                            <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                              <span style={{ fontSize: 13, color: "var(--text)", fontWeight: 600 }}>{r.userName}</span>
+                              <span style={{ fontSize: 12, color: "var(--muted)" }}>{r.className} · {r.startTime}</span>
+                            </div>
+                            <span style={{ fontSize: 12, color: "var(--red)", fontFamily: "'Bebas Neue', sans-serif", letterSpacing: 1 }}>
+                              {dayjs(r.classDate).format("MM/DD (ddd)")}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 )}
 
                 {/* WOD 프로그래밍 탭 */}
