@@ -9,7 +9,7 @@ import { isLoggedIn, getUser } from "@/lib/auth";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
 import { Post } from "@/types";
-import s from "../adminUsers.module.css";
+import s from "../../users/adminUsers.module.css";
 import ps from "../adminPosts.module.css";
 
 export default function ReportedPostsPage() {
