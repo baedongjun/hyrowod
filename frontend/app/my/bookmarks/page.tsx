@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { bookmarkApi } from "@/lib/api";
+import { Post } from "@/types";
 import { isLoggedIn } from "@/lib/auth";
 import dayjs from "dayjs";
 import s from "./bookmarks.module.css";
@@ -30,13 +31,13 @@ export default function MyBookmarksPage() {
       const res = await bookmarkApi.getMyBookmarks(pageParam as number);
       return res.data.data;
     },
-    getNextPageParam: (last: { last: boolean; number: number; content: unknown[] }) =>
+    getNextPageParam: (last: { last: boolean; number: number; content: Post[] }) =>
       last.last ? undefined : last.number + 1,
     initialPageParam: 0,
     enabled: mounted,
   });
 
-  const posts = data?.pages.flatMap((p: { content: unknown[] }) => p.content) ?? [];
+  const posts = data?.pages.flatMap((p: { content: Post[] }) => p.content) ?? [];
 
   if (!mounted) return null;
 
