@@ -412,7 +412,7 @@ export const userApi = {
 // Stats API
 export const statsApi = {
   getPublicStats: () =>
-    api.get<ApiResponse<{ totalBoxes: number; totalUsers: number; totalPosts: number; totalCompetitions: number }>>("/api/v1/stats"),
+    api.get<ApiResponse<{ totalBoxes: number; totalUsers: number; totalPosts: number; totalCompetitions: number; totalWodRecords: number }>>("/api/v1/stats"),
 };
 
 // Payment API
