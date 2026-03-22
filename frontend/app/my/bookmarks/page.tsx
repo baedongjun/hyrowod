@@ -30,7 +30,7 @@ export default function MyBookmarksPage() {
       const res = await bookmarkApi.getMyBookmarks(pageParam as number);
       return res.data.data;
     },
-    getNextPageParam: (last: { last: boolean; number: number }) =>
+    getNextPageParam: (last: { last: boolean; number: number; content: unknown[] }) =>
       last.last ? undefined : last.number + 1,
     initialPageParam: 0,
     enabled: mounted,
