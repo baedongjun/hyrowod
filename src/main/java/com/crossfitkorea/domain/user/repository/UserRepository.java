@@ -1,5 +1,6 @@
 package com.crossfitkorea.domain.user.repository;
 
+import com.crossfitkorea.domain.user.entity.AuthProvider;
 import com.crossfitkorea.domain.user.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +13,7 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
     boolean existsByEmail(String email);
+    Optional<User> findByProviderAndProviderId(AuthProvider provider, String providerId);
 
     @Query("SELECT u FROM User u WHERE " +
         "(:keyword IS NULL OR LOWER(u.name) LIKE LOWER(CONCAT('%', :keyword, '%')) " +

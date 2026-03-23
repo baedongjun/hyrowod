@@ -2,6 +2,8 @@ package com.crossfitkorea.config;
 
 import com.crossfitkorea.security.JwtAuthenticationFilter;
 import com.crossfitkorea.security.JwtTokenProvider;
+import com.crossfitkorea.security.oauth2.CustomOAuth2UserService;
+import com.crossfitkorea.security.oauth2.OAuth2AuthenticationSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +30,8 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -43,6 +47,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 // 인증 불필요
                 .requestMatchers("/api/v1/auth/**").permitAll()
+                .requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll()
                 // 박스 공지 - 인증 필요 (멤버/오너만 조회 가능)
                 .requestMatchers(HttpMethod.GET, "/api/v1/boxes/*/notices").authenticated()
                 .requestMatchers(HttpMethod.GET, "/api/v1/boxes/*/notices/**").authenticated()
@@ -79,6 +84,15 @@ public class SecurityConfig {
                 .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                 // 나머지 인증 필요
                 .anyRequest().authenticated()
+            )
+            .oauth2Login(oauth2 -> oauth2
+                .authorizationEndpoint(auth -> auth
+                    .baseUri("/oauth2/authorization"))
+                .redirectionEndpoint(redirect -> redirect
+                    .baseUri("/login/oauth2/code/*"))
+                .userInfoEndpoint(userInfo -> userInfo
+                    .userService(customOAuth2UserService))
+                .successHandler(oAuth2AuthenticationSuccessHandler)
             )
             .addFilterBefore(
                 new JwtAuthenticationFilter(jwtTokenProvider),

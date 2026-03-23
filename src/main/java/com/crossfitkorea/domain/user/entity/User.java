@@ -20,8 +20,14 @@ public class User extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String email;
 
+    private String password; // OAuth2 사용자는 null
+
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String password;
+    @Builder.Default
+    private AuthProvider provider = AuthProvider.LOCAL;
+
+    private String providerId;
 
     @Column(nullable = false)
     private String name;
