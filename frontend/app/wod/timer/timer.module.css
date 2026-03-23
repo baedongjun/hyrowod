@@ -1,7 +1,7 @@
 .page {
   min-height: 100vh;
   background: var(--bg);
-  padding: 40px 16px;
+  padding: 104px 16px 40px;
 }
 
 .inner {

@@ -4,12 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import s from "./tools.module.css";
 
-const FORMULAS = [
-  { name: "Brzycki", fn: (w: number, r: number) => w * (36 / (37 - r)) },
-  { name: "Epley",   fn: (w: number, r: number) => w * (1 + r / 30) },
-  { name: "Lander",  fn: (w: number, r: number) => (100 * w) / (101.3 - 2.67123 * r) },
-  { name: "Lombardi",fn: (w: number, r: number) => w * Math.pow(r, 0.1) },
-];
+const brzycki = (w: number, r: number) => w * (36 / (37 - r));
 
 const PERCENTAGES = [100, 95, 90, 85, 80, 75, 70, 65, 60, 55, 50];
 
@@ -28,9 +23,7 @@ export default function ToolsPage() {
   const r = parseInt(reps);
   const valid = !isNaN(w) && !isNaN(r) && w > 0 && r >= 1 && r <= 36;
 
-  const avg1rm = valid
-    ? Math.round(FORMULAS.reduce((sum, f) => sum + f.fn(w, r), 0) / FORMULAS.length)
-    : 0;
+  const avg1rm = valid ? Math.round(brzycki(w, r)) : 0;
 
   return (
     <div className={s.page}>
@@ -89,15 +82,6 @@ export default function ToolsPage() {
                 <span className={s.result1rmLabel}>예상 1RM</span>
                 <span className={s.result1rmValue}>{avg1rm} kg</span>
                 <span className={s.result1rmSub}>{exercise}</span>
-              </div>
-
-              <div className={s.formulaRow}>
-                {FORMULAS.map((f) => (
-                  <div key={f.name} className={s.formulaItem}>
-                    <span className={s.formulaName}>{f.name}</span>
-                    <span className={s.formulaVal}>{Math.round(f.fn(w, r))} kg</span>
-                  </div>
-                ))}
               </div>
 
               <div className={s.tableWrap}>
