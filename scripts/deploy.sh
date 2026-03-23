@@ -48,19 +48,30 @@ else
   exit 1
 fi
 
-# 시드 데이터 실행 (ON CONFLICT DO NOTHING 이므로 중복 실행 안전)
+# 시드 데이터 실행 (박스 데이터가 없을 때만 최초 1회)
 SEED_FILE="$APP_DIR/seed.sql"
 if [ -f "$SEED_FILE" ]; then
-  echo "[5/5] 시드 데이터 실행..."
-  if docker run --rm \
+  echo "[5/5] 시드 데이터 확인..."
+  BOX_COUNT=$(docker run --rm \
     -e PGPASSWORD="$DB_PASSWORD" \
-    -v "$SEED_FILE:/seed.sql" \
     postgres:16-alpine \
-    psql -h "$DB_HOST" -p "${DB_PORT:-5432}" -U "$DB_USERNAME" -d "$DB_NAME" -f /seed.sql; then
-    echo "✓ 시드 데이터 완료"
+    psql -h "$DB_HOST" -p "${DB_PORT:-5432}" -U "$DB_USERNAME" -d "$DB_NAME" \
+    -tAc "SELECT COUNT(*) FROM boxes;" 2>/dev/null || echo "0")
+
+  if [ "${BOX_COUNT:-0}" -gt 0 ]; then
+    echo "✓ 시드 데이터 이미 존재 (boxes: $BOX_COUNT 개) — 건너뜀"
   else
-    echo "✗ 시드 데이터 실행 실패 (DB_HOST=$DB_HOST, DB_USERNAME=$DB_USERNAME, DB_NAME=$DB_NAME)"
-    exit 1
+    echo "  박스 데이터 없음 — 시드 데이터 삽입 중..."
+    if docker run --rm \
+      -e PGPASSWORD="$DB_PASSWORD" \
+      -v "$SEED_FILE:/seed.sql" \
+      postgres:16-alpine \
+      psql -h "$DB_HOST" -p "${DB_PORT:-5432}" -U "$DB_USERNAME" -d "$DB_NAME" -f /seed.sql; then
+      echo "✓ 시드 데이터 완료"
+    else
+      echo "✗ 시드 데이터 실행 실패"
+      exit 1
+    fi
   fi
 fi
 
