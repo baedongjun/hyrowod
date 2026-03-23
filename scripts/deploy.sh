@@ -52,10 +52,14 @@ fi
 SEED_FILE="$APP_DIR/seed.sql"
 if [ -f "$SEED_FILE" ]; then
   echo "[5/5] 시드 데이터 실행..."
-  if docker exec crossfitkorea-postgres psql -U "$DB_USERNAME" -d "$DB_NAME" -f /dev/stdin < "$SEED_FILE"; then
+  if docker run --rm \
+    -e PGPASSWORD="$DB_PASSWORD" \
+    -v "$SEED_FILE:/seed.sql" \
+    postgres:16-alpine \
+    psql -h "$DB_HOST" -p "${DB_PORT:-5432}" -U "$DB_USERNAME" -d "$DB_NAME" -f /seed.sql; then
     echo "✓ 시드 데이터 완료"
   else
-    echo "✗ 시드 데이터 실행 실패 (DB_USERNAME=$DB_USERNAME, DB_NAME=$DB_NAME)"
+    echo "✗ 시드 데이터 실행 실패 (DB_HOST=$DB_HOST, DB_USERNAME=$DB_USERNAME, DB_NAME=$DB_NAME)"
     exit 1
   fi
 fi
