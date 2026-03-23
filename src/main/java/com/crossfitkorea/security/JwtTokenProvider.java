@@ -65,6 +65,14 @@ public class JwtTokenProvider {
         return claims;
     }
 
+    public boolean isOAuth2TempToken(String token) {
+        try {
+            return "oauth2_register".equals(parseClaims(token).getSubject());
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public String createRefreshToken(String email) {
         return Jwts.builder()
             .subject(email)
