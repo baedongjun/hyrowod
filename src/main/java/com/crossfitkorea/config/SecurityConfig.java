@@ -3,6 +3,7 @@ package com.crossfitkorea.config;
 import com.crossfitkorea.security.JwtAuthenticationFilter;
 import com.crossfitkorea.security.JwtTokenProvider;
 import com.crossfitkorea.security.oauth2.CustomOAuth2UserService;
+import com.crossfitkorea.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.crossfitkorea.security.oauth2.OAuth2AuthenticationSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -32,6 +33,7 @@ public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
     private final CustomOAuth2UserService customOAuth2UserService;
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    private final HttpCookieOAuth2AuthorizationRequestRepository cookieAuthorizationRequestRepository;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -87,12 +89,14 @@ public class SecurityConfig {
             )
             .oauth2Login(oauth2 -> oauth2
                 .authorizationEndpoint(auth -> auth
-                    .baseUri("/oauth2/authorization"))
+                    .baseUri("/oauth2/authorization")
+                    .authorizationRequestRepository(cookieAuthorizationRequestRepository))
                 .redirectionEndpoint(redirect -> redirect
                     .baseUri("/login/oauth2/code/*"))
                 .userInfoEndpoint(userInfo -> userInfo
                     .userService(customOAuth2UserService))
                 .successHandler(oAuth2AuthenticationSuccessHandler)
+                .failureUrl("/login?error=oauth2")
             )
             .addFilterBefore(
                 new JwtAuthenticationFilter(jwtTokenProvider),
