@@ -1,12 +1,35 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { saveAuth } from "@/lib/auth";
 import { userApi } from "@/lib/api";
 import { toast } from "react-toastify";
 
-export default function OAuth2CallbackPage() {
+const Spinner = () => (
+  <div style={{
+    minHeight: "100vh",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    background: "var(--bg)",
+    flexDirection: "column",
+    gap: 16,
+  }}>
+    <div style={{
+      width: 40,
+      height: 40,
+      border: "3px solid var(--border)",
+      borderTop: "3px solid var(--red)",
+      borderRadius: "50%",
+      animation: "spin 0.8s linear infinite",
+    }} />
+    <p style={{ color: "var(--muted)", fontSize: 14 }}>로그인 처리 중...</p>
+    <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+  </div>
+);
+
+function OAuth2CallbackInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -21,7 +44,6 @@ export default function OAuth2CallbackPage() {
       return;
     }
 
-    // 토큰 임시 저장 후 유저 정보 조회
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
 
@@ -46,26 +68,13 @@ export default function OAuth2CallbackPage() {
       });
   }, [router, searchParams]);
 
+  return <Spinner />;
+}
+
+export default function OAuth2CallbackPage() {
   return (
-    <div style={{
-      minHeight: "100vh",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      background: "var(--bg)",
-      flexDirection: "column",
-      gap: 16,
-    }}>
-      <div style={{
-        width: 40,
-        height: 40,
-        border: "3px solid var(--border)",
-        borderTop: "3px solid var(--red)",
-        borderRadius: "50%",
-        animation: "spin 0.8s linear infinite",
-      }} />
-      <p style={{ color: "var(--muted)", fontSize: 14 }}>로그인 처리 중...</p>
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-    </div>
+    <Suspense fallback={<Spinner />}>
+      <OAuth2CallbackInner />
+    </Suspense>
   );
 }

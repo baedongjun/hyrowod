@@ -1,266 +1,270 @@
-﻿2026-03-23T01:18:08.1737971Z Current runner version: '2.332.0'
-2026-03-23T01:18:08.1762201Z ##[group]Runner Image Provisioner
-2026-03-23T01:18:08.1762973Z Hosted Compute Agent
-2026-03-23T01:18:08.1763442Z Version: 20260213.493
-2026-03-23T01:18:08.1764427Z Commit: 5c115507f6dd24b8de37d8bbe0bb4509d0cc0fa3
-2026-03-23T01:18:08.1765034Z Build Date: 2026-02-13T00:28:41Z
-2026-03-23T01:18:08.1765635Z Worker ID: {350588f2-6039-49d5-b893-4e33b053ea58}
-2026-03-23T01:18:08.1766349Z Azure Region: northcentralus
-2026-03-23T01:18:08.1766916Z ##[endgroup]
-2026-03-23T01:18:08.1768272Z ##[group]Operating System
-2026-03-23T01:18:08.1768922Z Ubuntu
-2026-03-23T01:18:08.1769382Z 24.04.3
-2026-03-23T01:18:08.1769782Z LTS
-2026-03-23T01:18:08.1770266Z ##[endgroup]
-2026-03-23T01:18:08.1770700Z ##[group]Runner Image
-2026-03-23T01:18:08.1771223Z Image: ubuntu-24.04
-2026-03-23T01:18:08.1771695Z Version: 20260309.50.1
-2026-03-23T01:18:08.1772776Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260309.50/images/ubuntu/Ubuntu2404-Readme.md
-2026-03-23T01:18:08.1774186Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260309.50
-2026-03-23T01:18:08.1774997Z ##[endgroup]
-2026-03-23T01:18:08.1775986Z ##[group]GITHUB_TOKEN Permissions
-2026-03-23T01:18:08.1777819Z Contents: read
-2026-03-23T01:18:08.1778299Z Metadata: read
-2026-03-23T01:18:08.1778835Z Packages: read
-2026-03-23T01:18:08.1779255Z ##[endgroup]
-2026-03-23T01:18:08.1781333Z Secret source: Actions
-2026-03-23T01:18:08.1781913Z Prepare workflow directory
-2026-03-23T01:18:08.2163180Z Prepare all required actions
-2026-03-23T01:18:08.2200723Z Getting action download info
-2026-03-23T01:18:08.5131717Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
-2026-03-23T01:18:08.6108212Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
-2026-03-23T01:18:08.7674993Z Complete job name: Frontend Test
-2026-03-23T01:18:08.8268163Z ##[group]Run actions/checkout@v4
-2026-03-23T01:18:08.8269162Z with:
-2026-03-23T01:18:08.8269599Z   repository: baedongjun/crossfitkorea
-2026-03-23T01:18:08.8270316Z   token: ***
-2026-03-23T01:18:08.8270858Z   ssh-strict: true
-2026-03-23T01:18:08.8271260Z   ssh-user: git
-2026-03-23T01:18:08.8271692Z   persist-credentials: true
-2026-03-23T01:18:08.8272196Z   clean: true
-2026-03-23T01:18:08.8272644Z   sparse-checkout-cone-mode: true
-2026-03-23T01:18:08.8273109Z   fetch-depth: 1
-2026-03-23T01:18:08.8273601Z   fetch-tags: false
-2026-03-23T01:18:08.8274223Z   show-progress: true
-2026-03-23T01:18:08.8274675Z   lfs: false
-2026-03-23T01:18:08.8275145Z   submodules: false
-2026-03-23T01:18:08.8275565Z   set-safe-directory: true
-2026-03-23T01:18:08.8276334Z ##[endgroup]
-2026-03-23T01:18:08.9274309Z Syncing repository: baedongjun/crossfitkorea
-2026-03-23T01:18:08.9276019Z ##[group]Getting Git version info
-2026-03-23T01:18:08.9277026Z Working directory is '/home/runner/work/crossfitkorea/crossfitkorea'
-2026-03-23T01:18:08.9278089Z [command]/usr/bin/git version
-2026-03-23T01:18:08.9335294Z git version 2.53.0
-2026-03-23T01:18:08.9358923Z ##[endgroup]
-2026-03-23T01:18:08.9380307Z Temporarily overriding HOME='/home/runner/work/_temp/b2ae1eb3-89eb-4568-ae5b-704e7a8c51d7' before making global git config changes
-2026-03-23T01:18:08.9382761Z Adding repository directory to the temporary git global config as a safe directory
-2026-03-23T01:18:08.9387247Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/crossfitkorea/crossfitkorea
-2026-03-23T01:18:08.9422916Z Deleting the contents of '/home/runner/work/crossfitkorea/crossfitkorea'
-2026-03-23T01:18:08.9426456Z ##[group]Initializing the repository
-2026-03-23T01:18:08.9431215Z [command]/usr/bin/git init /home/runner/work/crossfitkorea/crossfitkorea
-2026-03-23T01:18:08.9524631Z hint: Using 'master' as the name for the initial branch. This default branch name
-2026-03-23T01:18:08.9525748Z hint: will change to "main" in Git 3.0. To configure the initial branch name
-2026-03-23T01:18:08.9527330Z hint: to use in all of your new repositories, which will suppress this warning,
-2026-03-23T01:18:08.9528957Z hint: call:
-2026-03-23T01:18:08.9529628Z hint:
-2026-03-23T01:18:08.9530583Z hint: 	git config --global init.defaultBranch <name>
-2026-03-23T01:18:08.9531537Z hint:
-2026-03-23T01:18:08.9532443Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
-2026-03-23T01:18:08.9534098Z hint: 'development'. The just-created branch can be renamed via this command:
-2026-03-23T01:18:08.9535506Z hint:
-2026-03-23T01:18:08.9536186Z hint: 	git branch -m <name>
-2026-03-23T01:18:08.9536904Z hint:
-2026-03-23T01:18:08.9538038Z hint: Disable this message with "git config set advice.defaultBranchName false"
-2026-03-23T01:18:08.9539650Z Initialized empty Git repository in /home/runner/work/crossfitkorea/crossfitkorea/.git/
-2026-03-23T01:18:08.9542479Z [command]/usr/bin/git remote add origin https://github.com/baedongjun/crossfitkorea
-2026-03-23T01:18:08.9569017Z ##[endgroup]
-2026-03-23T01:18:08.9570307Z ##[group]Disabling automatic garbage collection
-2026-03-23T01:18:08.9573615Z [command]/usr/bin/git config --local gc.auto 0
-2026-03-23T01:18:08.9596666Z ##[endgroup]
-2026-03-23T01:18:08.9597949Z ##[group]Setting up auth
-2026-03-23T01:18:08.9603772Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
-2026-03-23T01:18:08.9630794Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
-2026-03-23T01:18:08.9918537Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
-2026-03-23T01:18:08.9943418Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
-2026-03-23T01:18:09.0113540Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
-2026-03-23T01:18:09.0140947Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
-2026-03-23T01:18:09.0313206Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
-2026-03-23T01:18:09.0340892Z ##[endgroup]
-2026-03-23T01:18:09.0341653Z ##[group]Fetching the repository
-2026-03-23T01:18:09.0348886Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +bb3362d60bd2cd72a49d92a6dc9b8f974413dd1f:refs/remotes/origin/main
-2026-03-23T01:18:09.4245608Z From https://github.com/baedongjun/crossfitkorea
-2026-03-23T01:18:09.4246640Z  * [new ref]         bb3362d60bd2cd72a49d92a6dc9b8f974413dd1f -> origin/main
-2026-03-23T01:18:09.4272341Z ##[endgroup]
-2026-03-23T01:18:09.4273673Z ##[group]Determining the checkout info
-2026-03-23T01:18:09.4275606Z ##[endgroup]
-2026-03-23T01:18:09.4280434Z [command]/usr/bin/git sparse-checkout disable
-2026-03-23T01:18:09.4318543Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
-2026-03-23T01:18:09.4339985Z ##[group]Checking out the ref
-2026-03-23T01:18:09.4344608Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
-2026-03-23T01:18:09.4569640Z Switched to a new branch 'main'
-2026-03-23T01:18:09.4570863Z branch 'main' set up to track 'origin/main'.
-2026-03-23T01:18:09.4576888Z ##[endgroup]
-2026-03-23T01:18:09.4606744Z [command]/usr/bin/git log -1 --format=%H
-2026-03-23T01:18:09.4625163Z bb3362d60bd2cd72a49d92a6dc9b8f974413dd1f
-2026-03-23T01:18:09.4851604Z ##[group]Run actions/setup-node@v4
-2026-03-23T01:18:09.4852147Z with:
-2026-03-23T01:18:09.4852528Z   node-version: 20
-2026-03-23T01:18:09.4852927Z   cache: npm
-2026-03-23T01:18:09.4853397Z   cache-dependency-path: frontend/package-lock.json
-2026-03-23T01:18:09.4854186Z   always-auth: false
-2026-03-23T01:18:09.4854632Z   check-latest: false
-2026-03-23T01:18:09.4855256Z   token: ***
-2026-03-23T01:18:09.4855653Z ##[endgroup]
-2026-03-23T01:18:09.6559290Z Found in cache @ /opt/hostedtoolcache/node/20.20.1/x64
-2026-03-23T01:18:09.6565331Z ##[group]Environment details
-2026-03-23T01:18:09.9874482Z node: v20.20.1
-2026-03-23T01:18:09.9875904Z npm: 10.8.2
-2026-03-23T01:18:09.9877036Z yarn: 1.22.22
-2026-03-23T01:18:09.9879187Z ##[endgroup]
-2026-03-23T01:18:09.9897199Z [command]/opt/hostedtoolcache/node/20.20.1/x64/bin/npm config get cache
-2026-03-23T01:18:10.1068850Z /home/runner/.npm
-2026-03-23T01:18:10.2478541Z Cache hit for: node-cache-Linux-x64-npm-616d0d95f84f8a78282edafa7a3d09cb82f1b54063a3507ecec75976ca741c2b
-2026-03-23T01:18:11.3833256Z Received 156400564 of 156400564 (100.0%), 148.1 MBs/sec
-2026-03-23T01:18:11.3833883Z Cache Size: ~149 MB (156400564 B)
-2026-03-23T01:18:11.3859544Z [command]/usr/bin/tar -xf /home/runner/work/_temp/86a0298e-ad7d-44f3-bce6-8d53feaba696/cache.tzst -P -C /home/runner/work/crossfitkorea/crossfitkorea --use-compress-program unzstd
-2026-03-23T01:18:11.5726715Z Cache restored successfully
-2026-03-23T01:18:11.5912355Z Cache restored from key: node-cache-Linux-x64-npm-616d0d95f84f8a78282edafa7a3d09cb82f1b54063a3507ecec75976ca741c2b
-2026-03-23T01:18:11.6042202Z ##[group]Run npm ci
-2026-03-23T01:18:11.6042574Z [36;1mnpm ci[0m
-2026-03-23T01:18:11.6082380Z shell: /usr/bin/bash -e {0}
-2026-03-23T01:18:11.6082712Z ##[endgroup]
-2026-03-23T01:18:15.0669526Z npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
-2026-03-23T01:18:15.1562076Z npm warn deprecated @humanwhocodes/config-array@0.13.0: Use @eslint/config-array instead
-2026-03-23T01:18:15.1604938Z npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
-2026-03-23T01:18:15.2305865Z npm warn deprecated glob@7.2.3: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
-2026-03-23T01:18:15.2364281Z npm warn deprecated @humanwhocodes/object-schema@2.0.3: Use @eslint/object-schema instead
-2026-03-23T01:18:17.1089844Z npm warn deprecated eslint@8.57.1: This version is no longer supported. Please see https://eslint.org/version-support for other options.
-2026-03-23T01:18:20.1202475Z npm warn deprecated next@15.2.1: This version has a security vulnerability. Please upgrade to a patched version. See https://nextjs.org/blog/CVE-2025-66478 for more details.
-2026-03-23T01:18:20.4087049Z
-2026-03-23T01:18:20.4087846Z added 422 packages, and audited 423 packages in 9s
-2026-03-23T01:18:20.4088346Z
-2026-03-23T01:18:20.4088642Z 156 packages are looking for funding
-2026-03-23T01:18:20.4089190Z   run `npm fund` for details
-2026-03-23T01:18:20.5013207Z
-2026-03-23T01:18:20.5014270Z 2 vulnerabilities (1 high, 1 critical)
-2026-03-23T01:18:20.5014746Z
-2026-03-23T01:18:20.5015988Z To address issues that do not require attention, run:
-2026-03-23T01:18:20.5016770Z   npm audit fix
-2026-03-23T01:18:20.5017119Z
-2026-03-23T01:18:20.5017951Z To address all issues, run:
-2026-03-23T01:18:20.5018351Z   npm audit fix --force
-2026-03-23T01:18:20.5018635Z
-2026-03-23T01:18:20.5018837Z Run `npm audit` for details.
-2026-03-23T01:18:20.5363051Z ##[group]Run npm run lint
-2026-03-23T01:18:20.5363332Z [36;1mnpm run lint[0m
-2026-03-23T01:18:20.5392604Z shell: /usr/bin/bash -e {0}
-2026-03-23T01:18:20.5392851Z ##[endgroup]
-2026-03-23T01:18:20.6379321Z
-2026-03-23T01:18:20.6380578Z > crossfitkorea-frontend@0.1.0 lint
-2026-03-23T01:18:20.6381276Z > next lint
-2026-03-23T01:18:20.6381501Z
-2026-03-23T01:18:24.5178203Z Attention: Next.js now collects completely anonymous telemetry regarding usage.
-2026-03-23T01:18:24.5180723Z This information is used to shape Next.js' roadmap and prioritize features.
-2026-03-23T01:18:24.5182228Z You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
-2026-03-23T01:18:24.5183609Z https://nextjs.org/telemetry
-2026-03-23T01:18:24.5183893Z
-2026-03-23T01:18:24.6928404Z
-2026-03-23T01:18:24.6929316Z ./app/boxes/[id]/page.tsx
-2026-03-23T01:18:24.6932123Z 717:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-23T01:18:24.6934162Z
-2026-03-23T01:18:24.6934455Z ./app/challenges/[id]/page.tsx
-2026-03-23T01:18:24.6936936Z 199:13  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-23T01:18:24.6940758Z 257:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-23T01:18:24.6944899Z 308:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-23T01:18:24.6948968Z 335:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-23T01:18:24.6950727Z
-2026-03-23T01:18:24.6950945Z ./app/challenges/page.tsx
-2026-03-23T01:18:24.6953282Z 42:9  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-23T01:18:24.6955174Z
-2026-03-23T01:18:24.6955368Z ./app/feed/page.tsx
-2026-03-23T01:18:24.6957810Z 68:9  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-23T01:18:24.6962019Z 102:9  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-23T01:18:24.6964099Z
-2026-03-23T01:18:24.6964297Z ./app/layout.tsx
-2026-03-23T01:18:24.6966395Z 51:9  Warning: Custom fonts not added in `pages/_document.js` will only load for a single page. This is discouraged. See: https://nextjs.org/docs/messages/no-page-custom-font  @next/next/no-page-custom-font
-2026-03-23T01:18:24.6967612Z
-2026-03-23T01:18:24.6967803Z ./app/search/page.tsx
-2026-03-23T01:18:24.6970353Z 218:31  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-23T01:18:24.6972193Z
-2026-03-23T01:18:24.6972356Z ./app/users/page.tsx
-2026-03-23T01:18:24.6975183Z 83:21  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-23T01:18:24.6977027Z
-2026-03-23T01:18:24.6977911Z info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
-2026-03-23T01:18:24.7797361Z ##[group]Run npm run build
-2026-03-23T01:18:24.7797620Z [36;1mnpm run build[0m
-2026-03-23T01:18:24.7824891Z shell: /usr/bin/bash -e {0}
-2026-03-23T01:18:24.7825123Z env:
-2026-03-23T01:18:24.7825353Z   NEXT_PUBLIC_API_URL: http://localhost:8080
-2026-03-23T01:18:24.7825641Z   NEXT_PUBLIC_KAKAO_MAP_KEY: test_key
-2026-03-23T01:18:24.7825875Z ##[endgroup]
-2026-03-23T01:18:24.8768364Z
-2026-03-23T01:18:24.8769031Z > crossfitkorea-frontend@0.1.0 build
-2026-03-23T01:18:24.8769618Z > next build
-2026-03-23T01:18:24.8769803Z
-2026-03-23T01:18:25.4741213Z    ▲ Next.js 15.2.1
-2026-03-23T01:18:25.4742764Z
-2026-03-23T01:18:25.5085243Z    Creating an optimized production build ...
-2026-03-23T01:18:45.7147793Z  ✓ Compiled successfully
-2026-03-23T01:18:45.7183433Z    Linting and checking validity of types ...
-2026-03-23T01:18:47.4932647Z
-2026-03-23T01:18:47.4936096Z ./app/boxes/[id]/page.tsx
-2026-03-23T01:18:47.4939040Z 717:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-23T01:18:47.4940957Z
-2026-03-23T01:18:47.4941242Z ./app/challenges/[id]/page.tsx
-2026-03-23T01:18:47.4943662Z 199:13  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-23T01:18:47.4947931Z 257:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-23T01:18:47.4953814Z 308:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-23T01:18:47.5027338Z 335:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-23T01:18:47.5029468Z
-2026-03-23T01:18:47.5042222Z ./app/challenges/page.tsx
-2026-03-23T01:18:47.5044949Z 42:9  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-23T01:18:47.5046826Z
-2026-03-23T01:18:47.5046991Z ./app/feed/page.tsx
-2026-03-23T01:18:47.5049341Z 68:9  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-23T01:18:47.5053562Z 102:9  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-23T01:18:47.5055414Z
-2026-03-23T01:18:47.5055541Z ./app/layout.tsx
-2026-03-23T01:18:47.5057312Z 51:9  Warning: Custom fonts not added in `pages/_document.js` will only load for a single page. This is discouraged. See: https://nextjs.org/docs/messages/no-page-custom-font  @next/next/no-page-custom-font
-2026-03-23T01:18:47.5058474Z
-2026-03-23T01:18:47.5058627Z ./app/search/page.tsx
-2026-03-23T01:18:47.5061191Z 218:31  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-23T01:18:47.5063087Z
-2026-03-23T01:18:47.5063256Z ./app/users/page.tsx
-2026-03-23T01:18:47.5065889Z 83:21  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-23T01:18:47.5067784Z
-2026-03-23T01:18:47.5068696Z info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
-2026-03-23T01:18:55.1459280Z Failed to compile.
-2026-03-23T01:18:55.1460012Z
-2026-03-23T01:18:55.1460463Z ./app/oauth2/callback/page.tsx:34:11
-2026-03-23T01:18:55.1462462Z Type error: Object literal may only specify known properties, and 'user' does not exist in type 'AuthResponse'.
-2026-03-23T01:18:55.1463216Z
-2026-03-23T01:18:55.1463812Z [0m [90m 32 |[39m           accessToken[33m,[39m[0m
-2026-03-23T01:18:55.1464858Z [0m [90m 33 |[39m           refreshToken[33m,[39m[0m
-2026-03-23T01:18:55.1465711Z [0m[31m[1m>[22m[39m[90m 34 |[39m           user[33m:[39m {[0m
-2026-03-23T01:18:55.1466169Z [0m [90m    |[39m           [31m[1m^[22m[39m[0m
-2026-03-23T01:18:55.1466662Z [0m [90m 35 |[39m             email[33m:[39m user[33m.[39memail[33m,[39m[0m
-2026-03-23T01:18:55.1467195Z [0m [90m 36 |[39m             name[33m:[39m user[33m.[39mname[33m,[39m[0m
-2026-03-23T01:18:55.1467700Z [0m [90m 37 |[39m             role[33m:[39m user[33m.[39mrole[33m,[39m[0m
-2026-03-23T01:18:55.1697399Z Next.js build worker exited with code: 1 and signal: null
-2026-03-23T01:18:55.1838504Z ##[error]Process completed with exit code 1.
-2026-03-23T01:18:55.1941111Z Post job cleanup.
-2026-03-23T01:18:55.2795838Z [command]/usr/bin/git version
-2026-03-23T01:18:55.2827952Z git version 2.53.0
-2026-03-23T01:18:55.2865139Z Temporarily overriding HOME='/home/runner/work/_temp/c5ebb713-e726-440c-aa5f-0e3199f0f9b7' before making global git config changes
-2026-03-23T01:18:55.2865914Z Adding repository directory to the temporary git global config as a safe directory
-2026-03-23T01:18:55.2870043Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/crossfitkorea/crossfitkorea
-2026-03-23T01:18:55.2905716Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
-2026-03-23T01:18:55.2932621Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
-2026-03-23T01:18:55.3112913Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
-2026-03-23T01:18:55.3130284Z http.https://github.com/.extraheader
-2026-03-23T01:18:55.3140697Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
-2026-03-23T01:18:55.3164494Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
-2026-03-23T01:18:55.3338626Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
-2026-03-23T01:18:55.3364656Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
-2026-03-23T01:18:55.3636298Z Cleaning up orphan processes
-2026-03-23T01:18:55.3838343Z ##[warning]Node.js 20 actions are deprecated. The following actions are running on Node.js 20 and may not work as expected: actions/checkout@v4, actions/setup-node@v4. Actions will be forced to run with Node.js 24 by default starting June 2nd, 2026. Please check if updated versions of these actions are available that support Node.js 24. To opt into Node.js 24 now, set the FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true environment variable on the runner or in your workflow file. Once Node.js 24 becomes the default, you can temporarily opt out by setting ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+﻿2026-03-23T01:48:24.8350062Z Current runner version: '2.332.0'
+2026-03-23T01:48:24.8384640Z ##[group]Runner Image Provisioner
+2026-03-23T01:48:24.8385971Z Hosted Compute Agent
+2026-03-23T01:48:24.8387058Z Version: 20260213.493
+2026-03-23T01:48:24.8388113Z Commit: 5c115507f6dd24b8de37d8bbe0bb4509d0cc0fa3
+2026-03-23T01:48:24.8389387Z Build Date: 2026-02-13T00:28:41Z
+2026-03-23T01:48:24.8390775Z Worker ID: {a310bb6f-57da-472b-bfb4-cbf91d8c732b}
+2026-03-23T01:48:24.8392062Z Azure Region: eastus
+2026-03-23T01:48:24.8393013Z ##[endgroup]
+2026-03-23T01:48:24.8395372Z ##[group]Operating System
+2026-03-23T01:48:24.8396394Z Ubuntu
+2026-03-23T01:48:24.8397238Z 24.04.3
+2026-03-23T01:48:24.8398198Z LTS
+2026-03-23T01:48:24.8399020Z ##[endgroup]
+2026-03-23T01:48:24.8399944Z ##[group]Runner Image
+2026-03-23T01:48:24.8401437Z Image: ubuntu-24.04
+2026-03-23T01:48:24.8402392Z Version: 20260309.50.1
+2026-03-23T01:48:24.8404495Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260309.50/images/ubuntu/Ubuntu2404-Readme.md
+2026-03-23T01:48:24.8407082Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260309.50
+2026-03-23T01:48:24.8408830Z ##[endgroup]
+2026-03-23T01:48:24.8411005Z ##[group]GITHUB_TOKEN Permissions
+2026-03-23T01:48:24.8413674Z Contents: read
+2026-03-23T01:48:24.8414587Z Metadata: read
+2026-03-23T01:48:24.8415345Z Packages: read
+2026-03-23T01:48:24.8416315Z ##[endgroup]
+2026-03-23T01:48:24.8419129Z Secret source: Actions
+2026-03-23T01:48:24.8420216Z Prepare workflow directory
+2026-03-23T01:48:24.8997489Z Prepare all required actions
+2026-03-23T01:48:24.9054264Z Getting action download info
+2026-03-23T01:48:25.1156395Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+2026-03-23T01:48:25.2287312Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+2026-03-23T01:48:25.4179743Z Complete job name: Frontend Test
+2026-03-23T01:48:25.4879158Z ##[group]Run actions/checkout@v4
+2026-03-23T01:48:25.4879963Z with:
+2026-03-23T01:48:25.4880378Z   repository: baedongjun/crossfitkorea
+2026-03-23T01:48:25.4881213Z   token: ***
+2026-03-23T01:48:25.4881590Z   ssh-strict: true
+2026-03-23T01:48:25.4881965Z   ssh-user: git
+2026-03-23T01:48:25.4882359Z   persist-credentials: true
+2026-03-23T01:48:25.4882787Z   clean: true
+2026-03-23T01:48:25.4883179Z   sparse-checkout-cone-mode: true
+2026-03-23T01:48:25.4883644Z   fetch-depth: 1
+2026-03-23T01:48:25.4884016Z   fetch-tags: false
+2026-03-23T01:48:25.4884403Z   show-progress: true
+2026-03-23T01:48:25.4884795Z   lfs: false
+2026-03-23T01:48:25.4885152Z   submodules: false
+2026-03-23T01:48:25.4885534Z   set-safe-directory: true
+2026-03-23T01:48:25.4886423Z ##[endgroup]
+2026-03-23T01:48:25.5967527Z Syncing repository: baedongjun/crossfitkorea
+2026-03-23T01:48:25.5969372Z ##[group]Getting Git version info
+2026-03-23T01:48:25.5970199Z Working directory is '/home/runner/work/crossfitkorea/crossfitkorea'
+2026-03-23T01:48:25.5971431Z [command]/usr/bin/git version
+2026-03-23T01:48:25.6045389Z git version 2.53.0
+2026-03-23T01:48:25.6072246Z ##[endgroup]
+2026-03-23T01:48:25.6094779Z Temporarily overriding HOME='/home/runner/work/_temp/9769f349-88dc-4182-b32d-309db352653a' before making global git config changes
+2026-03-23T01:48:25.6096158Z Adding repository directory to the temporary git global config as a safe directory
+2026-03-23T01:48:25.6100718Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/crossfitkorea/crossfitkorea
+2026-03-23T01:48:25.6140162Z Deleting the contents of '/home/runner/work/crossfitkorea/crossfitkorea'
+2026-03-23T01:48:25.6143679Z ##[group]Initializing the repository
+2026-03-23T01:48:25.6148080Z [command]/usr/bin/git init /home/runner/work/crossfitkorea/crossfitkorea
+2026-03-23T01:48:25.6265000Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-03-23T01:48:25.6266352Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-03-23T01:48:25.6267900Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-03-23T01:48:25.6269490Z hint: call:
+2026-03-23T01:48:25.6270103Z hint:
+2026-03-23T01:48:25.6271482Z hint: 	git config --global init.defaultBranch <name>
+2026-03-23T01:48:25.6272140Z hint:
+2026-03-23T01:48:25.6272709Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-03-23T01:48:25.6273662Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-03-23T01:48:25.6274402Z hint:
+2026-03-23T01:48:25.6274816Z hint: 	git branch -m <name>
+2026-03-23T01:48:25.6275378Z hint:
+2026-03-23T01:48:25.6276353Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-03-23T01:48:25.6277586Z Initialized empty Git repository in /home/runner/work/crossfitkorea/crossfitkorea/.git/
+2026-03-23T01:48:25.6281375Z [command]/usr/bin/git remote add origin https://github.com/baedongjun/crossfitkorea
+2026-03-23T01:48:25.6314938Z ##[endgroup]
+2026-03-23T01:48:25.6315642Z ##[group]Disabling automatic garbage collection
+2026-03-23T01:48:25.6318726Z [command]/usr/bin/git config --local gc.auto 0
+2026-03-23T01:48:25.6347754Z ##[endgroup]
+2026-03-23T01:48:25.6348406Z ##[group]Setting up auth
+2026-03-23T01:48:25.6354585Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-03-23T01:48:25.6385243Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-03-23T01:48:25.6720344Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-03-23T01:48:25.6751862Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-03-23T01:48:25.6982820Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-03-23T01:48:25.7013662Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-03-23T01:48:25.7247878Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-03-23T01:48:25.7283138Z ##[endgroup]
+2026-03-23T01:48:25.7284470Z ##[group]Fetching the repository
+2026-03-23T01:48:25.7293130Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +ff5b311568dfa4a9bf08762ab993c23185be9f0e:refs/remotes/origin/main
+2026-03-23T01:48:26.0822605Z From https://github.com/baedongjun/crossfitkorea
+2026-03-23T01:48:26.0823595Z  * [new ref]         ff5b311568dfa4a9bf08762ab993c23185be9f0e -> origin/main
+2026-03-23T01:48:26.0855929Z ##[endgroup]
+2026-03-23T01:48:26.0857217Z ##[group]Determining the checkout info
+2026-03-23T01:48:26.0858736Z ##[endgroup]
+2026-03-23T01:48:26.0864384Z [command]/usr/bin/git sparse-checkout disable
+2026-03-23T01:48:26.0907329Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-03-23T01:48:26.0934947Z ##[group]Checking out the ref
+2026-03-23T01:48:26.0939400Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2026-03-23T01:48:26.1278353Z Switched to a new branch 'main'
+2026-03-23T01:48:26.1280206Z branch 'main' set up to track 'origin/main'.
+2026-03-23T01:48:26.1288889Z ##[endgroup]
+2026-03-23T01:48:26.1327594Z [command]/usr/bin/git log -1 --format=%H
+2026-03-23T01:48:26.1351325Z ff5b311568dfa4a9bf08762ab993c23185be9f0e
+2026-03-23T01:48:26.1598779Z ##[group]Run actions/setup-node@v4
+2026-03-23T01:48:26.1599339Z with:
+2026-03-23T01:48:26.1599688Z   node-version: 20
+2026-03-23T01:48:26.1600125Z   cache: npm
+2026-03-23T01:48:26.1600838Z   cache-dependency-path: frontend/package-lock.json
+2026-03-23T01:48:26.1601752Z   always-auth: false
+2026-03-23T01:48:26.1602170Z   check-latest: false
+2026-03-23T01:48:26.1602731Z   token: ***
+2026-03-23T01:48:26.1603099Z ##[endgroup]
+2026-03-23T01:48:26.3384755Z Found in cache @ /opt/hostedtoolcache/node/20.20.1/x64
+2026-03-23T01:48:26.3391775Z ##[group]Environment details
+2026-03-23T01:48:26.6591378Z node: v20.20.1
+2026-03-23T01:48:26.6593195Z npm: 10.8.2
+2026-03-23T01:48:26.6594428Z yarn: 1.22.22
+2026-03-23T01:48:26.6597459Z ##[endgroup]
+2026-03-23T01:48:26.6617979Z [command]/opt/hostedtoolcache/node/20.20.1/x64/bin/npm config get cache
+2026-03-23T01:48:26.7869917Z /home/runner/.npm
+2026-03-23T01:48:26.8926740Z Cache hit for: node-cache-Linux-x64-npm-616d0d95f84f8a78282edafa7a3d09cb82f1b54063a3507ecec75976ca741c2b
+2026-03-23T01:48:27.7569179Z Received 156400564 of 156400564 (100.0%), 184.1 MBs/sec
+2026-03-23T01:48:27.7570014Z Cache Size: ~149 MB (156400564 B)
+2026-03-23T01:48:27.7601579Z [command]/usr/bin/tar -xf /home/runner/work/_temp/f27006eb-13eb-4fb2-9f13-b7901ebcc1fd/cache.tzst -P -C /home/runner/work/crossfitkorea/crossfitkorea --use-compress-program unzstd
+2026-03-23T01:48:28.1035262Z Cache restored successfully
+2026-03-23T01:48:28.1364315Z Cache restored from key: node-cache-Linux-x64-npm-616d0d95f84f8a78282edafa7a3d09cb82f1b54063a3507ecec75976ca741c2b
+2026-03-23T01:48:28.1549229Z ##[group]Run npm ci
+2026-03-23T01:48:28.1549556Z [36;1mnpm ci[0m
+2026-03-23T01:48:28.1609824Z shell: /usr/bin/bash -e {0}
+2026-03-23T01:48:28.1610114Z ##[endgroup]
+2026-03-23T01:48:31.7412537Z npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+2026-03-23T01:48:31.8432532Z npm warn deprecated @humanwhocodes/config-array@0.13.0: Use @eslint/config-array instead
+2026-03-23T01:48:31.8491664Z npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+2026-03-23T01:48:31.9188669Z npm warn deprecated glob@7.2.3: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+2026-03-23T01:48:31.9282022Z npm warn deprecated @humanwhocodes/object-schema@2.0.3: Use @eslint/object-schema instead
+2026-03-23T01:48:34.0005669Z npm warn deprecated eslint@8.57.1: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+2026-03-23T01:48:37.4048003Z npm warn deprecated next@15.2.1: This version has a security vulnerability. Please upgrade to a patched version. See https://nextjs.org/blog/CVE-2025-66478 for more details.
+2026-03-23T01:48:37.6391810Z
+2026-03-23T01:48:37.6392725Z added 422 packages, and audited 423 packages in 9s
+2026-03-23T01:48:37.6393254Z
+2026-03-23T01:48:37.6393591Z 156 packages are looking for funding
+2026-03-23T01:48:37.6394126Z   run `npm fund` for details
+2026-03-23T01:48:37.7344136Z
+2026-03-23T01:48:37.7344967Z 2 vulnerabilities (1 high, 1 critical)
+2026-03-23T01:48:37.7345523Z
+2026-03-23T01:48:37.7345976Z To address issues that do not require attention, run:
+2026-03-23T01:48:37.7346539Z   npm audit fix
+2026-03-23T01:48:37.7346726Z
+2026-03-23T01:48:37.7346945Z To address all issues, run:
+2026-03-23T01:48:37.7351722Z   npm audit fix --force
+2026-03-23T01:48:37.7352151Z
+2026-03-23T01:48:37.7352458Z Run `npm audit` for details.
+2026-03-23T01:48:37.8009201Z ##[group]Run npm run lint
+2026-03-23T01:48:37.8009493Z [36;1mnpm run lint[0m
+2026-03-23T01:48:37.8060658Z shell: /usr/bin/bash -e {0}
+2026-03-23T01:48:37.8060936Z ##[endgroup]
+2026-03-23T01:48:37.9237173Z
+2026-03-23T01:48:37.9237586Z > crossfitkorea-frontend@0.1.0 lint
+2026-03-23T01:48:37.9238129Z > next lint
+2026-03-23T01:48:37.9238333Z
+2026-03-23T01:48:42.1487355Z Attention: Next.js now collects completely anonymous telemetry regarding usage.
+2026-03-23T01:48:42.1491647Z This information is used to shape Next.js' roadmap and prioritize features.
+2026-03-23T01:48:42.1493123Z You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+2026-03-23T01:48:42.1494873Z https://nextjs.org/telemetry
+2026-03-23T01:48:42.1495228Z
+2026-03-23T01:48:42.3091069Z
+2026-03-23T01:48:42.3091550Z ./app/boxes/[id]/page.tsx
+2026-03-23T01:48:42.3094511Z 717:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-23T01:48:42.3096425Z
+2026-03-23T01:48:42.3096706Z ./app/challenges/[id]/page.tsx
+2026-03-23T01:48:42.3098248Z 199:13  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-23T01:48:42.3100972Z 257:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-23T01:48:42.3103429Z 308:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-23T01:48:42.3105851Z 335:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-23T01:48:42.3106950Z
+2026-03-23T01:48:42.3107065Z ./app/challenges/page.tsx
+2026-03-23T01:48:42.3108524Z 42:9  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-23T01:48:42.3109630Z
+2026-03-23T01:48:42.3109724Z ./app/feed/page.tsx
+2026-03-23T01:48:42.3111441Z 68:9  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-23T01:48:42.3113868Z 102:9  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-23T01:48:42.3114963Z
+2026-03-23T01:48:42.3115093Z ./app/layout.tsx
+2026-03-23T01:48:42.3116394Z 51:9  Warning: Custom fonts not added in `pages/_document.js` will only load for a single page. This is discouraged. See: https://nextjs.org/docs/messages/no-page-custom-font  @next/next/no-page-custom-font
+2026-03-23T01:48:42.3117136Z
+2026-03-23T01:48:42.3117247Z ./app/search/page.tsx
+2026-03-23T01:48:42.3118704Z 218:31  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-23T01:48:42.3119826Z
+2026-03-23T01:48:42.3119921Z ./app/users/page.tsx
+2026-03-23T01:48:42.3121729Z 83:21  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-23T01:48:42.3122823Z
+2026-03-23T01:48:42.3123372Z info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
+2026-03-23T01:48:42.4254765Z ##[group]Run npm run build
+2026-03-23T01:48:42.4255036Z [36;1mnpm run build[0m
+2026-03-23T01:48:42.4304813Z shell: /usr/bin/bash -e {0}
+2026-03-23T01:48:42.4305059Z env:
+2026-03-23T01:48:42.4305303Z   NEXT_PUBLIC_API_URL: http://localhost:8080
+2026-03-23T01:48:42.4305627Z   NEXT_PUBLIC_KAKAO_MAP_KEY: test_key
+2026-03-23T01:48:42.4305895Z ##[endgroup]
+2026-03-23T01:48:42.5418187Z
+2026-03-23T01:48:42.5418702Z > crossfitkorea-frontend@0.1.0 build
+2026-03-23T01:48:42.5419353Z > next build
+2026-03-23T01:48:42.5419595Z
+2026-03-23T01:48:43.1731553Z    ▲ Next.js 15.2.1
+2026-03-23T01:48:43.1733379Z
+2026-03-23T01:48:43.2169989Z    Creating an optimized production build ...
+2026-03-23T01:49:05.1636966Z  ✓ Compiled successfully
+2026-03-23T01:49:05.1678029Z    Linting and checking validity of types ...
+2026-03-23T01:49:06.9783793Z
+2026-03-23T01:49:06.9789190Z ./app/boxes/[id]/page.tsx
+2026-03-23T01:49:06.9792290Z 717:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-23T01:49:06.9794283Z
+2026-03-23T01:49:06.9794546Z ./app/challenges/[id]/page.tsx
+2026-03-23T01:49:06.9797179Z 199:13  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-23T01:49:06.9801447Z 257:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-23T01:49:06.9805824Z 308:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-23T01:49:06.9818617Z 335:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-23T01:49:06.9820919Z
+2026-03-23T01:49:06.9821128Z ./app/challenges/page.tsx
+2026-03-23T01:49:06.9823909Z 42:9  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-23T01:49:06.9825961Z
+2026-03-23T01:49:06.9826137Z ./app/feed/page.tsx
+2026-03-23T01:49:06.9828820Z 68:9  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-23T01:49:06.9833948Z 102:9  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-23T01:49:06.9836006Z
+2026-03-23T01:49:06.9836178Z ./app/layout.tsx
+2026-03-23T01:49:06.9838178Z 51:9  Warning: Custom fonts not added in `pages/_document.js` will only load for a single page. This is discouraged. See: https://nextjs.org/docs/messages/no-page-custom-font  @next/next/no-page-custom-font
+2026-03-23T01:49:06.9838959Z
+2026-03-23T01:49:06.9839084Z ./app/search/page.tsx
+2026-03-23T01:49:06.9841355Z 218:31  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-23T01:49:06.9843483Z
+2026-03-23T01:49:06.9843680Z ./app/users/page.tsx
+2026-03-23T01:49:06.9846441Z 83:21  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-23T01:49:06.9848481Z
+2026-03-23T01:49:06.9849457Z info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
+2026-03-23T01:49:14.7232730Z    Collecting page data ...
+2026-03-23T01:49:15.3134292Z  ⚠ Using edge runtime on a page currently disables static generation for that page
+2026-03-23T01:49:17.0741503Z    Generating static pages (0/62) ...
+2026-03-23T01:49:17.9939400Z  ⨯ useSearchParams() should be wrapped in a suspense boundary at page "/oauth2/callback". Read more: https://nextjs.org/docs/messages/missing-suspense-with-csr-bailout
+2026-03-23T01:49:17.9955279Z     at i (/home/runner/work/crossfitkorea/crossfitkorea/frontend/.next/server/chunks/3314.js:3:15687)
+2026-03-23T01:49:17.9956691Z     at p (/home/runner/work/crossfitkorea/crossfitkorea/frontend/.next/server/chunks/3314.js:7:47835)
+2026-03-23T01:49:17.9958254Z     at i (/home/runner/work/crossfitkorea/crossfitkorea/frontend/.next/server/app/oauth2/callback/page.js:1:3413)
+2026-03-23T01:49:17.9959980Z     at nL (/home/runner/work/crossfitkorea/crossfitkorea/frontend/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:76:46773)
+2026-03-23T01:49:17.9984884Z     at nF (/home/runner/work/crossfitkorea/crossfitkorea/frontend/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:76:48548)
+2026-03-23T01:49:17.9986899Z     at nq (/home/runner/work/crossfitkorea/crossfitkorea/frontend/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:76:67434)
+2026-03-23T01:49:17.9988928Z     at nH (/home/runner/work/crossfitkorea/crossfitkorea/frontend/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:76:65009)
+2026-03-23T01:49:17.9991427Z     at nU (/home/runner/work/crossfitkorea/crossfitkorea/frontend/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:76:47125)
+2026-03-23T01:49:17.9993518Z     at nF (/home/runner/work/crossfitkorea/crossfitkorea/frontend/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:76:48594)
+2026-03-23T01:49:17.9995465Z     at nF (/home/runner/work/crossfitkorea/crossfitkorea/frontend/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:76:64360)
+2026-03-23T01:49:17.9997360Z Error occurred prerendering page "/oauth2/callback". Read more: https://nextjs.org/docs/messages/prerender-error
+2026-03-23T01:49:17.9998794Z Export encountered an error on /oauth2/callback/page: /oauth2/callback, exiting the build.
+2026-03-23T01:49:18.0054787Z  ⨯ Next.js build worker exited with code: 1 and signal: null
+2026-03-23T01:49:18.0471484Z ##[error]Process completed with exit code 1.
+2026-03-23T01:49:18.0583738Z Post job cleanup.
+2026-03-23T01:49:18.1536221Z [command]/usr/bin/git version
+2026-03-23T01:49:18.1574322Z git version 2.53.0
+2026-03-23T01:49:18.1619911Z Temporarily overriding HOME='/home/runner/work/_temp/40471ded-cbf0-47b6-89e4-ebffcca64963' before making global git config changes
+2026-03-23T01:49:18.1621687Z Adding repository directory to the temporary git global config as a safe directory
+2026-03-23T01:49:18.1626826Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/crossfitkorea/crossfitkorea
+2026-03-23T01:49:18.1665387Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-03-23T01:49:18.1700061Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-03-23T01:49:18.1944916Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-03-23T01:49:18.1967309Z http.https://github.com/.extraheader
+2026-03-23T01:49:18.1981323Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-03-23T01:49:18.2014060Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-03-23T01:49:18.2249377Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-03-23T01:49:18.2282830Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-03-23T01:49:18.2628343Z Cleaning up orphan processes
+2026-03-23T01:49:18.3010393Z ##[warning]Node.js 20 actions are deprecated. The following actions are running on Node.js 20 and may not work as expected: actions/checkout@v4, actions/setup-node@v4. Actions will be forced to run with Node.js 24 by default starting June 2nd, 2026. Please check if updated versions of these actions are available that support Node.js 24. To opt into Node.js 24 now, set the FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true environment variable on the runner or in your workflow file. Once Node.js 24 becomes the default, you can temporarily opt out by setting ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
