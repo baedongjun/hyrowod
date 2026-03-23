@@ -77,10 +77,11 @@ public class JwtTokenProvider {
     public Authentication getAuthentication(String token) {
         Claims claims = parseClaims(token);
         String role = claims.get("role", String.class);
+        String authority = (role != null && !role.isBlank()) ? role : "ROLE_USER";
         return new UsernamePasswordAuthenticationToken(
             claims.getSubject(),
             "",
-            List.of(new SimpleGrantedAuthority(role))
+            List.of(new SimpleGrantedAuthority(authority))
         );
     }
 

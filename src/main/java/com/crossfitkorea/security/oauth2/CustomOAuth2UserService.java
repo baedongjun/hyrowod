@@ -11,6 +11,8 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
 import java.util.Collections;
 import java.util.Optional;
 
@@ -38,7 +40,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         updateExistingUser(userInfo, provider);
 
         return new DefaultOAuth2User(
-            Collections.singleton(() -> "ROLE_USER"),
+            Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),
             oAuth2User.getAttributes(),
             userNameAttributeName
         );
