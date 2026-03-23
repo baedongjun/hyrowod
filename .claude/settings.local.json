@@ -78,7 +78,8 @@
       "Bash(sed -i '121,315s/, false, true, NOW\\(\\)/, 0, false, true, NOW\\(\\)/g' D:/gitWorkspace/workspace/crossfitkorea/seed.sql)",
       "Bash(sed -n '138p' D:/gitWorkspace/workspace/crossfitkorea/seed.sql)",
       "Bash(npm install:*)",
-      "Bash(xargs grep:*)"
+      "Bash(xargs grep:*)",
+      "Bash(git push:*)"
     ]
   }
 }
