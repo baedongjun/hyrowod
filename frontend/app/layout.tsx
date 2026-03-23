@@ -17,8 +17,8 @@ export const metadata: Metadata = {
   keywords: ["크로스핏", "CrossFit", "크로스핏 박스", "WOD", "대회", "한국 크로스핏"],
   metadataBase: new URL("https://crossfitkorea.com"),
   icons: {
-    icon: "/icon.svg",
-    apple: "/apple-icon.svg",
+    icon: "/cfkorea-app-icon.png",
+    apple: "/cfkorea-app-icon.png",
   },
   openGraph: {
     title: "CrossFit Korea | 한국 크로스핏 박스 검색 플랫폼",
