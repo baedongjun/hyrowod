@@ -21,15 +21,19 @@ export default function BoxMap({ boxes }: BoxMapProps) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const clustererRef = useRef<any>(null);
 
-  // 마커를 boxes에 맞게 갱신
-  const updateMarkers = (boxes: Box[]) => {
+  // 항상 최신 boxes를 가리키는 ref — 렌더마다 동기 업데이트
+  const boxesRef = useRef<Box[]>(boxes);
+  boxesRef.current = boxes;
+
+  // 마커 갱신
+  const updateMarkers = (bxs: Box[]) => {
     const clusterer = clustererRef.current;
     const map = mapInstanceRef.current;
     if (!clusterer || !map) return;
 
     clusterer.clear();
 
-    const markers = boxes
+    const markers = bxs
       .filter((box) => box.latitude && box.longitude)
       .map((box) => {
         const marker = new window.kakao.maps.Marker({
@@ -57,7 +61,7 @@ export default function BoxMap({ boxes }: BoxMapProps) {
     clusterer.addMarkers(markers);
   };
 
-  // 지도 초기화 (최초 1회)
+  // 지도 초기화 — boxesRef.current로 항상 최신 boxes 사용
   const initMap = () => {
     if (!mapRef.current || mapInstanceRef.current) return;
 
@@ -85,42 +89,41 @@ export default function BoxMap({ boxes }: BoxMapProps) {
     });
     clustererRef.current = clusterer;
 
-    updateMarkers(boxes);
+    // 클로저의 stale boxes 대신 ref로 최신 boxes 사용
+    updateMarkers(boxesRef.current);
   };
 
   // 카카오 SDK 로드 및 지도 초기화 (마운트 시 1회)
   useEffect(() => {
-    // 이미 SDK가 로드되어 있으면 바로 초기화
+    const load = () => window.kakao.maps.load(initMap);
+
     if (window.kakao && window.kakao.maps) {
-      window.kakao.maps.load(initMap);
+      load();
       return;
     }
 
-    // 이미 스크립트가 삽입되어 있으면 load 이벤트 대기
-    const existing = document.querySelector(`script[src*="dapi.kakao.com/v2/maps"]`);
+    // 이미 다른 페이지에서 스크립트가 삽입돼 있으면 load 이벤트 대기
+    const existing = document.querySelector(`script[src*="dapi.kakao.com/v2/maps"]`) as HTMLScriptElement | null;
     if (existing) {
-      existing.addEventListener("load", () => window.kakao.maps.load(initMap));
-      return;
+      existing.addEventListener("load", load);
+      return () => existing.removeEventListener("load", load);
     }
 
-    // 스크립트 새로 삽입
     const script = document.createElement("script");
     script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_KEY}&autoload=false&libraries=clusterer`;
     script.async = true;
     document.head.appendChild(script);
-    script.onload = () => window.kakao.maps.load(initMap);
+    script.onload = load;
 
     return () => {
-      // 언마운트 시 지도 인스턴스 해제
       mapInstanceRef.current = null;
       clustererRef.current = null;
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // boxes가 바뀔 때 마커만 갱신
+  // boxes 변경 시 마커 갱신
   useEffect(() => {
-    if (!mapInstanceRef.current || !clustererRef.current) return;
     updateMarkers(boxes);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [boxes]);
