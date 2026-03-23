@@ -31,13 +31,9 @@ export default function OAuth2CallbackPage() {
         saveAuth({
           accessToken,
           refreshToken,
-          user: {
-            email: user.email,
-            name: user.name,
-            role: user.role,
-            profileImageUrl: user.profileImageUrl,
-            phone: user.phone,
-          },
+          email: user.email,
+          name: user.name,
+          role: user.role,
         });
         toast.success(`${user.name}님, 환영합니다!`);
         router.replace("/");
