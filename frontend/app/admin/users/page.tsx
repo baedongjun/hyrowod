@@ -26,6 +26,9 @@ export default function AdminUsersPage() {
   const [page, setPage] = useState(0);
   const [keyword, setKeyword] = useState("");
   const [searchInput, setSearchInput] = useState("");
+  const [editTarget, setEditTarget] = useState<UserItem | null>(null);
+  const [editName, setEditName] = useState("");
+  const [editPhone, setEditPhone] = useState("");
   const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
@@ -42,22 +45,39 @@ export default function AdminUsersPage() {
   const activeMutation = useMutation({
     mutationFn: ({ id, active }: { id: number; active: boolean }) =>
       adminApi.toggleUserActive(id, active),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
-      toast.success("변경되었습니다.");
-    },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["admin", "users"] }); toast.success("변경되었습니다."); },
     onError: () => toast.error("오류가 발생했습니다."),
   });
 
   const roleMutation = useMutation({
     mutationFn: ({ id, role }: { id: number; role: string }) =>
       adminApi.updateUserRole(id, role),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
-      toast.success("역할이 변경되었습니다.");
-    },
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["admin", "users"] }); toast.success("역할이 변경되었습니다."); },
     onError: () => toast.error("오류가 발생했습니다."),
   });
+
+  const editMutation = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: { name?: string; phone?: string } }) =>
+      adminApi.updateUser(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
+      toast.success("회원 정보가 수정되었습니다.");
+      setEditTarget(null);
+    },
+    onError: () => toast.error("수정 중 오류가 발생했습니다."),
+  });
+
+  const openEdit = (user: UserItem) => {
+    setEditTarget(user);
+    setEditName(user.name ?? "");
+    setEditPhone(user.phone ?? "");
+  };
+
+  const handleEditSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editTarget) return;
+    editMutation.mutate({ id: editTarget.id, data: { name: editName, phone: editPhone } });
+  };
 
   return (
     <div>
@@ -87,16 +107,15 @@ export default function AdminUsersPage() {
               <th className={s.th}>전화번호</th>
               <th className={`${s.th} ${s.thCenter}`}>역할</th>
               <th className={`${s.th} ${s.thCenter}`}>상태</th>
+              <th className={`${s.th} ${s.thCenter}`}>관리</th>
             </tr>
           </thead>
           <tbody>
             {isLoading ? (
               [...Array(8)].map((_, i) => (
                 <tr key={i} className={s.tr}>
-                  {[...Array(5)].map((_, j) => (
-                    <td key={j} className={s.td}>
-                      <div className={s.skeletonCell} />
-                    </td>
+                  {[...Array(6)].map((_, j) => (
+                    <td key={j} className={s.td}><div className={s.skeletonCell} /></td>
                   ))}
                 </tr>
               ))
@@ -125,6 +144,9 @@ export default function AdminUsersPage() {
                       {user.active ? "활성" : "비활성"}
                     </button>
                   </td>
+                  <td className={`${s.td} ${s.tdCenter}`}>
+                    <button className={s.editBtn} onClick={() => openEdit(user)}>수정</button>
+                  </td>
                 </tr>
               ))
             )}
@@ -139,6 +161,48 @@ export default function AdminUsersPage() {
           </div>
         )}
       </div>
+
+      {/* 수정 모달 */}
+      {editTarget && (
+        <div className={s.overlay} onClick={() => setEditTarget(null)}>
+          <div className={s.modal} onClick={(e) => e.stopPropagation()}>
+            <div className={s.modalHeader}>
+              <h2 className={s.modalTitle}>회원 정보 수정</h2>
+              <button className={s.modalClose} onClick={() => setEditTarget(null)}>✕</button>
+            </div>
+            <form onSubmit={handleEditSubmit} className={s.modalForm}>
+              <div className={s.infoRow}>
+                <span className={s.infoLabel}>이메일</span>
+                <span className={s.infoValue}>{editTarget.email}</span>
+              </div>
+              <div className={s.formField}>
+                <label className={s.fieldLabel}>이름 *</label>
+                <input
+                  className={s.fieldInput}
+                  value={editName}
+                  onChange={(e) => setEditName(e.target.value)}
+                  required
+                />
+              </div>
+              <div className={s.formField}>
+                <label className={s.fieldLabel}>전화번호</label>
+                <input
+                  className={s.fieldInput}
+                  value={editPhone}
+                  onChange={(e) => setEditPhone(e.target.value)}
+                  placeholder="예: 010-1234-5678"
+                />
+              </div>
+              <div className={s.modalActions}>
+                <button type="button" className="btn-secondary" onClick={() => setEditTarget(null)}>취소</button>
+                <button type="submit" className="btn-primary" disabled={editMutation.isPending}>
+                  {editMutation.isPending ? "저장 중..." : "저장"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

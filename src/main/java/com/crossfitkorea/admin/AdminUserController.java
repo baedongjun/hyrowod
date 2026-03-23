@@ -16,6 +16,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/v1/admin")
 @RequiredArgsConstructor
@@ -57,6 +59,23 @@ public class AdminUserController {
         User user = userRepository.findById(id)
             .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
         user.setRole(role);
+        return ResponseEntity.ok(ApiResponse.success(UserDto.from(userRepository.save(user))));
+    }
+
+    @Operation(summary = "[어드민] 회원 정보 수정 (이름, 전화번호)")
+    @PutMapping("/users/{id}")
+    public ResponseEntity<ApiResponse<UserDto>> updateUser(
+        @PathVariable Long id,
+        @RequestBody Map<String, String> body
+    ) {
+        User user = userRepository.findById(id)
+            .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+        if (body.containsKey("name") && body.get("name") != null && !body.get("name").isBlank()) {
+            user.setName(body.get("name").trim());
+        }
+        if (body.containsKey("phone")) {
+            user.setPhone(body.get("phone") != null && !body.get("phone").isBlank() ? body.get("phone").trim() : null);
+        }
         return ResponseEntity.ok(ApiResponse.success(UserDto.from(userRepository.save(user))));
     }
 }

@@ -464,6 +464,15 @@ export const adminApi = {
   updateUserRole: (id: number, role: string) =>
     api.patch(`/api/v1/admin/users/${id}/role`, null, { params: { role } }),
 
+  updateUser: (id: number, data: { name?: string; phone?: string }) =>
+    api.put(`/api/v1/admin/users/${id}`, data),
+
+  updateBox: (id: number, data: object) =>
+    api.put(`/api/v1/boxes/${id}`, data),
+
+  deleteBox: (id: number) =>
+    api.delete(`/api/v1/boxes/${id}`),
+
   getPosts: (page = 0) =>
     api.get("/api/v1/admin/posts", { params: { page } }),
 
