@@ -4,6 +4,7 @@ export const saveAuth = (auth: AuthResponse) => {
   localStorage.setItem("accessToken", auth.accessToken);
   localStorage.setItem("refreshToken", auth.refreshToken);
   localStorage.setItem("user", JSON.stringify({
+    id: auth.id,
     email: auth.email,
     name: auth.name,
     role: auth.role,

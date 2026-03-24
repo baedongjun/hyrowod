@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { wodApi, competitionApi, communityApi, membershipApi, leaderboardApi, challengeApi, statsApi } from "@/lib/api";
+import { wodApi, competitionApi, communityApi, membershipApi, leaderboardApi, challengeApi } from "@/lib/api";
 import { isLoggedIn, getUser } from "@/lib/auth";
 import { Wod, Competition, Post, BoxMembership, BoxRanking } from "@/types";
 import dayjs from "dayjs";
@@ -136,11 +136,6 @@ export default function HomePage() {
     queryFn: async () => (await challengeApi.getAll()).data.data as { id: number; title: string; type: string; targetDays: number; participantCount: number; active: boolean }[],
   });
 
-  const { data: stats } = useQuery({
-    queryKey: ["stats"],
-    queryFn: async () => (await statsApi.getPublicStats()).data.data as { totalBoxes: number; totalUsers: number; totalPosts: number; totalCompetitions: number },
-    staleTime: 1000 * 60 * 10,
-  });
 
   const activeComps: Competition[] = (competitions?.content ?? []).filter(
     (c: Competition) => c.status === "OPEN" || c.status === "UPCOMING"
@@ -200,24 +195,6 @@ export default function HomePage() {
         </div>
       </nav>
 
-      {/* Stats Bar */}
-      {stats && (
-        <div className={s.statsBar}>
-          <div className={s.statsBarInner}>
-            {[
-              { val: stats.totalBoxes,        label: "전국 박스",  href: "/boxes" },
-              { val: stats.totalUsers,         label: "회원",       href: "/signup" },
-              { val: stats.totalPosts,         label: "커뮤니티 글", href: "/community" },
-              { val: stats.totalCompetitions,  label: "대회",       href: "/competitions" },
-            ].map((item, i) => (
-              <Link key={i} href={item.href} className={s.statItem}>
-                <span className={s.statVal}>{item.val.toLocaleString()}</span>
-                <span className={s.statItemLabel}>{item.label}</span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
 
       {/* WOD + Competition Highlight */}
       <section className={s.highlight}>

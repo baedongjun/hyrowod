@@ -149,6 +149,7 @@ export interface User {
 }
 
 export interface AuthResponse {
+  id: number;
   accessToken: string;
   refreshToken: string;
   email: string;

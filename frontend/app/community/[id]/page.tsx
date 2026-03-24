@@ -211,15 +211,19 @@ export default function PostDetailPage() {
   const likeMutation = useMutation({
     mutationFn: () => communityApi.likePost(postId),
     onMutate: () => {
-      // optimistic
+      // 뮤테이션 시점의 상태를 context로 캡처
       const wasLiked = liked;
+      const prevCount = likeCount ?? post?.likeCount ?? 0;
       setLiked(!wasLiked);
-      setLikeCount((c) => (c ?? post?.likeCount ?? 0) + (wasLiked ? -1 : 1));
+      setLikeCount(prevCount + (wasLiked ? -1 : 1));
+      return { wasLiked, prevCount };
     },
-    onError: () => {
-      // revert
-      setLiked((prev) => !prev);
-      setLikeCount((c) => (c ?? 0) + (liked ? 1 : -1));
+    onError: (_err, _vars, context) => {
+      // context로 정확히 되돌리기 (클로저 stale 문제 방지)
+      if (context) {
+        setLiked(context.wasLiked);
+        setLikeCount(context.prevCount);
+      }
       toast.error("좋아요 처리에 실패했습니다.");
     },
     onSettled: () => refetchPost(),
@@ -291,7 +295,9 @@ export default function PostDetailPage() {
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
                   </svg>
-                  {post.commentCount}
+                  {comments
+                    ? comments.reduce((acc, c) => acc + 1 + (c.replies?.length ?? 0), 0)
+                    : post.commentCount}
                 </span>
               </div>
             </div>

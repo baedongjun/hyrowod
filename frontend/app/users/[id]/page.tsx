@@ -9,6 +9,7 @@ import { userApi, badgeApi, followApi } from "@/lib/api";
 import { Post, WodRecord } from "@/types";
 import { Badge, FollowUser } from "@/types";
 import { isLoggedIn, getUser } from "@/lib/auth";
+import { toast } from "react-toastify";
 import dayjs from "dayjs";
 import s from "./profile.module.css";
 
@@ -32,7 +33,7 @@ export default function UserProfilePage() {
   const userId = Number(id);
   const queryClient = useQueryClient();
   const currentUser = getUser();
-  const isMe = currentUser && String((currentUser as { id?: number }).id) === id;
+  const isMe = currentUser && String(currentUser.id) === id;
   const loggedIn = isLoggedIn();
   const [activeTab, setActiveTab] = useState<TabType>("badges");
 
@@ -86,10 +87,33 @@ export default function UserProfilePage() {
 
   const toggleFollowMutation = useMutation({
     mutationFn: () => followApi.toggle(userId),
+    onMutate: () => {
+      // 낙관적 업데이트: 즉시 UI 반영
+      const wasFollowing = followStatus?.following ?? false;
+      queryClient.setQueryData(["follow", "status", userId], { following: !wasFollowing });
+      queryClient.setQueryData(["follow", "counts", userId], (old: { followerCount: number; followingCount: number } | undefined) => ({
+        ...old,
+        followerCount: (old?.followerCount ?? 0) + (wasFollowing ? -1 : 1),
+        followingCount: old?.followingCount ?? 0,
+      }));
+      return { wasFollowing };
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["follow", "status", userId] });
       queryClient.invalidateQueries({ queryKey: ["follow", "counts", userId] });
       queryClient.invalidateQueries({ queryKey: ["follow", "followers", userId] });
+    },
+    onError: (_err, _vars, context) => {
+      // 실패 시 되돌리기
+      if (context) {
+        queryClient.setQueryData(["follow", "status", userId], { following: context.wasFollowing });
+        queryClient.setQueryData(["follow", "counts", userId], (old: { followerCount: number; followingCount: number } | undefined) => ({
+          ...old,
+          followerCount: (old?.followerCount ?? 0) + (context.wasFollowing ? 1 : -1),
+          followingCount: old?.followingCount ?? 0,
+        }));
+      }
+      toast.error("팔로우 처리에 실패했습니다.");
     },
   });
 

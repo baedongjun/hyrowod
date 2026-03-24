@@ -155,7 +155,7 @@ public class UserService {
         }
         String newAccessToken = jwtTokenProvider.createAccessToken(user.getEmail(), user.getRole().name());
         String newRefreshToken = jwtTokenProvider.createRefreshToken(user.getEmail());
-        return new AuthResponse(newAccessToken, newRefreshToken, user.getEmail(), user.getName(), user.getRole().name());
+        return new AuthResponse(user.getId(), newAccessToken, newRefreshToken, user.getEmail(), user.getName(), user.getRole().name());
     }
 
     @Transactional
@@ -224,6 +224,6 @@ public class UserService {
     private AuthResponse buildAuthResponse(User user) {
         String accessToken = jwtTokenProvider.createAccessToken(user.getEmail(), user.getRole().name());
         String refreshToken = jwtTokenProvider.createRefreshToken(user.getEmail());
-        return new AuthResponse(accessToken, refreshToken, user.getEmail(), user.getName(), user.getRole().name());
+        return new AuthResponse(user.getId(), accessToken, refreshToken, user.getEmail(), user.getName(), user.getRole().name());
     }
 }
