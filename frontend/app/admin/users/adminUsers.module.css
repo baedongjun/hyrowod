@@ -258,3 +258,10 @@
   border-top: 1px solid var(--border);
 }
 .pageInfo { font-size: 13px; color: var(--muted); }
+
+@media (max-width: 768px) {
+  .pageHeader { flex-direction: column; align-items: flex-start; }
+  .pageTitle { font-size: 28px; }
+  .searchForm { width: 100%; }
+  .searchInput { width: 100%; flex: 1; min-width: 0; }
+}

@@ -330,6 +330,7 @@
 .cancelBtn:hover { color: var(--text); background: rgba(255,255,255,0.06); }
 
 @media (max-width: 768px) {
+  .pageTitle { font-size: 28px; }
   .formRow { grid-template-columns: 1fr; }
   .formGroupSmall { max-width: 100%; }
   .adCard { flex-direction: column; gap: 12px; }

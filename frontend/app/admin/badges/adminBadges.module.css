@@ -136,3 +136,8 @@
   font-size: 11px;
   color: var(--muted);
 }
+
+@media (max-width: 768px) {
+  .awardGrid { grid-template-columns: 1fr; }
+  .typesGrid { grid-template-columns: 1fr; }
+}

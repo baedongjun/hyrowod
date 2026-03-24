@@ -102,6 +102,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const router = useRouter();
   const pathname = usePathname();
   const [authorized, setAuthorized] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   useEffect(() => {
     if (!isAdmin()) {
@@ -111,32 +112,69 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     }
   }, [router]);
 
+  // 페이지 이동 시 드로어 닫기
+  useEffect(() => {
+    setDrawerOpen(false);
+  }, [pathname]);
+
   if (!authorized) {
     return <div className={s.checking}>권한을 확인 중...</div>;
   }
 
+  const NavLinks = () => (
+    <>
+      {NAV_ITEMS.map((item) => {
+        const active = item.exact ? pathname === item.href : pathname.startsWith(item.href);
+        return (
+          <Link
+            key={item.href}
+            href={item.href}
+            className={`${s.navLink} ${active ? s.navLinkActive : ""}`}
+          >
+            {item.icon}
+            {item.label}
+          </Link>
+        );
+      })}
+    </>
+  );
+
   return (
     <div className={s.layout}>
+      {/* 데스크톱 사이드바 */}
       <aside className={s.sidebar}>
         <div className={s.sidebarInner}>
           <p className={s.sidebarLabel}>관리자 메뉴</p>
           <nav className={s.nav}>
-            {NAV_ITEMS.map((item) => {
-              const active = item.exact ? pathname === item.href : pathname.startsWith(item.href);
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`${s.navLink} ${active ? s.navLinkActive : ""}`}
-                >
-                  {item.icon}
-                  {item.label}
-                </Link>
-              );
-            })}
+            <NavLinks />
           </nav>
         </div>
       </aside>
+
+      {/* 모바일 드로어 */}
+      {drawerOpen && (
+        <div className={s.drawerOverlay} onClick={() => setDrawerOpen(false)} />
+      )}
+      <div className={`${s.sidebarDrawer} ${drawerOpen ? s.sidebarDrawerOpen : ""}`}>
+        <div className={s.drawerHeader}>
+          <span className={s.drawerTitle}>관리자 메뉴</span>
+          <button className={s.drawerClose} onClick={() => setDrawerOpen(false)}>✕</button>
+        </div>
+        <div className={s.sidebarInner}>
+          <nav className={s.nav}>
+            <NavLinks />
+          </nav>
+        </div>
+      </div>
+
+      {/* 모바일 햄버거 버튼 */}
+      <button className={s.menuBtn} onClick={() => setDrawerOpen(true)} aria-label="메뉴 열기">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
 
       <main className={s.main}>
         <div className={s.mainInner}>{children}</div>

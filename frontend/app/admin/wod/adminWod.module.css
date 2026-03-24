@@ -211,6 +211,7 @@
 
 /* 768px 이하 */
 @media (max-width: 768px) {
+  .pageTitle { font-size: 28px; }
   .itemActions { flex-direction: row; }
   .itemDate { min-width: 36px; }
   .itemDateNum { font-size: 20px; }

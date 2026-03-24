@@ -198,6 +198,7 @@
 }
 
 @media (max-width: 768px) {
+  .pageTitle { font-size: 28px; }
   .row { grid-template-columns: 1fr; }
   .editRow { grid-template-columns: 1fr; }
   .itemActions { flex-wrap: wrap; }

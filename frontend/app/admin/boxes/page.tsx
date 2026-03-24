@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { adminApi } from "@/lib/api";
+import { adminApi, uploadApi } from "@/lib/api";
 import { Box } from "@/types";
 import AddressSearch from "@/components/common/AddressSearch";
 import { toast } from "react-toastify";
@@ -97,7 +97,12 @@ export default function AdminBoxesPage() {
   const [deleteTarget, setDeleteTarget] = useState<Box | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [form, setForm] = useState<BoxForm>(EMPTY_FORM);
+  const [editImageUrls, setEditImageUrls] = useState<string[]>([]);
   const [createForm, setCreateForm] = useState<BoxForm>(EMPTY_FORM);
+  const [createImageUrls, setCreateImageUrls] = useState<string[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const createFileRef = useRef<HTMLInputElement>(null);
+  const editFileRef = useRef<HTMLInputElement>(null);
   const [claimNoteMap, setClaimNoteMap] = useState<Record<number, string>>({});
   const queryClient = useQueryClient();
 
@@ -158,6 +163,7 @@ export default function AdminBoxesPage() {
       toast.success("박스가 등록되었습니다.");
       setShowCreateModal(false);
       setCreateForm(EMPTY_FORM);
+      setCreateImageUrls([]);
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (err: any) => { toast.error(err?.response?.data?.message || "등록 중 오류가 발생했습니다."); },
@@ -210,10 +216,30 @@ export default function AdminBoxesPage() {
       openTime: box.openTime ?? "",
       closeTime: box.closeTime ?? "",
     });
+    setEditImageUrls(box.imageUrls ?? []);
     setEditTarget(box);
   };
 
-  const buildBoxData = (f: BoxForm) => ({
+  const handleImageUpload = async (files: FileList | null, setUrls: React.Dispatch<React.SetStateAction<string[]>>, currentCount: number) => {
+    if (!files || files.length === 0) return;
+    const arr = Array.from(files);
+    if (currentCount + arr.length > 5) {
+      toast.error("이미지는 최대 5장까지 업로드 가능합니다.");
+      return;
+    }
+    setUploading(true);
+    try {
+      const res = await uploadApi.uploadImages(arr, "boxes");
+      setUrls((prev) => [...prev, ...res.data.data]);
+      toast.success(`${arr.length}장 업로드 완료`);
+    } catch {
+      toast.error("이미지 업로드에 실패했습니다.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const buildBoxData = (f: BoxForm, imageUrls: string[]) => ({
     name: f.name,
     address: f.address,
     city: f.city,
@@ -225,17 +251,18 @@ export default function AdminBoxesPage() {
     monthlyFee: f.monthlyFee ? parseInt(f.monthlyFee) : null,
     openTime: f.openTime || null,
     closeTime: f.closeTime || null,
+    imageUrls,
   });
 
   const handleEditSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!editTarget) return;
-    editMutation.mutate({ id: editTarget.id, data: buildBoxData(form) });
+    editMutation.mutate({ id: editTarget.id, data: buildBoxData(form, editImageUrls) });
   };
 
   const handleCreateSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    createMutation.mutate(buildBoxData(createForm));
+    createMutation.mutate(buildBoxData(createForm, createImageUrls));
   };
 
   const STATUS_LABEL: Record<string, string> = { PENDING: "대기중", APPROVED: "승인", REJECTED: "거절" };
@@ -470,20 +497,42 @@ export default function AdminBoxesPage() {
 
       {/* 박스 등록 모달 */}
       {showCreateModal && (
-        <div className={s.overlay} onClick={() => setShowCreateModal(false)}>
+        <div className={s.overlay} onClick={() => { setShowCreateModal(false); setCreateImageUrls([]); }}>
           <div className={s.modal} onClick={(e) => e.stopPropagation()}>
             <div className={s.modalHeader}>
               <h2 className={s.modalTitle}>박스 등록 (오너 없이)</h2>
-              <button className={s.modalClose} onClick={() => setShowCreateModal(false)}>✕</button>
+              <button className={s.modalClose} onClick={() => { setShowCreateModal(false); setCreateImageUrls([]); }}>✕</button>
             </div>
             <p style={{ fontSize: 12, color: "var(--muted)", marginBottom: 16 }}>
               초기 데이터 등록용입니다. 나중에 박스 오너가 소유권을 신청하면 승인할 수 있습니다.
             </p>
             <form onSubmit={handleCreateSubmit} className={s.modalForm}>
               <BoxFormFields f={createForm} setF={setCreateForm} />
+              {/* 이미지 업로드 */}
+              <div className={s.formField} style={{ gridColumn: "1 / -1", marginTop: 8 }}>
+                <label className={s.fieldLabel}>박스 이미지 (최대 5장)</label>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 6 }}>
+                  {createImageUrls.map((url, i) => (
+                    <div key={i} style={{ position: "relative", width: 80, height: 80 }}>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={url} alt="" style={{ width: 80, height: 80, objectFit: "cover", border: "1px solid var(--border)" }} />
+                      <button type="button" onClick={() => setCreateImageUrls(prev => prev.filter((_, idx) => idx !== i))}
+                        style={{ position: "absolute", top: 2, right: 2, background: "rgba(0,0,0,0.7)", color: "#fff", border: "none", width: 18, height: 18, fontSize: 10, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>✕</button>
+                    </div>
+                  ))}
+                  {createImageUrls.length < 5 && (
+                    <button type="button" onClick={() => createFileRef.current?.click()} disabled={uploading}
+                      style={{ width: 80, height: 80, border: "1px dashed var(--border)", background: "var(--bg-card-2)", color: "var(--muted)", fontSize: 22, cursor: "pointer" }}>
+                      {uploading ? "..." : "+"}
+                    </button>
+                  )}
+                </div>
+                <input ref={createFileRef} type="file" accept="image/jpeg,image/png,image/webp" multiple style={{ display: "none" }}
+                  onChange={(e) => { handleImageUpload(e.target.files, setCreateImageUrls, createImageUrls.length); e.target.value = ""; }} />
+              </div>
               <div className={s.modalActions}>
-                <button type="button" className="btn-secondary" onClick={() => setShowCreateModal(false)}>취소</button>
-                <button type="submit" className="btn-primary" disabled={createMutation.isPending}>
+                <button type="button" className="btn-secondary" onClick={() => { setShowCreateModal(false); setCreateImageUrls([]); }}>취소</button>
+                <button type="submit" className="btn-primary" disabled={createMutation.isPending || uploading}>
                   {createMutation.isPending ? "등록 중..." : "등록"}
                 </button>
               </div>
@@ -502,9 +551,31 @@ export default function AdminBoxesPage() {
             </div>
             <form onSubmit={handleEditSubmit} className={s.modalForm}>
               <BoxFormFields f={form} setF={setForm} />
+              {/* 이미지 업로드 */}
+              <div className={s.formField} style={{ gridColumn: "1 / -1", marginTop: 8 }}>
+                <label className={s.fieldLabel}>박스 이미지 (최대 5장)</label>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 6 }}>
+                  {editImageUrls.map((url, i) => (
+                    <div key={i} style={{ position: "relative", width: 80, height: 80 }}>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={url} alt="" style={{ width: 80, height: 80, objectFit: "cover", border: "1px solid var(--border)" }} />
+                      <button type="button" onClick={() => setEditImageUrls(prev => prev.filter((_, idx) => idx !== i))}
+                        style={{ position: "absolute", top: 2, right: 2, background: "rgba(0,0,0,0.7)", color: "#fff", border: "none", width: 18, height: 18, fontSize: 10, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>✕</button>
+                    </div>
+                  ))}
+                  {editImageUrls.length < 5 && (
+                    <button type="button" onClick={() => editFileRef.current?.click()} disabled={uploading}
+                      style={{ width: 80, height: 80, border: "1px dashed var(--border)", background: "var(--bg-card-2)", color: "var(--muted)", fontSize: 22, cursor: "pointer" }}>
+                      {uploading ? "..." : "+"}
+                    </button>
+                  )}
+                </div>
+                <input ref={editFileRef} type="file" accept="image/jpeg,image/png,image/webp" multiple style={{ display: "none" }}
+                  onChange={(e) => { handleImageUpload(e.target.files, setEditImageUrls, editImageUrls.length); e.target.value = ""; }} />
+              </div>
               <div className={s.modalActions}>
                 <button type="button" className="btn-secondary" onClick={() => setEditTarget(null)}>취소</button>
-                <button type="submit" className="btn-primary" disabled={editMutation.isPending}>
+                <button type="submit" className="btn-primary" disabled={editMutation.isPending || uploading}>
                   {editMutation.isPending ? "저장 중..." : "저장"}
                 </button>
               </div>

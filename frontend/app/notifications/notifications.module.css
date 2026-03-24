@@ -164,3 +164,14 @@
 .emptyIcon { font-size: 48px; margin-bottom: 16px; opacity: 0.4; }
 .emptyText { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
 .emptySub { font-size: 13px; color: var(--muted); }
+
+@media (max-width: 768px) {
+  .inner { padding: 24px 16px; }
+  .header { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .title { font-size: 28px; }
+  .headerActions { display: flex; gap: 8px; width: 100%; }
+  .readAllBtn, .deleteReadBtn { flex: 1; padding: 9px 12px; font-size: 12px; }
+  .itemInner { padding: 14px 16px; gap: 12px; }
+  .itemIcon { width: 34px; height: 34px; font-size: 18px; }
+  .itemMessage { font-size: 13px; }
+}
