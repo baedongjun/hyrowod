@@ -35,6 +35,7 @@ export interface Box {
   reviewCount: number;
   verified: boolean;
   premium: boolean;
+  active: boolean;
   ownerName: string;
 }
 

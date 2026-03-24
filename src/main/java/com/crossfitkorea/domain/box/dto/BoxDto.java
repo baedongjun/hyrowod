@@ -31,6 +31,7 @@ public class BoxDto {
     private Integer reviewCount;
     private boolean verified;
     private boolean premium;
+    private boolean active;
     private Long ownerId;
     private String ownerName;
     private Long memberCount;
@@ -58,6 +59,7 @@ public class BoxDto {
             .reviewCount(box.getReviewCount())
             .verified(box.isVerified())
             .premium(box.isPremium())
+            .active(box.isActive())
             .ownerId(box.getOwner() != null ? box.getOwner().getId() : null)
             .ownerName(box.getOwner() != null ? box.getOwner().getName() : null)
             .build();

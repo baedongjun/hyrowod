@@ -461,8 +461,8 @@ export const adminApi = {
   getDashboard: (months = 6) =>
     api.get("/api/v1/admin/dashboard", { params: { months } }),
 
-  getBoxes: (page = 0) =>
-    api.get("/api/v1/admin/boxes", { params: { page } }),
+  getBoxes: (page = 0, active = true) =>
+    api.get("/api/v1/admin/boxes", { params: { page, active } }),
 
   verifyBox: (id: number, verified: boolean) =>
     api.patch(`/api/v1/admin/boxes/${id}/verify`, null, { params: { verified } }),
@@ -550,6 +550,9 @@ export const adminApi = {
 
   assignOwner: (boxId: number, userId: number) =>
     api.patch(`/api/v1/admin/boxes/${boxId}/owner`, null, { params: { userId } }),
+
+  removeOwner: (boxId: number) =>
+    api.delete(`/api/v1/admin/boxes/${boxId}/owner`),
 
   getClaims: (page = 0) =>
     api.get("/api/v1/admin/boxes/claims", { params: { page } }),

@@ -42,9 +42,10 @@ public class AdminBoxController {
     @GetMapping("/boxes")
     @Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<Page<BoxDto>>> getAllBoxes(
+        @RequestParam(defaultValue = "true") boolean active,
         @PageableDefault(size = 20) Pageable pageable
     ) {
-        Page<BoxDto> boxes = boxRepository.findAll(pageable).map(BoxDto::from);
+        Page<BoxDto> boxes = boxRepository.findByActive(active, pageable).map(BoxDto::from);
         return ResponseEntity.ok(ApiResponse.success(boxes));
     }
 
@@ -63,6 +64,17 @@ public class AdminBoxController {
         @RequestParam Long userId
     ) {
         return ResponseEntity.ok(ApiResponse.success(boxClaimService.assignOwner(id, userId)));
+    }
+
+    @Operation(summary = "[어드민] 박스 오너 해제")
+    @DeleteMapping("/boxes/{id}/owner")
+    @Transactional
+    public ResponseEntity<ApiResponse<BoxDto>> removeOwner(@PathVariable Long id) {
+        Box box = boxRepository.findById(id)
+            .orElseThrow(() -> new com.crossfitkorea.common.exception.BusinessException(
+                com.crossfitkorea.common.exception.ErrorCode.BOX_NOT_FOUND));
+        box.setOwner(null);
+        return ResponseEntity.ok(ApiResponse.success(BoxDto.from(boxRepository.save(box))));
     }
 
     @Operation(summary = "[어드민] 박스 인증 처리")

@@ -32,6 +32,7 @@ type PageTab = "boxes" | "claims";
 export default function AdminBoxesPage() {
   const [pageTab, setPageTab] = useState<PageTab>("boxes");
   const [page, setPage] = useState(0);
+  const [showInactive, setShowInactive] = useState(false);
   const [claimsPage, setClaimsPage] = useState(0);
   const [editTarget, setEditTarget] = useState<Box | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Box | null>(null);
@@ -42,8 +43,8 @@ export default function AdminBoxesPage() {
   const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
-    queryKey: ["admin", "boxes", page],
-    queryFn: async () => (await adminApi.getBoxes(page)).data.data,
+    queryKey: ["admin", "boxes", page, showInactive],
+    queryFn: async () => (await adminApi.getBoxes(page, !showInactive)).data.data,
   });
 
   const { data: claimsData, isLoading: claimsLoading } = useQuery({
@@ -101,6 +102,16 @@ export default function AdminBoxesPage() {
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (err: any) => { toast.error(err?.response?.data?.message || "등록 중 오류가 발생했습니다."); },
+  });
+
+  const removeOwnerMutation = useMutation({
+    mutationFn: (id: number) => adminApi.removeOwner(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "boxes"] });
+      toast.success("오너가 해제되었습니다.");
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onError: (err: any) => { toast.error(err?.response?.data?.message || "오류가 발생했습니다."); },
   });
 
   const approveMutation = useMutation({
@@ -248,6 +259,22 @@ export default function AdminBoxesPage() {
 
       {pageTab === "boxes" && (
         <div className={s.tableWrap}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
+            <label style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", fontSize: 13, color: "var(--muted)" }}>
+              <input
+                type="checkbox"
+                checked={showInactive}
+                onChange={(e) => { setShowInactive(e.target.checked); setPage(0); }}
+                style={{ accentColor: "var(--red)" }}
+              />
+              삭제된 박스 포함
+            </label>
+            {showInactive && (
+              <span style={{ fontSize: 11, color: "var(--red)", fontWeight: 700, letterSpacing: 1 }}>
+                비활성 박스 포함 조회 중
+              </span>
+            )}
+          </div>
           <table className={s.table}>
             <thead className={s.thead}>
               <tr>
@@ -271,10 +298,30 @@ export default function AdminBoxesPage() {
                 ))
               ) : (
                 data?.content?.map((box: Box) => (
-                  <tr key={box.id} className={s.tr}>
-                    <td className={`${s.td} ${s.tdName}`}>{box.name}</td>
+                  <tr key={box.id} className={s.tr} style={!box.active ? { opacity: 0.5 } : undefined}>
+                    <td className={`${s.td} ${s.tdName}`}>
+                      {box.name}
+                      {!box.active && <span style={{ marginLeft: 6, fontSize: 10, color: "var(--red)", fontWeight: 700, letterSpacing: 1 }}>삭제됨</span>}
+                    </td>
                     <td className={s.td}>{box.city}{box.district && ` · ${box.district}`}</td>
-                    <td className={s.td}>{box.ownerName || <span style={{ color: "var(--muted)", fontSize: 12 }}>미배정</span>}</td>
+                    <td className={s.td}>
+                      {box.ownerName ? (
+                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                          <span>{box.ownerName}</span>
+                          {box.active && (
+                            <button
+                              style={{ background: "transparent", border: "1px solid rgba(255,255,255,0.15)", color: "var(--muted)", padding: "2px 7px", fontSize: 10, cursor: "pointer", letterSpacing: 0.5 }}
+                              disabled={removeOwnerMutation.isPending}
+                              onClick={() => { if (confirm(`'${box.name}'의 오너를 해제하시겠습니까?`)) removeOwnerMutation.mutate(box.id); }}
+                            >
+                              해제
+                            </button>
+                          )}
+                        </div>
+                      ) : (
+                        <span style={{ color: "var(--muted)", fontSize: 12 }}>미배정</span>
+                      )}
+                    </td>
                     <td className={`${s.td} ${s.tdCenter}`}>
                       <span className={s.rating}>
                         <svg className={s.star} width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
