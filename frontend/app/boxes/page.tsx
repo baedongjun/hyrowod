@@ -160,7 +160,6 @@ function BoxesContent() {
                           setKeyword(q);
                           setDebouncedKeyword(q);
                           setShowSuggestions(false);
-                          syncUrl({ q });
                         }}
                       >
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ flexShrink: 0, color: "var(--muted)" }}>
@@ -185,7 +184,6 @@ function BoxesContent() {
                       setDebouncedKeyword(box.name);
                       setShowSuggestions(false);
                       saveRecentSearch(box.name);
-                      syncUrl({ q: box.name });
                     }}
                   >
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ flexShrink: 0, color: "var(--muted)" }}>
