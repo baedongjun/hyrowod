@@ -9,6 +9,7 @@ import { feedApi, userApi, followApi } from "@/lib/api";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/ko";
+import { toast } from "react-toastify";
 import s from "./feed.module.css";
 
 dayjs.extend(relativeTime);
@@ -111,6 +112,7 @@ function SuggestedUsers() {
   const qc = useQueryClient();
   const currentUser = typeof window !== "undefined" ? getUser() : null;
   const [followingMap, setFollowingMap] = useState<Record<number, boolean>>({});
+  const [pendingMap, setPendingMap] = useState<Record<number, boolean>>({});
 
   const { data } = useQuery({
     queryKey: ["suggestedUsers"],
@@ -118,11 +120,20 @@ function SuggestedUsers() {
   });
 
   const followMutation = useMutation({
-    mutationFn: (userId: number) => followApi.toggle(userId),
+    mutationFn: (userId: number) => {
+      setPendingMap(prev => ({ ...prev, [userId]: true }));
+      return followApi.toggle(userId);
+    },
     onSuccess: (res, userId) => {
       const isFollowing = res.data.data?.following ?? false;
       setFollowingMap(prev => ({ ...prev, [userId]: isFollowing }));
       qc.invalidateQueries({ queryKey: ["feed"] });
+    },
+    onError: () => {
+      toast.error("팔로우 처리에 실패했습니다.");
+    },
+    onSettled: (_data, _err, userId) => {
+      setPendingMap(prev => ({ ...prev, [userId]: false }));
     },
   });
 
@@ -149,9 +160,9 @@ function SuggestedUsers() {
             <button
               className={followingMap[u.id] ? s.unfollowBtn : s.followBtn}
               onClick={() => followMutation.mutate(u.id)}
-              disabled={followMutation.isPending}
+              disabled={!!pendingMap[u.id]}
             >
-              {followingMap[u.id] ? "팔로잉" : "팔로우"}
+              {pendingMap[u.id] ? "..." : followingMap[u.id] ? "팔로잉" : "팔로우"}
             </button>
           </div>
         ))}

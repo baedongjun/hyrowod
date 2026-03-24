@@ -38,7 +38,7 @@ public class NotificationSseService {
         if (emitter != null) {
             try {
                 emitter.send(SseEmitter.event().name("notification").data(data));
-            } catch (IOException e) {
+            } catch (Exception e) {
                 emitters.remove(userId);
             }
         }
