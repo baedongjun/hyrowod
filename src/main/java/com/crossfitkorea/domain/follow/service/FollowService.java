@@ -1,5 +1,7 @@
 package com.crossfitkorea.domain.follow.service;
 
+import com.crossfitkorea.common.exception.BusinessException;
+import com.crossfitkorea.common.exception.ErrorCode;
 import com.crossfitkorea.domain.follow.dto.FollowDto;
 import com.crossfitkorea.domain.follow.entity.Follow;
 import com.crossfitkorea.domain.follow.repository.FollowRepository;
@@ -29,7 +31,7 @@ public class FollowService {
         User target = userService.getUserById(targetUserId);
 
         if (me.getId().equals(targetUserId)) {
-            throw new IllegalArgumentException("자기 자신을 팔로우할 수 없습니다.");
+            throw new BusinessException(ErrorCode.CANNOT_FOLLOW_SELF);
         }
 
         return followRepository.findByFollowerAndFollowing(me, target)

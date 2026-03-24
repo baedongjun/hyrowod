@@ -427,8 +427,8 @@ export default function PostDetailPage() {
                   comment={comment}
                   postId={postId}
                   currentUser={currentUser}
-                  onReplySuccess={refetchComments}
-                  onDeleteSuccess={refetchComments}
+                  onReplySuccess={() => { refetchComments(); refetchPost(); }}
+                  onDeleteSuccess={() => { refetchComments(); refetchPost(); }}
                 />
               ))
             ) : (

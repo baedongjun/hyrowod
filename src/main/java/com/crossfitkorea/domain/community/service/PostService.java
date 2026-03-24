@@ -147,7 +147,7 @@ public class PostService {
             .build();
 
         commentRepository.save(comment);
-        post.setCommentCount(post.getCommentCount() + 1);
+        post.setCommentCount((int) commentRepository.countByPostIdAndActiveTrue(post.getId()));
 
         // 알림: 게시글 작성자에게 (본인 댓글 제외)
         if (!post.getUser().getEmail().equals(userEmail)) {
@@ -197,6 +197,8 @@ public class PostService {
             throw new BusinessException(ErrorCode.COMMENT_NOT_AUTHORIZED);
         }
         comment.setActive(false);
+        Post post = comment.getPost();
+        post.setCommentCount((int) commentRepository.countByPostIdAndActiveTrue(post.getId()));
     }
 
     @Transactional
@@ -204,6 +206,8 @@ public class PostService {
         Comment comment = commentRepository.findById(commentId)
             .orElseThrow(() -> new BusinessException(ErrorCode.COMMENT_NOT_FOUND));
         comment.setActive(false);
+        Post post = comment.getPost();
+        post.setCommentCount((int) commentRepository.countByPostIdAndActiveTrue(post.getId()));
     }
 
     public boolean isLiked(Long postId, String userEmail) {

@@ -14,4 +14,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findByParentIdAndActiveTrueOrderByCreatedAtAsc(Long parentId);
 
     Page<Comment> findByUserEmailAndActiveTrueOrderByCreatedAtDesc(String email, Pageable pageable);
+
+    long countByPostIdAndActiveTrue(Long postId);
 }

@@ -3,12 +3,12 @@
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { userApi, badgeApi, followApi } from "@/lib/api";
 import { Post, WodRecord } from "@/types";
 import { Badge, FollowUser } from "@/types";
-import { isLoggedIn, getUser } from "@/lib/auth";
+import { isLoggedIn, getUser, setUser } from "@/lib/auth";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
 import s from "./profile.module.css";
@@ -33,9 +33,26 @@ export default function UserProfilePage() {
   const userId = Number(id);
   const queryClient = useQueryClient();
   const currentUser = getUser();
-  const isMe = currentUser && String(currentUser.id) === id;
   const loggedIn = isLoggedIn();
   const [activeTab, setActiveTab] = useState<TabType>("badges");
+  const [myId, setMyId] = useState<number | undefined>(currentUser?.id);
+
+  // currentUser.id가 없으면 서버에서 조회해 localStorage 보완
+  useEffect(() => {
+    if (loggedIn && !myId) {
+      userApi.getMe().then((res) => {
+        const me = res.data.data;
+        if (me?.id) {
+          const stored = getUser();
+          if (stored) setUser({ ...stored, id: me.id });
+          setMyId(me.id);
+        }
+      }).catch(() => {});
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const isMe = loggedIn && myId !== undefined && String(myId) === id;
 
   const { data: profile, isLoading } = useQuery({
     queryKey: ["user", userId, "profile"],

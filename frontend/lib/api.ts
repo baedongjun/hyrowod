@@ -67,10 +67,10 @@ api.interceptors.response.use(
           `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"}/api/v1/auth/refresh`,
           { refreshToken }
         );
-        const { accessToken, refreshToken: newRefresh, email, name, role } = res.data.data;
+        const { id, accessToken, refreshToken: newRefresh, email, name, role } = res.data.data;
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("refreshToken", newRefresh);
-        localStorage.setItem("user", JSON.stringify({ email, name, role }));
+        localStorage.setItem("user", JSON.stringify({ id, email, name, role }));
         api.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
         processQueue(null, accessToken);
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
