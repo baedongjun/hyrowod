@@ -53,6 +53,11 @@ public class WodService {
             .map(WodDto::from);
     }
 
+    public Page<WodDto> getBoxWodHistory(Long boxId, Pageable pageable) {
+        return wodRepository.findByBoxIdAndActiveTrueOrderByWodDateDesc(boxId, pageable)
+            .map(WodDto::from);
+    }
+
     @Transactional
     public WodDto updateWod(Long id, WodCreateRequest request) {
         Wod wod = wodRepository.findById(id)

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { wodApi, competitionApi, communityApi, membershipApi, leaderboardApi, challengeApi } from "@/lib/api";
+import { wodApi, competitionApi, communityApi, membershipApi, leaderboardApi, challengeApi, statsApi } from "@/lib/api";
 import { isLoggedIn, getUser } from "@/lib/auth";
 import { Wod, Competition, Post, BoxMembership, BoxRanking } from "@/types";
 import dayjs from "dayjs";
@@ -136,6 +136,12 @@ export default function HomePage() {
     queryFn: async () => (await challengeApi.getAll()).data.data as { id: number; title: string; type: string; targetDays: number; participantCount: number; active: boolean }[],
   });
 
+  const { data: stats } = useQuery({
+    queryKey: ["stats"],
+    queryFn: async () => (await statsApi.getStats()).data.data as { totalBoxes: number; totalUsers: number; totalPosts: number; totalCompetitions: number },
+    staleTime: 1000 * 60 * 10,
+  });
+
   const activeComps: Competition[] = (competitions?.content ?? []).filter(
     (c: Competition) => c.status === "OPEN" || c.status === "UPCOMING"
   ).slice(0, 3);
@@ -156,11 +162,22 @@ export default function HomePage() {
             CROSSFIT
             <span className={s.heroTitleRed}>KOREA</span>
           </h1>
-          <p className={s.heroSub}>대한민국 크로스핏 커뮤니티</p>
+          <p className={s.heroSub}>대한민국 크로스핏 올인원 플랫폼</p>
           <p className={s.heroDesc}>
-            전국 크로스핏 박스를 지도에서 찾고,<br />
-            오늘의 WOD와 대회 일정을 한눈에 확인하세요.
+            전국 박스 검색부터 WOD 기록·대회 신청·챌린지·커뮤니티까지,<br />
+            크로스핏의 모든 것을 한 곳에서.
           </p>
+          <div className={s.heroFeatures}>
+            <span className={s.heroFeatureItem}>박스 찾기</span>
+            <span className={s.heroFeatureDivider}>·</span>
+            <span className={s.heroFeatureItem}>WOD 기록</span>
+            <span className={s.heroFeatureDivider}>·</span>
+            <span className={s.heroFeatureItem}>대회 신청</span>
+            <span className={s.heroFeatureDivider}>·</span>
+            <span className={s.heroFeatureItem}>챌린지</span>
+            <span className={s.heroFeatureDivider}>·</span>
+            <span className={s.heroFeatureItem}>커뮤니티</span>
+          </div>
           <div className={s.heroCta}>
             <Link href="/boxes" className="btn-primary">박스 찾기</Link>
             <Link href="/wod" className="btn-secondary">오늘의 WOD</Link>
@@ -182,6 +199,25 @@ export default function HomePage() {
           ))}
         </div>
       </nav>
+
+      {/* Stats Bar */}
+      {stats && (
+        <div className={s.statsBar}>
+          <div className={s.statsBarInner}>
+            {[
+              { val: stats.totalBoxes,        label: "전국 박스",  href: "/boxes" },
+              { val: stats.totalUsers,         label: "회원",       href: "/signup" },
+              { val: stats.totalPosts,         label: "커뮤니티 글", href: "/community" },
+              { val: stats.totalCompetitions,  label: "대회",       href: "/competitions" },
+            ].map((item, i) => (
+              <Link key={i} href={item.href} className={s.statItem}>
+                <span className={s.statVal}>{item.val.toLocaleString()}</span>
+                <span className={s.statItemLabel}>{item.label}</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* WOD + Competition Highlight */}
       <section className={s.highlight}>

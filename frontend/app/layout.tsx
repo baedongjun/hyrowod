@@ -8,39 +8,39 @@ import QueryProvider from "@/components/providers/QueryProvider";
 import FadeInObserver from "@/components/common/FadeInObserver";
 import ServiceWorkerRegistrar from "@/components/common/ServiceWorkerRegistrar";
 
+const SITE_DESCRIPTION =
+  "전국 크로스핏 박스 검색·WOD 기록·대회 신청·커뮤니티·챌린지까지. 대한민국 크로스핏 올인원 플랫폼.";
+
 export const metadata: Metadata = {
   title: {
-    default: "CrossFit Korea | 한국 크로스핏 박스 검색 플랫폼",
+    default: "CrossFit Korea | 대한민국 크로스핏 커뮤니티 플랫폼",
     template: "%s | CrossFit Korea",
   },
-  description: "전국 크로스핏 박스를 지도로 검색하고, 시간표와 후기, 코치 정보를 한눈에 확인하세요.",
-  keywords: ["크로스핏", "CrossFit", "크로스핏 박스", "WOD", "대회", "한국 크로스핏"],
+  description: SITE_DESCRIPTION,
+  keywords: [
+    "크로스핏", "CrossFit", "크로스핏 박스", "WOD", "크로스핏 대회",
+    "한국 크로스핏", "크로스핏 커뮤니티", "크로스핏 챌린지", "운동 기록",
+    "박스 찾기", "크로스핏 시간표", "CrossFit Korea",
+  ],
   metadataBase: new URL("https://crossfitkorea.com"),
   icons: {
     icon: "/cfkorea-app-icon.png",
     apple: "/cfkorea-app-icon.png",
   },
   openGraph: {
-    title: "CrossFit Korea | 한국 크로스핏 박스 검색 플랫폼",
-    description: "전국 크로스핏 박스를 지도로 검색하고, 시간표와 후기, 코치 정보를 한눈에 확인하세요.",
+    title: "CrossFit Korea | 대한민국 크로스핏 커뮤니티 플랫폼",
+    description: SITE_DESCRIPTION,
     siteName: "CrossFit Korea",
     url: "https://crossfitkorea.com",
     locale: "ko_KR",
     type: "website",
-    images: [
-      {
-        url: "/opengraph-image",
-        width: 1200,
-        height: 630,
-        alt: "CrossFit Korea - 한국 크로스핏 박스 검색 플랫폼",
-      },
-    ],
+    // images: opengraph-image.tsx 파일에서 자동 생성 (Next.js 파일 기반 메타데이터)
   },
   twitter: {
     card: "summary_large_image",
-    title: "CrossFit Korea | 한국 크로스핏 박스 검색 플랫폼",
-    description: "전국 크로스핏 박스를 지도로 검색하고, 시간표와 후기, 코치 정보를 한눈에 확인하세요.",
-    images: ["/opengraph-image"],
+    title: "CrossFit Korea | 대한민국 크로스핏 커뮤니티 플랫폼",
+    description: SITE_DESCRIPTION,
+    // images: opengraph-image.tsx 파일에서 자동 생성
   },
 };
 

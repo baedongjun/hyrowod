@@ -224,8 +224,8 @@ export const wodApi = {
   getToday: (boxId?: number) =>
     api.get("/api/v1/wod/today", { params: boxId ? { boxId } : {} }),
 
-  getHistory: (page = 0, size = 20) =>
-    api.get("/api/v1/wod/history", { params: { page, size } }),
+  getHistory: (page = 0, size = 20, boxId?: number) =>
+    api.get("/api/v1/wod/history", { params: { page, size, ...(boxId ? { boxId } : {}) } }),
 
   createBoxWod: (boxId: number, data: object) =>
     api.post(`/api/v1/wod`, data, { params: { boxId } }),

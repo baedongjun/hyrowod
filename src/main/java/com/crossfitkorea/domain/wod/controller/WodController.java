@@ -39,8 +39,12 @@ public class WodController {
     @Operation(summary = "WOD 히스토리")
     @GetMapping("/history")
     public ResponseEntity<ApiResponse<Page<WodDto>>> getWodHistory(
+        @RequestParam(required = false) Long boxId,
         @PageableDefault(size = 20) Pageable pageable
     ) {
+        if (boxId != null) {
+            return ResponseEntity.ok(ApiResponse.success(wodService.getBoxWodHistory(boxId, pageable)));
+        }
         return ResponseEntity.ok(ApiResponse.success(wodService.getWodHistory(pageable)));
     }
 

@@ -40,6 +40,133 @@
   margin: 0;
 }
 
+/* Weekly Summary Card */
+.weekSummary {
+  background: var(--bg-card);
+  border: 1px solid rgba(232, 34, 10, 0.25);
+  border-left: 3px solid var(--red);
+  padding: 24px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.weekSummaryLeft {
+  flex: 1;
+  min-width: 140px;
+}
+
+.weekSummaryTag {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  color: var(--red);
+  text-transform: uppercase;
+  margin: 0 0 6px;
+}
+
+.weekSummaryTitle {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 1px;
+  color: var(--text);
+  margin: 0 0 4px;
+}
+
+.weekSummaryToday {
+  font-size: 12px;
+  color: #22c55e;
+  margin: 0;
+  font-weight: 600;
+}
+
+.weekSummaryStats {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.weekStat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.weekStatVal {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 32px;
+  color: var(--text);
+  letter-spacing: 1px;
+  line-height: 1;
+  position: relative;
+}
+
+.weekStatStreak {
+  color: var(--orange);
+}
+
+.streakFire {
+  font-size: 16px;
+  position: absolute;
+  top: -4px;
+  right: -18px;
+}
+
+.weekStatLabel {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.weekStatDiv {
+  width: 1px;
+  height: 36px;
+  background: var(--border);
+}
+
+.weekDots {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.weekDotItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.weekDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--bg-card-2);
+  border: 1px solid var(--border);
+  transition: background 0.2s;
+}
+
+.weekDotDone {
+  background: var(--red);
+  border-color: var(--red);
+}
+
+.weekDotFuture {
+  opacity: 0.35;
+}
+
+.weekDotLabel {
+  font-size: 9px;
+  color: var(--muted);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
 /* Stats */
 .stats {
   display: grid;
@@ -566,4 +693,7 @@
   .header { flex-direction: column; align-items: flex-start; }
   .item { padding: 16px; gap: 14px; }
   .heatmap { overflow-x: auto; }
+  .weekSummary { gap: 20px; }
+  .weekDots { gap: 8px; }
+  .weekSummaryTitle { font-size: 18px; }
 }

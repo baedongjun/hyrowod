@@ -230,6 +230,11 @@
   justify-content: center;
   line-height: 1;
   padding: 0 3px;
+  animation: badgePulse 2s ease-in-out infinite;
+}
+@keyframes badgePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(232,34,10,0.4); }
+  50% { box-shadow: 0 0 0 4px rgba(232,34,10,0); }
 }
 .notifDropdown {
   position: absolute;
@@ -296,9 +301,64 @@
   color: var(--muted);
 }
 
+/* ── Bottom Navigation (mobile only) ── */
+.bottomNav {
+  display: none;
+}
+
 @media (max-width: 768px) {
   .inner { padding: 0 24px; }
   .nav, .auth { display: none; }
   .menuBtn { display: flex; align-items: center; }
   .notifDropdown { width: 280px; right: -8px; }
+
+  .bottomNav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 99;
+    background: rgba(10,10,10,0.97);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid var(--border);
+    height: 56px;
+  }
+  .bottomNavItem {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 10px;
+    letter-spacing: 0.3px;
+    transition: color 0.2s;
+    position: relative;
+  }
+  .bottomNavItem:hover,
+  .bottomNavActive {
+    color: var(--text);
+  }
+  .bottomNavActive svg {
+    color: var(--red);
+  }
+  .bottomNavBadge {
+    position: absolute;
+    top: 4px;
+    right: calc(50% - 18px);
+    min-width: 14px;
+    height: 14px;
+    background: var(--red);
+    color: #fff;
+    font-size: 9px;
+    font-weight: 700;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 2px;
+  }
 }

@@ -85,8 +85,27 @@
   font-size: 15px;
   color: var(--muted);
   line-height: 1.9;
-  max-width: 400px;
-  margin-bottom: 48px;
+  max-width: 500px;
+  margin-bottom: 20px;
+}
+
+.heroFeatures {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+.heroFeatureItem {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+.heroFeatureDivider {
+  color: rgba(232, 34, 10, 0.5);
+  font-size: 14px;
 }
 
 .heroCta {
@@ -157,6 +176,47 @@
   transition: color 0.2s;
 }
 .quickNavSub { font-size: 11px; color: #555; letter-spacing: 0.5px; }
+
+/* =======================================
+   Stats Bar
+   ======================================= */
+.statsBar {
+  background: rgba(232,34,10,0.04);
+  border-bottom: 1px solid rgba(232,34,10,0.12);
+}
+.statsBarInner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 80px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+.statItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 20px 16px;
+  text-decoration: none;
+  color: inherit;
+  border-right: 1px solid rgba(232,34,10,0.1);
+  transition: background 0.2s;
+}
+.statItem:last-child { border-right: none; }
+.statItem:hover { background: rgba(232,34,10,0.06); }
+.statVal {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  color: var(--red);
+  line-height: 1;
+  letter-spacing: 1px;
+}
+.statItemLabel {
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
 
 /* =======================================
    Shared

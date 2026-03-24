@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "CrossFit Korea - 한국 크로스핏 박스 검색 플랫폼";
+export const alt = "CrossFit Korea - 대한민국 크로스핏 커뮤니티 플랫폼";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -173,15 +173,18 @@ export default function OgImage() {
           {/* 설명 */}
           <div
             style={{
-              fontSize: 20,
+              fontSize: 18,
               color: "#888888",
-              lineHeight: 1.6,
+              lineHeight: 1.7,
               marginBottom: 32,
               maxWidth: 460,
+              display: "flex",
+              flexDirection: "column",
+              gap: 0,
             }}
           >
-            전국 크로스핏 박스 검색
-            {"\n"}WOD 기록 · 대회 신청 · 커뮤니티
+            <span>박스 찾기 · WOD 기록 · 대회 신청</span>
+            <span>챌린지 · 커뮤니티 · 개인 기록 트래킹</span>
           </div>
 
           {/* URL */}

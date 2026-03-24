@@ -5,10 +5,10 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { boxApi, membershipApi, uploadApi, announcementApi, checkInApi, reservationApi } from "@/lib/api";
+import { boxApi, membershipApi, uploadApi, announcementApi, checkInApi, reservationApi, wodApi } from "@/lib/api";
 import { BoxNotice } from "@/types";
 import BoxDetailMap from "@/components/box/BoxDetailMap";
-import { Box, Coach, Schedule, Review, Page, BoxAnnouncement } from "@/types";
+import { Box, Coach, Schedule, Review, Page, BoxAnnouncement, Wod } from "@/types";
 import { isLoggedIn, getUser } from "@/lib/auth";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
@@ -21,9 +21,15 @@ const DAY_LABEL: Record<string, string> = {
   THURSDAY:"목요일", FRIDAY:"금요일", SATURDAY:"토요일", SUNDAY:"일요일",
 };
 
-const TABS_PUBLIC = ["정보", "공지사항", "코치", "시간표", "후기"] as const;
-const TABS_MEMBER = ["정보", "공지사항", "멤버 공지", "코치", "시간표", "후기"] as const;
+const TABS_PUBLIC = ["정보", "공지사항", "WOD", "코치", "시간표", "후기"] as const;
+const TABS_MEMBER = ["정보", "공지사항", "멤버 공지", "WOD", "코치", "시간표", "후기"] as const;
 type Tab = typeof TABS_MEMBER[number];
+
+const WOD_TYPE_BADGE: Record<string, string> = {
+  AMRAP: "badge-amrap", FOR_TIME: "badge-fortime", EMOM: "badge-emom",
+  TABATA: "badge-emom", STRENGTH: "badge-strength", SKILL: "badge-pending",
+  REST_DAY: "badge-default", CUSTOM: "badge-default",
+};
 
 export default function BoxDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -96,6 +102,18 @@ export default function BoxDetailPage() {
     queryKey: ["box", boxId, "announcements"],
     queryFn: async () => (await announcementApi.getByBox(boxId)).data.data as BoxAnnouncement[],
     enabled: tab === "공지사항",
+  });
+
+  const { data: wodToday } = useQuery({
+    queryKey: ["box", boxId, "wod", "today"],
+    queryFn: async () => (await wodApi.getToday(boxId)).data.data as Wod | null,
+    enabled: tab === "WOD",
+  });
+
+  const { data: wodHistory } = useQuery({
+    queryKey: ["box", boxId, "wod", "history"],
+    queryFn: async () => (await wodApi.getHistory(0, 10, boxId)).data.data as { content: Wod[] },
+    enabled: tab === "WOD",
   });
 
   const { data: notices } = useQuery({
@@ -655,6 +673,37 @@ export default function BoxDetailPage() {
                   <p>등록된 멤버 공지가 없습니다</p>
                 </div>
               )}
+            </div>
+          )}
+
+          {/* WOD */}
+          {tab === "WOD" && (
+            <div>
+              {wodToday && (
+                <div className={s.wodCard}>
+                  <div className={s.wodCardHeader}>
+                    <span className={s.wodToday}>오늘의 WOD</span>
+                    <span className={`badge ${WOD_TYPE_BADGE[wodToday.type] || "badge-default"}`}>{wodToday.type}</span>
+                  </div>
+                  <p className={s.wodTitle}>{wodToday.title}</p>
+                  <pre className={s.wodContent}>{wodToday.content}</pre>
+                  {wodToday.scoreType && <p className={s.wodScore}>점수 방식: {wodToday.scoreType}</p>}
+                </div>
+              )}
+              <div className={s.wodHistory}>
+                <p className={s.wodHistoryTitle}>최근 WOD</p>
+                {(wodHistory?.content?.length ?? 0) === 0 ? (
+                  <p className={s.emptyMsg}>등록된 WOD가 없습니다.</p>
+                ) : (
+                  wodHistory?.content?.map((w) => (
+                    <div key={w.id} className={s.wodRow}>
+                      <span className={s.wodDate}>{w.wodDate}</span>
+                      <span className={`badge ${WOD_TYPE_BADGE[w.type] || "badge-default"}`}>{w.type}</span>
+                      <span className={s.wodRowTitle}>{w.title}</span>
+                    </div>
+                  ))
+                )}
+              </div>
             </div>
           )}
 

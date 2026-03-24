@@ -252,6 +252,20 @@ export default function WodRecordsPage() {
     return count;
   })();
 
+  // 이번 주 요약 (월~일 기준)
+  const weekSummary = (() => {
+    const weekStart = dayjs().startOf("week"); // 일요일
+    const weekEnd = dayjs().endOf("week");
+    const thisWeekRecords = (recentRecords || []).filter((r) => {
+      const d = dayjs(r.wodDate);
+      return (d.isAfter(weekStart) || d.isSame(weekStart, "day")) && (d.isBefore(weekEnd) || d.isSame(weekEnd, "day"));
+    });
+    const daysWorkedOut = new Set(thisWeekRecords.map((r) => r.wodDate)).size;
+    const rxThisWeek = thisWeekRecords.filter((r) => r.rx).length;
+    const todayDone = thisWeekRecords.some((r) => r.wodDate === dayjs().format("YYYY-MM-DD"));
+    return { daysWorkedOut, rxThisWeek, todayDone };
+  })();
+
   // 캘린더: 이번 달 기록 맵
   const calRecordMap: Record<string, WodRecord> = {};
   (recentRecords || []).forEach((r) => { calRecordMap[r.wodDate] = r; });
@@ -295,6 +309,56 @@ export default function WodRecordsPage() {
             </Link>
           </div>
         </div>
+
+        {/* 이번 주 요약 카드 */}
+        {recentRecords && (
+          <div className={s.weekSummary}>
+            <div className={s.weekSummaryLeft}>
+              <p className={s.weekSummaryTag}>THIS WEEK</p>
+              <p className={s.weekSummaryTitle}>
+                {weekSummary.daysWorkedOut > 0
+                  ? `이번 주 ${weekSummary.daysWorkedOut}일 완료`
+                  : "이번 주 아직 기록 없음"}
+              </p>
+              {weekSummary.todayDone && (
+                <p className={s.weekSummaryToday}>오늘 WOD 완료!</p>
+              )}
+            </div>
+            <div className={s.weekSummaryStats}>
+              <div className={s.weekStat}>
+                <span className={s.weekStatVal}>{weekSummary.daysWorkedOut}</span>
+                <span className={s.weekStatLabel}>이번 주</span>
+              </div>
+              <div className={s.weekStatDiv} />
+              <div className={s.weekStat}>
+                <span className={s.weekStatVal}>{weekSummary.rxThisWeek}</span>
+                <span className={s.weekStatLabel}>RX</span>
+              </div>
+              <div className={s.weekStatDiv} />
+              <div className={s.weekStat}>
+                <span className={`${s.weekStatVal} ${streak > 0 ? s.weekStatStreak : ""}`}>
+                  {streak}
+                  {streak > 0 && <span className={s.streakFire}>🔥</span>}
+                </span>
+                <span className={s.weekStatLabel}>연속</span>
+              </div>
+            </div>
+            <div className={s.weekDots}>
+              {["일","월","화","수","목","금","토"].map((label, i) => {
+                const d = dayjs().startOf("week").add(i, "day");
+                const dateStr = d.format("YYYY-MM-DD");
+                const done = (recentRecords || []).some((r) => r.wodDate === dateStr);
+                const isPast = d.isBefore(dayjs(), "day") || d.isSame(dayjs(), "day");
+                return (
+                  <div key={label} className={s.weekDotItem}>
+                    <div className={`${s.weekDot} ${done ? s.weekDotDone : ""} ${!isPast ? s.weekDotFuture : ""}`} />
+                    <span className={s.weekDotLabel}>{label}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {/* 출석 히트맵 */}
         {recentRecords && recentRecords.length > 0 && (

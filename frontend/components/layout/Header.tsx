@@ -61,6 +61,7 @@ export default function Header() {
     queryKey: ["notifications", "count"],
     queryFn: async () => (await notificationApi.getUnreadCount()).data.data as { count: number },
     enabled: loggedIn,
+    refetchInterval: 60_000, // 1분마다 갱신
   });
 
   // SSE 실시간 알림
@@ -230,6 +231,41 @@ export default function Header() {
           </button>
         </div>
       </header>
+
+      {/* 모바일 하단 네비게이션 */}
+      <nav className={s.bottomNav}>
+        <Link href="/boxes" className={`${s.bottomNavItem} ${pathname.startsWith("/boxes") ? s.bottomNavActive : ""}`}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/>
+          </svg>
+          <span>박스</span>
+        </Link>
+        <Link href="/wod" className={`${s.bottomNavItem} ${pathname.startsWith("/wod") ? s.bottomNavActive : ""}`}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+          </svg>
+          <span>WOD</span>
+        </Link>
+        <Link href="/community" className={`${s.bottomNavItem} ${pathname.startsWith("/community") ? s.bottomNavActive : ""}`}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          <span>커뮤니티</span>
+        </Link>
+        <Link href="/competitions" className={`${s.bottomNavItem} ${pathname.startsWith("/competitions") ? s.bottomNavActive : ""}`}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M8 21h8m-4-4v4M5 3h14l1 7H4L5 3zM4 10c0 4.418 3.582 8 8 8s8-3.582 8-8"/>
+          </svg>
+          <span>대회</span>
+        </Link>
+        <Link href={loggedIn ? "/my" : "/login"} className={`${s.bottomNavItem} ${pathname.startsWith("/my") || pathname === "/login" ? s.bottomNavActive : ""}`}>
+          {loggedIn && unreadCount > 0 && <span className={s.bottomNavBadge}>{unreadCount > 9 ? "9+" : unreadCount}</span>}
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+          </svg>
+          <span>{loggedIn ? "내 활동" : "로그인"}</span>
+        </Link>
+      </nav>
 
       <div className={`${s.mobileMenu} ${open ? s.mobileMenuOpen : ""}`}>
         <nav className={s.mobileNav}>

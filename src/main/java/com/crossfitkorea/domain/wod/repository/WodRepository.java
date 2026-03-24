@@ -20,6 +20,8 @@ public interface WodRepository extends JpaRepository<Wod, Long> {
 
     Page<Wod> findByBoxIsNullAndActiveTrueOrderByWodDateDesc(Pageable pageable);
 
+    Page<Wod> findByBoxIdAndActiveTrueOrderByWodDateDesc(Long boxId, Pageable pageable);
+
     List<Wod> findByBoxIdAndActiveTrueAndWodDateBetweenOrderByWodDateDesc(
         Long boxId, LocalDate from, LocalDate to
     );
