@@ -6,6 +6,7 @@ import com.crossfitkorea.domain.competition.dto.CompetitionCreateRequest;
 import com.crossfitkorea.domain.competition.dto.CompetitionDto;
 import com.crossfitkorea.domain.competition.entity.Competition;
 import com.crossfitkorea.domain.competition.entity.CompetitionStatus;
+import com.crossfitkorea.domain.competition.repository.CompetitionRegistrationRepository;
 import com.crossfitkorea.domain.competition.repository.CompetitionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,16 +20,18 @@ import org.springframework.transaction.annotation.Transactional;
 public class CompetitionService {
 
     private final CompetitionRepository competitionRepository;
+    private final CompetitionRegistrationRepository registrationRepository;
 
     public Page<CompetitionDto> getCompetitions(CompetitionStatus status, String city, Pageable pageable) {
         return competitionRepository.searchCompetitions(status, city, pageable)
-            .map(CompetitionDto::from);
+            .map(c -> CompetitionDto.from(c, registrationRepository.countByCompetitionIdAndCancelledFalse(c.getId())));
     }
 
     public CompetitionDto getCompetition(Long id) {
         Competition competition = competitionRepository.findById(id)
             .orElseThrow(() -> new BusinessException(ErrorCode.COMPETITION_NOT_FOUND));
-        return CompetitionDto.from(competition);
+        long count = registrationRepository.countByCompetitionIdAndCancelledFalse(id);
+        return CompetitionDto.from(competition, count);
     }
 
     @Transactional
@@ -49,7 +52,8 @@ public class CompetitionService {
             .entryFee(request.getEntryFee())
             .build();
 
-        return CompetitionDto.from(competitionRepository.save(competition));
+        Competition saved = competitionRepository.save(competition);
+        return CompetitionDto.from(saved, 0L);
     }
 
     @Transactional
@@ -71,7 +75,8 @@ public class CompetitionService {
         competition.setMaxParticipants(request.getMaxParticipants());
         competition.setEntryFee(request.getEntryFee());
 
-        return CompetitionDto.from(competition);
+        long count = registrationRepository.countByCompetitionIdAndCancelledFalse(id);
+        return CompetitionDto.from(competition, count);
     }
 
     @Transactional
@@ -79,7 +84,8 @@ public class CompetitionService {
         Competition competition = competitionRepository.findById(id)
             .orElseThrow(() -> new BusinessException(ErrorCode.COMPETITION_NOT_FOUND));
         competition.setStatus(status);
-        return CompetitionDto.from(competition);
+        long count = registrationRepository.countByCompetitionIdAndCancelledFalse(id);
+        return CompetitionDto.from(competition, count);
     }
 
     @Transactional

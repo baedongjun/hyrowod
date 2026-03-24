@@ -79,7 +79,9 @@
       "Bash(sed -n '138p' D:/gitWorkspace/workspace/crossfitkorea/seed.sql)",
       "Bash(npm install:*)",
       "Bash(xargs grep:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(tail:*)",
+      "Bash(wc:*)"
     ]
   }
 }

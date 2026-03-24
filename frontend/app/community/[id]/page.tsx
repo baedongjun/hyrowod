@@ -82,7 +82,11 @@ function CommentItem({ comment, postId, currentUser, onReplySuccess, onDeleteSuc
   return (
     <div className={s.comment}>
       <div className={s.commentHeader}>
-        <span className={s.commentUser}>{comment.userName}</span>
+        {comment.userId ? (
+          <Link href={`/users/${comment.userId}`} className={s.commentUser} style={{ textDecoration: "none" }}>{comment.userName}</Link>
+        ) : (
+          <span className={s.commentUser}>{comment.userName}</span>
+        )}
         <span className={s.commentDate}>{dayjs(comment.createdAt).fromNow()}</span>
         {isMyComment && !editing && (
           <button className={s.commentEditBtn} onClick={() => { setEditing(true); setEditText(comment.content); }}>수정</button>
@@ -171,10 +175,21 @@ export default function PostDetailPage() {
   const [commentText, setCommentText] = useState("");
   const [liked, setLiked] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
+  const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
 
   const { data: post, isLoading, refetch: refetchPost } = useQuery({
     queryKey: ["post", postId],
     queryFn: async () => (await communityApi.getPost(postId)).data.data as Post,
+  });
+
+  useQuery({
+    queryKey: ["post", postId, "likeStatus"],
+    queryFn: async () => {
+      const res = await communityApi.getLikeStatus(postId);
+      setLiked(res.data.data.liked);
+      return res.data.data.liked as boolean;
+    },
+    enabled: !!currentUser,
   });
 
   const { data: comments, refetch: refetchComments } = useQuery({
@@ -195,7 +210,7 @@ export default function PostDetailPage() {
   const likeMutation = useMutation({
     mutationFn: () => communityApi.likePost(postId),
     onSuccess: () => {
-      setLiked(true);
+      setLiked((prev) => !prev);
       refetchPost();
     },
     onError: () => toast.error("좋아요 처리에 실패했습니다."),
@@ -278,18 +293,27 @@ export default function PostDetailPage() {
           {post.imageUrls?.length > 0 && (
             <div className={s.postImages}>
               {post.imageUrls.map((url, i) => (
-                <div key={i} className={s.postImg} style={{ position: "relative" }}>
+                <div key={i} className={s.postImg} style={{ position: "relative", cursor: "zoom-in" }} onClick={() => setLightboxUrl(url)}>
                   <Image src={url} alt="" fill style={{ objectFit: "cover" }} />
                 </div>
               ))}
             </div>
           )}
 
+          {lightboxUrl && (
+            <div className={s.lightboxOverlay} onClick={() => setLightboxUrl(null)}>
+              <button className={s.lightboxClose} onClick={() => setLightboxUrl(null)}>✕</button>
+              <div className={s.lightboxImgWrap} onClick={(e) => e.stopPropagation()}>
+                <img src={lightboxUrl} alt="" className={s.lightboxImg} />
+              </div>
+            </div>
+          )}
+
           <div className={s.postActions}>
             <button
               className={`${s.likeBtn} ${liked ? s.likeBtnActive : ""}`}
-              onClick={() => { if (isLoggedIn() && !liked) likeMutation.mutate(); }}
-              disabled={!isLoggedIn() || liked}
+              onClick={() => { if (isLoggedIn()) likeMutation.mutate(); }}
+              disabled={!isLoggedIn() || likeMutation.isPending}
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill={liked ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2">
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>

@@ -8,7 +8,7 @@
   background: rgba(10,10,10,0.97);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border);
-  padding: 16px 80px;
+  padding: 16px 0;
 }
 
 .searchTop {
@@ -16,6 +16,10 @@
   align-items: center;
   gap: 16px;
   margin-bottom: 12px;
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 80px;
 }
 
 .searchInputWrap {
@@ -227,6 +231,11 @@
   gap: 6px;
   overflow-x: auto;
   padding-bottom: 2px;
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 80px;
+  padding-right: 80px;
 }
 .cityPills::-webkit-scrollbar { height: 0; }
 
@@ -379,7 +388,9 @@
 }
 
 @media (max-width: 768px) {
-  .searchBar  { padding: 12px 24px; }
+  .searchBar  { padding: 12px 0; }
+  .searchTop  { padding: 0 24px; }
+  .cityPills  { padding-left: 24px; padding-right: 24px; }
   .content    { padding: 24px 24px; }
   .grid       { grid-template-columns: 1fr; }
   .searchTop  { flex-wrap: wrap; }

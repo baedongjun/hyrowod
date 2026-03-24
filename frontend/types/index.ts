@@ -104,6 +104,7 @@ export interface Competition {
   status: CompetitionStatus;
   maxParticipants: number | null;
   entryFee: number | null;
+  currentParticipants?: number;
 }
 
 export type PostCategory = "FREE" | "QNA" | "RECORD" | "MARKET";
@@ -130,6 +131,7 @@ export interface Comment {
   postId: number;
   parentId: number | null;
   content: string;
+  userId?: number;
   userName: string;
   userProfileImageUrl: string | null;
   createdAt: string;

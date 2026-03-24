@@ -8,13 +8,16 @@
   background: rgba(10,10,10,0.97);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border);
-  padding: 0 80px;
+  padding: 0;
 }
 .barTop {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 0 12px;
+  padding: 16px 80px 12px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
 }
 .barTitle {
   font-family: 'Bebas Neue', sans-serif;
@@ -33,7 +36,10 @@
   display: flex;
   gap: 6px;
   overflow-x: auto;
-  padding-bottom: 12px;
+  padding: 0 80px 12px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
 }
 .pills::-webkit-scrollbar { height: 0; }
 
@@ -42,7 +48,10 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding-bottom: 12px;
+  padding: 0 80px 12px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
 }
 .searchInputWrap {
   position: relative;
@@ -331,7 +340,9 @@
 }
 
 @media (max-width: 768px) {
-  .bar    { padding: 0 24px; }
+  .barTop   { padding: 12px 24px 8px; }
+  .pills    { padding: 0 24px 12px; }
+  .searchBar { padding: 0 24px 12px; }
   .layout { padding: 24px 24px; grid-template-columns: 1fr; }
   .sidebar { position: static; }
 }

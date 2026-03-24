@@ -157,6 +157,19 @@ public class WodRecordService {
     }
 
     @Transactional
+    public WodRecordDto updateRecord(Long recordId, WodRecordRequest request, String email) {
+        WodRecord record = wodRecordRepository.findById(recordId)
+            .orElseThrow(() -> new BusinessException(ErrorCode.WOD_NOT_FOUND));
+        if (!record.getUser().getEmail().equals(email)) {
+            throw new BusinessException(ErrorCode.FORBIDDEN);
+        }
+        record.setScore(request.getScore());
+        record.setNotes(request.getNotes());
+        record.setRx(request.isRx());
+        return toDto(wodRecordRepository.save(record));
+    }
+
+    @Transactional
     public void deleteRecord(Long recordId, String email) {
         WodRecord record = wodRecordRepository.findById(recordId)
             .orElseThrow(() -> new BusinessException(ErrorCode.WOD_NOT_FOUND));

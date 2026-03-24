@@ -308,6 +308,9 @@ export const communityApi = {
   likePost: (id: number) =>
     api.post(`/api/v1/community/posts/${id}/like`),
 
+  getLikeStatus: (id: number) =>
+    api.get(`/api/v1/community/posts/${id}/like`),
+
   getComments: (postId: number) =>
     api.get(`/api/v1/community/posts/${postId}/comments`),
 
@@ -382,6 +385,9 @@ export const wodRecordApi = {
 
   saveRecord: (data: { wodDate?: string; score?: string; notes?: string; rx?: boolean }) =>
     api.post("/api/v1/wod/records", data),
+
+  updateRecord: (id: number, data: { score?: string; notes?: string; rx?: boolean }) =>
+    api.put(`/api/v1/wod/records/${id}`, data),
 
   deleteRecord: (id: number) =>
     api.delete(`/api/v1/wod/records/${id}`),

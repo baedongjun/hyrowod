@@ -206,6 +206,12 @@ public class PostService {
         comment.setActive(false);
     }
 
+    public boolean isLiked(Long postId, String userEmail) {
+        Post post = findActivePost(postId);
+        User user = userService.getUserByEmail(userEmail);
+        return post.getLikedUserIds().contains(user.getId());
+    }
+
     @Transactional
     public PostDto likePost(Long id, String userEmail) {
         Post post = findActivePost(id);

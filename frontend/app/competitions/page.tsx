@@ -377,6 +377,11 @@ export default function CompetitionsPage() {
                         {comp.entryFee.toLocaleString()}원
                       </span>
                     )}
+                    {comp.maxParticipants && (
+                      <span className={s.metaItem} style={{ color: (comp.currentParticipants ?? 0) >= comp.maxParticipants ? "var(--red)" : "var(--muted)" }}>
+                        {comp.currentParticipants ?? 0}/{comp.maxParticipants}명
+                      </span>
+                    )}
                   </div>
                   {comp.description && <p className={s.desc}>{comp.description}</p>}
                 </div>

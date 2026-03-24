@@ -57,6 +57,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/v1/boxes/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/v1/wod/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/v1/competitions/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/community/posts/*/like").authenticated()
                 .requestMatchers(HttpMethod.GET, "/api/v1/community/posts/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/v1/coaches/**").permitAll()
                 // 예약 관련: 개인/박스 예약 조회는 인증 필요

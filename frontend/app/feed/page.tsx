@@ -160,9 +160,13 @@ function SuggestedUsers() {
   );
 }
 
+const FILTER_TYPES = ["전체", "WOD_RECORD", "BADGE", "COMPETITION", "POST"] as const;
+type FilterType = typeof FILTER_TYPES[number];
+
 export default function FeedPage() {
   const router = useRouter();
   const observerRef = useRef<HTMLDivElement>(null);
+  const [activeFilter, setActiveFilter] = useState<FilterType>("전체");
 
   useEffect(() => {
     if (!isLoggedIn()) {
@@ -206,7 +210,9 @@ export default function FeedPage() {
     return () => observer.disconnect();
   }, [handleObserver]);
 
-  const allItems = data?.pages.flatMap((p) => p.content) ?? [];
+  const allItems = (data?.pages.flatMap((p) => p.content) ?? []).filter(
+    (item) => activeFilter === "전체" || item.type === activeFilter
+  );
   const isEmpty = !isLoading && allItems.length === 0;
 
   const handleCardClick = (link?: string) => {
@@ -218,6 +224,18 @@ export default function FeedPage() {
       <div className={s.header}>
         <h1 className={s.title}>활동 피드</h1>
         <p className={s.subtitle}>팔로우한 선수들의 최근 활동</p>
+      </div>
+
+      <div className={s.filterBar}>
+        {FILTER_TYPES.map((f) => (
+          <button
+            key={f}
+            className={`${s.filterBtn} ${activeFilter === f ? s.filterBtnActive : ""}`}
+            onClick={() => setActiveFilter(f)}
+          >
+            {f === "전체" ? "전체" : `${TYPE_ICON[f]} ${TYPE_LABEL[f]}`}
+          </button>
+        ))}
       </div>
 
       {isLoading && (

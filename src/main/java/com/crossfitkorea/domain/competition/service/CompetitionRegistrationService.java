@@ -62,7 +62,8 @@ public class CompetitionRegistrationService {
     public List<CompetitionDto> getMyRegistrations(String email) {
         return registrationRepository.findByUserEmailAndCancelledFalseOrderByCreatedAtDesc(email)
             .stream()
-            .map(r -> CompetitionDto.from(r.getCompetition()))
+            .map(r -> CompetitionDto.from(r.getCompetition(),
+                registrationRepository.countByCompetitionIdAndCancelledFalse(r.getCompetition().getId())))
             .toList();
     }
 

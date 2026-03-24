@@ -94,6 +94,17 @@ public class WodRecordController {
             wodRecordService.getStreakInfo(userDetails.getUsername())));
     }
 
+    @Operation(summary = "WOD 기록 수정")
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<WodRecordDto>> updateRecord(
+        @PathVariable Long id,
+        @RequestBody WodRecordRequest request,
+        @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        return ResponseEntity.ok(ApiResponse.success(
+            wodRecordService.updateRecord(id, request, userDetails.getUsername())));
+    }
+
     @Operation(summary = "WOD 기록 삭제")
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteRecord(

@@ -105,6 +105,16 @@ public class PostController {
         return ResponseEntity.ok(ApiResponse.success(postService.likePost(id, email)));
     }
 
+    @Operation(summary = "게시글 좋아요 여부 조회")
+    @GetMapping("/posts/{id}/like")
+    public ResponseEntity<ApiResponse<Map<String, Boolean>>> getLikeStatus(
+        @PathVariable Long id,
+        @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        boolean liked = userDetails != null && postService.isLiked(id, userDetails.getUsername());
+        return ResponseEntity.ok(ApiResponse.success(Map.of("liked", liked)));
+    }
+
     @Operation(summary = "댓글 수정 (본인만)")
     @PutMapping("/comments/{commentId}")
     public ResponseEntity<ApiResponse<CommentDto>> updateMyComment(

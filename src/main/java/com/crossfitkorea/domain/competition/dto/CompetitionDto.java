@@ -27,8 +27,9 @@ public class CompetitionDto {
     private CompetitionStatus status;
     private Integer maxParticipants;
     private Integer entryFee;
+    private long currentParticipants;
 
-    public static CompetitionDto from(Competition competition) {
+    public static CompetitionDto from(Competition competition, long currentParticipants) {
         return CompetitionDto.builder()
             .id(competition.getId())
             .name(competition.getName())
@@ -45,6 +46,7 @@ public class CompetitionDto {
             .status(competition.getStatus())
             .maxParticipants(competition.getMaxParticipants())
             .entryFee(competition.getEntryFee())
+            .currentParticipants(currentParticipants)
             .build();
     }
 }

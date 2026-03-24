@@ -15,6 +15,7 @@ public class CommentDto {
     private Long postId;
     private Long parentId;
     private String content;
+    private Long userId;
     private String userName;
     private String userProfileImageUrl;
     private LocalDateTime createdAt;
@@ -27,6 +28,7 @@ public class CommentDto {
             .postId(comment.getPost().getId())
             .parentId(comment.getParent() != null ? comment.getParent().getId() : null)
             .content(comment.getContent())
+            .userId(comment.getUser().getId())
             .userName(comment.getUser().getName())
             .userProfileImageUrl(comment.getUser().getProfileImageUrl())
             .createdAt(comment.getCreatedAt())

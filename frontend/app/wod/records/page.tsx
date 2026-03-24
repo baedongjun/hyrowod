@@ -181,8 +181,8 @@ export default function WodRecordsPage() {
   });
 
   const editMutation = useMutation({
-    mutationFn: ({ wodDate, score, notes, rx }: { wodDate: string; score: string; notes: string; rx: boolean }) =>
-      wodRecordApi.saveRecord({ wodDate, score: score || undefined, notes: notes || undefined, rx }),
+    mutationFn: ({ id, score, notes, rx }: { id: number; score: string; notes: string; rx: boolean }) =>
+      wodRecordApi.updateRecord(id, { score: score || undefined, notes: notes || undefined, rx }),
     onSuccess: () => {
       toast.success("기록이 수정되었습니다.");
       queryClient.invalidateQueries({ queryKey: ["wod-records"] });
@@ -456,7 +456,7 @@ export default function WodRecordsPage() {
                         <button
                           className={s.editSaveBtn}
                           disabled={editMutation.isPending}
-                          onClick={() => editMutation.mutate({ wodDate: rec.wodDate, ...editForm })}
+                          onClick={() => editMutation.mutate({ id: rec.id, ...editForm })}
                         >저장</button>
                         <button className={s.editCancelBtn} onClick={() => setEditingId(null)}>취소</button>
                       </div>

@@ -2,7 +2,7 @@
 
 import { useState, Suspense, useEffect, useRef, useCallback } from "react";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { boxApi } from "@/lib/api";
 import BoxCard from "@/components/box/BoxCard";
@@ -14,14 +14,12 @@ const CITIES = ["전체", "서울", "경기", "부산", "인천", "대구", "대
 
 function BoxesContent() {
   const searchParams = useSearchParams();
-  const router = useRouter();
 
   const [viewMode, setViewMode] = useState<"list" | "map">("list");
   const [keyword, setKeyword] = useState(searchParams.get("q") || "");
   const [debouncedKeyword, setDebouncedKeyword] = useState(searchParams.get("q") || "");
   const [selectedCity, setSelectedCity] = useState(searchParams.get("city") || "전체");
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const [showFilters, setShowFilters] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const searchWrapRef = useRef<HTMLDivElement>(null);
   const observerRef = useRef<HTMLDivElement | null>(null);
@@ -44,38 +42,14 @@ function BoxesContent() {
     localStorage.setItem(RECENT_KEY, JSON.stringify(updated));
     setRecentSearches(updated);
   };
-  const [verifiedOnly, setVerifiedOnly] = useState(searchParams.get("verified") === "true");
-  const [premiumOnly, setPremiumOnly] = useState(searchParams.get("premium") === "true");
-  const [maxFee, setMaxFee] = useState(searchParams.get("maxFee") || "");
-  const [minRating, setMinRating] = useState(searchParams.get("minRating") || "");
-  const [sortBy, setSortBy] = useState(searchParams.get("sort") || "createdAt,desc");
-
-  // URL 동기화
-  const syncUrl = (overrides: Record<string, string | undefined> = {}) => {
-    const params = new URLSearchParams();
-    const vals: Record<string, string | undefined> = {
-      city: selectedCity !== "전체" ? selectedCity : undefined,
-      q: debouncedKeyword || undefined,
-      verified: verifiedOnly ? "true" : undefined,
-      premium: premiumOnly ? "true" : undefined,
-      maxFee: maxFee || undefined,
-      minRating: minRating || undefined,
-      sort: sortBy !== "createdAt,desc" ? sortBy : undefined,
-      ...overrides,
-    };
-    Object.entries(vals).forEach(([k, v]) => { if (v) params.set(k, v); });
-    const qs = params.toString();
-    router.replace(`/boxes${qs ? `?${qs}` : ""}`, { scroll: false });
-  };
+  const [sortBy, setSortBy] = useState("createdAt,desc");
 
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
       setDebouncedKeyword(keyword);
-      syncUrl({ q: keyword || undefined });
     }, 400);
     return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [keyword]);
 
   const currentUser = typeof window !== "undefined" ? (() => { try { const u = localStorage.getItem("user"); return u ? JSON.parse(u) : null; } catch { return null; } })() : null;
@@ -88,17 +62,13 @@ function BoxesContent() {
     fetchNextPage,
     hasNextPage,
   } = useInfiniteQuery({
-    queryKey: ["boxes", "infinite", selectedCity, debouncedKeyword, verifiedOnly, premiumOnly, maxFee, minRating, sortBy],
+    queryKey: ["boxes", "infinite", selectedCity, debouncedKeyword, sortBy],
     queryFn: async ({ pageParam = 0 }) => {
       const res = await boxApi.search({
         city: selectedCity === "전체" ? undefined : selectedCity,
         keyword: debouncedKeyword || undefined,
         page: pageParam as number,
         size: 12,
-        verified: verifiedOnly ? true : undefined,
-        premium: premiumOnly ? true : undefined,
-        maxFee: maxFee ? parseInt(maxFee) : undefined,
-        minRating: minRating ? parseFloat(minRating) : undefined,
         sort: sortBy,
       });
       return res.data.data as Page<Box>;
@@ -155,11 +125,8 @@ function BoxesContent() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  const activeFilterCount = [verifiedOnly, premiumOnly, !!maxFee, !!minRating].filter(Boolean).length;
-
   const handleCityChange = (city: string) => {
     setSelectedCity(city);
-    syncUrl({ city: city !== "전체" ? city : undefined });
   };
 
   return (
@@ -232,20 +199,6 @@ function BoxesContent() {
             )}
           </div>
 
-          <button
-            onClick={() => setShowFilters(!showFilters)}
-            className={s.filterBtn}
-            style={{ position: "relative" }}
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/>
-            </svg>
-            필터
-            {activeFilterCount > 0 && (
-              <span className={s.filterBadge}>{activeFilterCount}</span>
-            )}
-          </button>
-
           <div className={s.viewToggle}>
             <button
               onClick={() => setViewMode("list")}
@@ -269,55 +222,6 @@ function BoxesContent() {
             </button>
           </div>
         </div>
-
-        {showFilters && (
-          <div className={s.filterPanel}>
-            <div className={s.filterRow}>
-              <label className={s.filterCheck}>
-                <input type="checkbox" checked={verifiedOnly} onChange={(e) => { setVerifiedOnly(e.target.checked); }} />
-                <span>인증 박스만</span>
-              </label>
-              <label className={s.filterCheck}>
-                <input type="checkbox" checked={premiumOnly} onChange={(e) => { setPremiumOnly(e.target.checked); }} />
-                <span>프리미엄만</span>
-              </label>
-            </div>
-            <div className={s.filterRow}>
-              <div className={s.filterField}>
-                <span className={s.filterLabel}>최대 월 회비</span>
-                <input
-                  type="number"
-                  className={s.filterInput}
-                  placeholder="예: 150000"
-                  value={maxFee}
-                  onChange={(e) => { setMaxFee(e.target.value); }}
-                />
-              </div>
-              <div className={s.filterField}>
-                <span className={s.filterLabel}>최소 평점</span>
-                <select
-                  className={s.filterSelect}
-                  value={minRating}
-                  onChange={(e) => setMinRating(e.target.value)}
-                >
-                  <option value="">전체</option>
-                  <option value="3">3.0+</option>
-                  <option value="3.5">3.5+</option>
-                  <option value="4">4.0+</option>
-                  <option value="4.5">4.5+</option>
-                </select>
-              </div>
-              {activeFilterCount > 0 && (
-                <button
-                  className={s.filterReset}
-                  onClick={() => { setVerifiedOnly(false); setPremiumOnly(false); setMaxFee(""); setMinRating(""); }}
-                >
-                  초기화
-                </button>
-              )}
-            </div>
-          </div>
-        )}
 
         <div className={s.cityPills}>
           {CITIES.map((city) => (

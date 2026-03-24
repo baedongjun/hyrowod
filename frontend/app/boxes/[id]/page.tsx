@@ -924,6 +924,33 @@ export default function BoxDetailPage() {
                 </div>
               )}
 
+              {reviewData?.content?.length > 0 && (() => {
+                const dist: Record<number, number> = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+                reviewData.content.forEach((r: Review) => { if (r.rating >= 1 && r.rating <= 5) dist[r.rating]++; });
+                const total = reviewData.content.length;
+                const avg = total > 0 ? (reviewData.content.reduce((s: number, r: Review) => s + r.rating, 0) / total).toFixed(1) : "0";
+                return (
+                  <div className={s.ratingDistWrap}>
+                    <div className={s.ratingDistAvg}>
+                      <span className={s.ratingDistBig}>{avg}</span>
+                      <span className={s.ratingDistStars}>{"★".repeat(Math.round(Number(avg)))}</span>
+                      <span className={s.ratingDistTotal}>{total}개 후기</span>
+                    </div>
+                    <div className={s.ratingDistBars}>
+                      {[5, 4, 3, 2, 1].map((star) => (
+                        <div key={star} className={s.ratingDistRow}>
+                          <span className={s.ratingDistLabel}>{star}★</span>
+                          <div className={s.ratingDistBarBg}>
+                            <div className={s.ratingDistBarFill} style={{ width: total > 0 ? `${(dist[star] / total) * 100}%` : "0%" }} />
+                          </div>
+                          <span className={s.ratingDistCount}>{dist[star]}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })()}
+
               {reviewData?.content?.length > 0 ? (
                 <>
                   <div className={s.reviewList}>
