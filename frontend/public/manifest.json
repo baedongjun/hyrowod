@@ -1,7 +1,7 @@
 {
   "name": "CrossFit Korea",
   "short_name": "CF Korea",
-  "description": "한국 크로스핏 박스 검색 & 커뮤니티 플랫폼",
+  "description": "전국 크로스핏 박스 검색·WOD 기록·대회 신청·커뮤니티·챌린지 올인원 플랫폼",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0a0a0a",
@@ -9,13 +9,13 @@
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "/icons/icon-192.png",
+      "src": "/cfkorea-app-icon.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/icons/icon-512.png",
+      "src": "/cfkorea-app-icon.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"

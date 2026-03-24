@@ -37,9 +37,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
-        // SSE 등 헤더를 설정할 수 없는 경우 쿼리 파라미터 token= 확인 (SSE 경로만 허용)
+        // SSE는 브라우저 EventSource가 헤더를 설정할 수 없어 쿼리 파라미터로 토큰 전달
         String uri = request.getRequestURI();
-        if (uri.contains("/sse") || uri.contains("/notifications/stream")) {
+        if (uri.contains("/notifications/subscribe") || uri.contains("/sse") || uri.contains("/notifications/stream")) {
             String queryToken = request.getParameter("token");
             if (StringUtils.hasText(queryToken)) {
                 return queryToken;

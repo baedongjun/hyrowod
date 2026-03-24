@@ -138,7 +138,7 @@ export default function HomePage() {
 
   const { data: stats } = useQuery({
     queryKey: ["stats"],
-    queryFn: async () => (await statsApi.getStats()).data.data as { totalBoxes: number; totalUsers: number; totalPosts: number; totalCompetitions: number },
+    queryFn: async () => (await statsApi.getPublicStats()).data.data as { totalBoxes: number; totalUsers: number; totalPosts: number; totalCompetitions: number },
     staleTime: 1000 * 60 * 10,
   });
 
