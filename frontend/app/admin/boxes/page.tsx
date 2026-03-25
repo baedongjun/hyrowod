@@ -336,12 +336,12 @@ export default function AdminBoxesPage() {
               ) : (
                 data?.content?.map((box: Box) => (
                   <tr key={box.id} className={s.tr} style={!box.active ? { opacity: 0.5 } : undefined}>
-                    <td className={`${s.td} ${s.tdName}`}>
+                    <td data-label="박스명" className={`${s.td} ${s.tdName}`}>
                       {box.name}
                       {!box.active && <span style={{ marginLeft: 6, fontSize: 10, color: "var(--red)", fontWeight: 700, letterSpacing: 1 }}>삭제됨</span>}
                     </td>
-                    <td className={s.td}>{box.city}{box.district && ` · ${box.district}`}</td>
-                    <td className={s.td}>
+                    <td data-label="지역" className={s.td}>{box.city}{box.district && ` · ${box.district}`}</td>
+                    <td data-label="오너" className={`${s.td} ${s.hideOnMobile}`}>
                       {box.ownerName ? (
                         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                           <span>{box.ownerName}</span>
@@ -359,7 +359,7 @@ export default function AdminBoxesPage() {
                         <span style={{ color: "var(--muted)", fontSize: 12 }}>미배정</span>
                       )}
                     </td>
-                    <td className={`${s.td} ${s.tdCenter}`}>
+                    <td data-label="평점" className={`${s.td} ${s.tdCenter} ${s.hideOnMobile}`}>
                       <span className={s.rating}>
                         <svg className={s.star} width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
                           <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
@@ -367,7 +367,7 @@ export default function AdminBoxesPage() {
                         {box.rating ? Number(box.rating).toFixed(1) : "0.0"}
                       </span>
                     </td>
-                    <td className={`${s.td} ${s.tdCenter}`}>
+                    <td data-label="인증" className={`${s.td} ${s.tdCenter}`}>
                       <button
                         onClick={() => verifyMutation.mutate({ id: box.id, verified: !box.verified })}
                         className={`${s.toggleBtn} ${box.verified ? s.toggleVerified : ""}`}
@@ -377,7 +377,7 @@ export default function AdminBoxesPage() {
                         ) : "미인증"}
                       </button>
                     </td>
-                    <td className={`${s.td} ${s.tdCenter}`}>
+                    <td data-label="프리미엄" className={`${s.td} ${s.tdCenter}`}>
                       <button
                         onClick={() => premiumMutation.mutate({ id: box.id, premium: !box.premium })}
                         className={`${s.toggleBtn} ${box.premium ? s.togglePremium : ""}`}
@@ -385,7 +385,7 @@ export default function AdminBoxesPage() {
                         {box.premium ? "PREMIUM" : "일반"}
                       </button>
                     </td>
-                    <td className={`${s.td} ${s.tdCenter}`}>
+                    <td data-label="관리" className={`${s.td} ${s.tdCenter}`}>
                       <div className={s.actionBtns}>
                         <button className={s.editBtn} onClick={() => openEdit(box)}>수정</button>
                         <button className={s.deleteBtn} onClick={() => setDeleteTarget(box)}>삭제</button>
@@ -430,23 +430,25 @@ export default function AdminBoxesPage() {
                   {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                   {claimsData?.content?.map((claim: any) => (
                     <tr key={claim.id} className={s.tr}>
-                      <td className={s.td}>
-                        <div style={{ fontWeight: 700, fontSize: 13 }}>{claim.boxName}</div>
-                        <div style={{ fontSize: 11, color: "var(--muted)" }}>{claim.boxCity}</div>
+                      <td data-label="박스" className={`${s.td} ${s.tdName}`}>
+                        {claim.boxName}
+                        <span style={{ fontSize: 11, color: "var(--muted)", fontWeight: 400, marginLeft: 6 }}>{claim.boxCity}</span>
                       </td>
-                      <td className={s.td}>
-                        <div style={{ fontSize: 13 }}>{claim.requesterName}</div>
-                        <div style={{ fontSize: 11, color: "var(--muted)" }}>{claim.requesterEmail}</div>
+                      <td data-label="신청자" className={s.td}>
+                        <div>
+                          <div style={{ fontSize: 13, color: "var(--text)" }}>{claim.requesterName}</div>
+                          <div style={{ fontSize: 11, color: "var(--muted)" }}>{claim.requesterEmail}</div>
+                        </div>
                       </td>
-                      <td className={s.td} style={{ fontSize: 12, color: "var(--muted)", maxWidth: 200 }}>
+                      <td data-label="메시지" className={`${s.td} ${s.hideOnMobile}`} style={{ fontSize: 12, color: "var(--muted)", maxWidth: 200 }}>
                         {claim.message || "—"}
                       </td>
-                      <td className={`${s.td} ${s.tdCenter}`}>
+                      <td data-label="상태" className={`${s.td} ${s.tdCenter}`}>
                         <span style={{ fontSize: 11, fontWeight: 700, color: STATUS_COLOR[claim.status] }}>
                           {STATUS_LABEL[claim.status]}
                         </span>
                       </td>
-                      <td className={s.td}>
+                      <td data-label="메모" className={`${s.td} ${s.hideOnMobile}`}>
                         {claim.status === "PENDING" ? (
                           <input
                             style={{ background: "var(--bg-card-2)", border: "1px solid var(--border)", color: "var(--text)", padding: "4px 8px", fontSize: 12, width: "100%" }}
@@ -458,7 +460,7 @@ export default function AdminBoxesPage() {
                           <span style={{ fontSize: 12, color: "var(--muted)" }}>{claim.adminNote || "—"}</span>
                         )}
                       </td>
-                      <td className={`${s.td} ${s.tdCenter}`}>
+                      <td data-label="처리" className={`${s.td} ${s.tdCenter}`}>
                         {claim.status === "PENDING" && (
                           <div className={s.actionBtns}>
                             <button

@@ -264,4 +264,44 @@
   .pageTitle { font-size: 28px; }
   .searchForm { width: 100%; }
   .searchInput { width: 100%; flex: 1; min-width: 0; }
+
+  /* 테이블 → 카드 레이아웃 */
+  .tableWrap { overflow-x: unset; }
+  .table { display: block; width: 100%; }
+  .table thead { display: none; }
+  .table tbody { display: block; }
+  .tr { display: block; padding: 12px 16px; border-bottom: 1px solid var(--border); }
+  .tr:last-child { border-bottom: none; }
+  .td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 5px 0;
+    border: none;
+    font-size: 13px;
+  }
+  .td::before {
+    content: attr(data-label);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    flex-shrink: 0;
+    min-width: 40px;
+  }
+  /* 이름 셀: 카드 제목처럼 */
+  .tdName {
+    display: block;
+    padding: 0 0 10px;
+    margin-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .tdName::before { display: none; }
+  .tdCenter { text-align: right; }
+  .hideOnMobile { display: none !important; }
 }

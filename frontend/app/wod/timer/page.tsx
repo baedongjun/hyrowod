@@ -37,6 +37,7 @@ export default function WodTimerPage() {
   const [mode, setMode] = useState<Mode>("amrap");
   const [running, setRunning] = useState(false);
   const [finished, setFinished] = useState(false);
+  const [countdown, setCountdown] = useState<number | null>(null); // 3→2→1→0(GO!)→null
 
   // Config
   const [minutes, setMinutes] = useState(20);
@@ -59,11 +60,10 @@ export default function WodTimerPage() {
 
   const totalSeconds = minutes * 60 + seconds;
 
+  // 기본 비프음
   const beep = useCallback((freq = 880, duration = 0.15) => {
     try {
-      if (!beepRef.current) {
-        beepRef.current = new AudioContext();
-      }
+      if (!beepRef.current) beepRef.current = new AudioContext();
       const ctx = beepRef.current;
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
@@ -77,8 +77,51 @@ export default function WodTimerPage() {
     } catch {}
   }, []);
 
+  // 시작 효과음: 상승 3음계 (GO!)
+  const beepStart = useCallback(() => {
+    try {
+      if (!beepRef.current) beepRef.current = new AudioContext();
+      const ctx = beepRef.current;
+      [660, 880, 1100].forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.frequency.value = freq;
+        const t = ctx.currentTime + i * 0.13;
+        const dur = i === 2 ? 0.45 : 0.1;
+        gain.gain.setValueAtTime(0.4, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + dur);
+        osc.start(t);
+        osc.stop(t + dur);
+      });
+    } catch {}
+  }, []);
+
+  // 종료 효과음: 하강 3음계 (TIME!)
+  const beepEnd = useCallback(() => {
+    try {
+      if (!beepRef.current) beepRef.current = new AudioContext();
+      const ctx = beepRef.current;
+      [880, 660, 440].forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.frequency.value = freq;
+        const t = ctx.currentTime + i * 0.22;
+        const dur = i === 2 ? 0.8 : 0.15;
+        gain.gain.setValueAtTime(0.4, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + dur);
+        osc.start(t);
+        osc.stop(t + dur);
+      });
+    } catch {}
+  }, []);
+
   const reset = useCallback(() => {
     if (intervalRef.current) clearInterval(intervalRef.current);
+    setCountdown(null);
     setRunning(false);
     setFinished(false);
     setElapsed(0);
@@ -91,10 +134,39 @@ export default function WodTimerPage() {
 
   useEffect(() => { reset(); }, [mode]); // eslint-disable-line
 
-  const start = useCallback(() => {
+  // 카운트다운 로직: 3→2→1→0(GO!)→실제 시작
+  useEffect(() => {
+    if (countdown === null) return;
+
+    if (countdown === 0) {
+      // GO! 표시 후 0.8초 뒤 실제 타이머 시작
+      beepStart();
+      const t = setTimeout(() => {
+        setCountdown(null);
+        setRunning(true);
+      }, 800);
+      return () => clearTimeout(t);
+    }
+
+    // 3, 2: 낮은 비프 / 1: 높은 비프
+    beep(countdown === 1 ? 880 : 620, 0.13);
+
+    const t = setTimeout(() => {
+      setCountdown((c) => (c !== null ? c - 1 : null));
+    }, 1000);
+    return () => clearTimeout(t);
+  }, [countdown, beep, beepStart]);
+
+  // START 버튼: 처음 시작이면 카운트다운, 재개이면 즉시
+  const startWithCountdown = useCallback(() => {
     if (finished) { reset(); return; }
-    setRunning(true);
-  }, [finished, reset]);
+    if (countdown !== null || running) return;
+    if (elapsed === 0) {
+      setCountdown(3); // 첫 시작 → 카운트다운
+    } else {
+      setRunning(true); // 일시정지 후 재개 → 즉시
+    }
+  }, [finished, reset, countdown, running, elapsed]);
 
   useEffect(() => {
     if (!running) {
@@ -116,7 +188,7 @@ export default function WodTimerPage() {
             clearInterval(intervalRef.current!);
             setRunning(false);
             setFinished(true);
-            beep(440, 0.5);
+            beepEnd();
           }
         }
 
@@ -136,7 +208,7 @@ export default function WodTimerPage() {
             clearInterval(intervalRef.current!);
             setRunning(false);
             setFinished(true);
-            beep(440, 0.5);
+            beepEnd();
           }
         }
 
@@ -155,7 +227,7 @@ export default function WodTimerPage() {
                       clearInterval(intervalRef.current!);
                       setRunning(false);
                       setFinished(true);
-                      beep(440, 0.8);
+                      beepEnd();
                       return r;
                     }
                     beep(880, 0.2);
@@ -177,7 +249,7 @@ export default function WodTimerPage() {
     }, 1000);
 
     return () => clearInterval(intervalRef.current!);
-  }, [running, mode, totalSeconds, emomMinutes, tabataRounds, workSec, restSec, beep]);
+  }, [running, mode, totalSeconds, emomMinutes, tabataRounds, workSec, restSec, beep, beepEnd]);
 
   const getDisplayTime = () => {
     if (mode === "stopwatch" || mode === "fortime") return formatTime(elapsed);
@@ -207,7 +279,7 @@ export default function WodTimerPage() {
             <button
               key={m}
               className={`${s.modeBtn} ${mode === m ? s.modeBtnActive : ""}`}
-              onClick={() => { if (!running) setMode(m); }}
+              onClick={() => { if (!running && countdown === null) setMode(m); }}
             >
               {MODE_LABELS[m]}
             </button>
@@ -217,7 +289,7 @@ export default function WodTimerPage() {
         <p className={s.modeDesc}>{MODE_DESC[mode]}</p>
 
         {/* Config Panel */}
-        {!running && !finished && (
+        {!running && !finished && countdown === null && (
           <div className={s.config}>
             {(mode === "amrap" || mode === "fortime") && (
               <div className={s.configRow}>
@@ -293,6 +365,13 @@ export default function WodTimerPage() {
           {mode === "stopwatch" && running && (
             <div className={s.lapInfo}>경과 시간</div>
           )}
+
+          {/* 카운트다운 오버레이 */}
+          {countdown !== null && (
+            <div className={`${s.countdownOverlay} ${countdown === 0 ? s.countdownGo : ""}`}>
+              {countdown === 0 ? "GO!" : countdown}
+            </div>
+          )}
         </div>
 
         {/* Progress Bar (countdown modes) */}
@@ -307,8 +386,10 @@ export default function WodTimerPage() {
 
         {/* Controls */}
         <div className={s.controls}>
-          {!running && !finished ? (
-            <button className={s.btnStart} onClick={start}>START</button>
+          {countdown !== null ? (
+            <button className={s.btnReset} onClick={reset}>취소</button>
+          ) : !running && !finished ? (
+            <button className={s.btnStart} onClick={startWithCountdown}>START</button>
           ) : running ? (
             <>
               <button className={s.btnStop} onClick={() => setRunning(false)}>PAUSE</button>
@@ -319,7 +400,7 @@ export default function WodTimerPage() {
           ) : finished ? (
             <button className={s.btnStart} onClick={reset}>RESET</button>
           ) : null}
-          {(running || (!running && elapsed > 0)) && (
+          {(running || (!running && elapsed > 0 && countdown === null)) && (
             <button className={s.btnReset} onClick={reset}>RESET</button>
           )}
         </div>

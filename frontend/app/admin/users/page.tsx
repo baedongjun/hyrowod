@@ -122,10 +122,10 @@ export default function AdminUsersPage() {
             ) : (
               data?.content?.map((user: UserItem) => (
                 <tr key={user.id} className={s.tr}>
-                  <td className={`${s.td} ${s.tdName}`}>{user.name}</td>
-                  <td className={s.td}>{user.email}</td>
-                  <td className={s.td}>{user.phone || "—"}</td>
-                  <td className={`${s.td} ${s.tdCenter}`}>
+                  <td data-label="이름" className={`${s.td} ${s.tdName}`}>{user.name}</td>
+                  <td data-label="이메일" className={s.td}>{user.email}</td>
+                  <td data-label="전화번호" className={`${s.td} ${s.hideOnMobile}`}>{user.phone || "—"}</td>
+                  <td data-label="역할" className={`${s.td} ${s.tdCenter}`}>
                     <select
                       className={s.roleSelect}
                       value={user.role}
@@ -136,7 +136,7 @@ export default function AdminUsersPage() {
                       ))}
                     </select>
                   </td>
-                  <td className={`${s.td} ${s.tdCenter}`}>
+                  <td data-label="상태" className={`${s.td} ${s.tdCenter}`}>
                     <button
                       onClick={() => activeMutation.mutate({ id: user.id, active: !user.active })}
                       className={`${s.activeBtn} ${user.active ? s.activeBtnOn : s.activeBtnOff}`}
@@ -144,7 +144,7 @@ export default function AdminUsersPage() {
                       {user.active ? "활성" : "비활성"}
                     </button>
                   </td>
-                  <td className={`${s.td} ${s.tdCenter}`}>
+                  <td data-label="관리" className={`${s.td} ${s.tdCenter}`}>
                     <button className={s.editBtn} onClick={() => openEdit(user)}>수정</button>
                   </td>
                 </tr>

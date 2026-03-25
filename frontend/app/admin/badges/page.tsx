@@ -175,27 +175,27 @@ export default function AdminBadgesPage() {
                   awardedAt: string;
                 }) => (
                   <tr key={badge.id} className={s.tr}>
-                    <td className={`${s.td} ${s.tdName}`}>
-                      <span style={{ fontSize: 12, color: "var(--muted)", display: "block" }}>#{badge.userId}</span>
+                    <td data-label="회원" className={`${s.td} ${s.tdName}`}>
                       {badge.userName}
+                      <span style={{ fontSize: 11, color: "var(--muted)", fontWeight: 400, marginLeft: 6 }}>#{badge.userId}</span>
                     </td>
-                    <td className={s.td}>
+                    <td data-label="배지" className={s.td}>
                       <span className={bs.badgeName}>
                         {TIER_ICON[badge.tier]} {badge.name}
                       </span>
                     </td>
-                    <td className={`${s.td} ${s.tdCenter}`}>
+                    <td data-label="등급" className={`${s.td} ${s.tdCenter}`}>
                       <span style={{ color: TIER_COLOR[badge.tier], fontWeight: 600, fontSize: 12 }}>
                         {badge.tier}
                       </span>
                     </td>
-                    <td className={s.td}>
+                    <td data-label="설명" className={`${s.td} ${s.hideOnMobile}`}>
                       <span style={{ fontSize: 12, color: "var(--muted)" }}>{badge.description}</span>
                     </td>
-                    <td className={`${s.td} ${s.tdCenter}`}>
+                    <td data-label="수여일" className={`${s.td} ${s.tdCenter}`}>
                       {dayjs(badge.awardedAt).format("MM.DD HH:mm")}
                     </td>
-                    <td className={`${s.td} ${s.tdCenter}`}>
+                    <td data-label="관리" className={`${s.td} ${s.tdCenter}`}>
                       <button
                         onClick={() => {
                           if (window.confirm(`"${badge.name}" 배지를 회수하시겠습니까?`)) {
