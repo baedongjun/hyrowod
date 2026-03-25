@@ -1,0 +1,222 @@
+/* Install Banner — floats above bottom nav on mobile */
+.banner {
+  position: fixed;
+  bottom: 64px; /* above bottom nav (56px) */
+  left: 0;
+  right: 0;
+  z-index: 200;
+  padding: 0 12px 8px;
+  pointer-events: none;
+}
+
+.bannerInner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-bottom: 2px solid var(--red);
+  padding: 10px 14px;
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.5);
+  pointer-events: all;
+}
+
+.icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  object-fit: cover;
+}
+
+.text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: 1px;
+  color: var(--text);
+  display: block;
+}
+
+.sub {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.4;
+  display: block;
+}
+
+.installBtn {
+  flex-shrink: 0;
+  background: var(--red);
+  border: none;
+  color: var(--text);
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: var(--font-body);
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  transition: opacity 0.2s;
+}
+
+.installBtn:hover {
+  opacity: 0.85;
+}
+
+.closeBtn {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px 6px;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.closeBtn:hover {
+  color: var(--text);
+}
+
+/* Only show on mobile */
+@media (min-width: 769px) {
+  .banner {
+    display: none;
+  }
+}
+
+/* iOS Guide Modal */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  z-index: 600;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0;
+}
+
+.guide {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-top: 2px solid var(--red);
+  width: 100%;
+  max-width: 480px;
+  padding: 0;
+}
+
+.guideHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.guideTitle {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  letter-spacing: 2px;
+  color: var(--text);
+  margin: 0;
+}
+
+.guideClose {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.guideClose:hover {
+  color: var(--text);
+}
+
+.guideBody {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.guideStep {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.guideStep strong {
+  color: var(--text);
+}
+
+.stepNum {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  background: var(--red);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 0;
+}
+
+.guideDismiss {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  padding: 14px 20px;
+  font-size: 13px;
+  font-family: var(--font-body);
+  cursor: pointer;
+  text-align: center;
+  transition: color 0.2s, background 0.2s;
+}
+
+.guideDismiss:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* Narrow screen */
+@media (max-width: 440px) {
+  .bannerInner {
+    padding: 8px 12px;
+    gap: 8px;
+  }
+
+  .icon {
+    width: 34px;
+    height: 34px;
+  }
+
+  .sub {
+    font-size: 10px;
+  }
+
+  .installBtn {
+    padding: 7px 10px;
+    font-size: 11px;
+  }
+}

@@ -7,6 +7,7 @@ import Footer from "@/components/layout/Footer";
 import QueryProvider from "@/components/providers/QueryProvider";
 import FadeInObserver from "@/components/common/FadeInObserver";
 import ServiceWorkerRegistrar from "@/components/common/ServiceWorkerRegistrar";
+import InstallPwa from "@/components/common/InstallPwa";
 
 const SITE_DESCRIPTION =
   "전국 크로스핏 박스 검색·WOD 기록·대회 신청·커뮤니티·챌린지까지. 대한민국 크로스핏 올인원 플랫폼.";
@@ -66,6 +67,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
           <FadeInObserver />
           <ServiceWorkerRegistrar />
+          <InstallPwa />
           <ToastContainer
             position="top-right"
             autoClose={3000}
