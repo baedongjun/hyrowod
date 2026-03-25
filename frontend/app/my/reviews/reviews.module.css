@@ -163,3 +163,9 @@
 @media (max-width: 768px) {
   .inner { padding: 24px; }
 }
+
+@media (max-width: 440px) {
+  .inner { padding: 16px; }
+  .title { font-size: 28px; }
+  .item  { padding: 14px 16px; }
+}

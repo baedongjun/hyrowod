@@ -60,11 +60,18 @@ export default function WodTimerPage() {
 
   const totalSeconds = minutes * 60 + seconds;
 
+  // AudioContext를 생성/재개하는 헬퍼 (모바일 unlock 포함)
+  const getCtx = useCallback(() => {
+    if (!beepRef.current) beepRef.current = new AudioContext();
+    const ctx = beepRef.current;
+    if (ctx.state === "suspended") ctx.resume();
+    return ctx;
+  }, []);
+
   // 기본 비프음
   const beep = useCallback((freq = 880, duration = 0.15) => {
     try {
-      if (!beepRef.current) beepRef.current = new AudioContext();
-      const ctx = beepRef.current;
+      const ctx = getCtx();
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.connect(gain);
@@ -75,13 +82,12 @@ export default function WodTimerPage() {
       osc.start(ctx.currentTime);
       osc.stop(ctx.currentTime + duration);
     } catch {}
-  }, []);
+  }, [getCtx]);
 
   // 시작 효과음: 상승 3음계 (GO!)
   const beepStart = useCallback(() => {
     try {
-      if (!beepRef.current) beepRef.current = new AudioContext();
-      const ctx = beepRef.current;
+      const ctx = getCtx();
       [660, 880, 1100].forEach((freq, i) => {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
@@ -96,13 +102,12 @@ export default function WodTimerPage() {
         osc.stop(t + dur);
       });
     } catch {}
-  }, []);
+  }, [getCtx]);
 
   // 종료 효과음: 하강 3음계 (TIME!)
   const beepEnd = useCallback(() => {
     try {
-      if (!beepRef.current) beepRef.current = new AudioContext();
-      const ctx = beepRef.current;
+      const ctx = getCtx();
       [880, 660, 440].forEach((freq, i) => {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
@@ -117,7 +122,7 @@ export default function WodTimerPage() {
         osc.stop(t + dur);
       });
     } catch {}
-  }, []);
+  }, [getCtx]);
 
   const reset = useCallback(() => {
     if (intervalRef.current) clearInterval(intervalRef.current);

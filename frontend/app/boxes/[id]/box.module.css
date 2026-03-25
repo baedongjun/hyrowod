@@ -865,10 +865,35 @@
 .ratingDistCount { font-size: 12px; color: var(--muted); min-width: 20px; text-align: right; }
 
 @media (max-width: 768px) {
-  .heroContent { padding: 24px; }
-  .heroName    { font-size: 36px; }
-  .layout      { grid-template-columns: 1fr; padding: 24px; }
-  .infoGrid    { grid-template-columns: 1fr; }
-  .coachGrid   { grid-template-columns: 1fr; }
+  .heroContent  { padding: 20px; }
+  .heroName     { font-size: 36px; }
+  .heroMeta     { flex-wrap: wrap; gap: 4px 6px; }
+  .layout       { grid-template-columns: 1fr; padding: 20px; }
+  .infoGrid     { grid-template-columns: 1fr; }
+  .coachGrid    { grid-template-columns: 1fr; }
   .ratingDistWrap { flex-direction: column; gap: 16px; }
+  .scheduleTime { min-width: 80px; font-size: 15px; }
+  .scheduleItem { flex-wrap: wrap; gap: 8px; padding: 10px 14px; }
+  .addFormGrid  { grid-template-columns: 1fr; }
+  .sideCard     { padding: 16px; }
+  .description  { padding: 20px; }
+  .reviewForm   { padding: 16px; }
+  .reviewItem   { padding: 14px 16px; }
+  .announcementItem { padding: 14px 16px; }
+  .wodCard      { padding: 14px 16px; }
+  .reviewHeader { flex-wrap: wrap; gap: 6px; }
+}
+
+@media (max-width: 440px) {
+  .hero         { height: 260px; }
+  .heroContent  { padding: 14px 16px; }
+  .heroName     { font-size: 28px; }
+  .heroMeta     { font-size: 12px; }
+  .layout       { padding: 14px 16px; }
+  .scheduleTime { min-width: 70px; font-size: 14px; }
+  .coachCard    { padding: 16px; gap: 12px; }
+  .coachAvatar  { width: 52px; height: 52px; }
+  .ratingDistBig { font-size: 36px; }
+  .feeValue     { font-size: 32px; }
+  .infoItem     { padding: 14px; }
 }

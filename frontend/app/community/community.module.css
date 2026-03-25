@@ -368,3 +368,12 @@
   .postTitle { font-size: 14px; }
   .postMeta  { font-size: 11px; margin-top: 3px; }
 }
+
+@media (max-width: 440px) {
+  .barTop   { padding: 10px 14px 6px; }
+  .barTitle { font-size: 18px; }
+  .layout   { padding: 10px 14px 20px; }
+  .postItem { padding: 10px 12px; }
+  .postTitle { font-size: 13px; }
+  .contentHeader { flex-wrap: wrap; gap: 8px; }
+}

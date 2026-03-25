@@ -61,7 +61,7 @@
 .postImages {
   padding: 0 28px 28px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: 8px;
 }
 .postImg {
@@ -330,11 +330,25 @@
 }
 
 @media (max-width: 768px) {
-  .content { padding: 24px; }
+  .content     { padding: 24px; }
   .postHeader  { padding: 20px; }
   .postBody    { padding: 20px; }
-  .postActions { padding: 12px 20px; }
+  .postActions { padding: 12px 20px; flex-wrap: wrap; }
   .commentsHeader { padding: 16px 20px; }
   .commentForm { padding: 16px 20px; }
   .comment     { padding: 14px 20px; }
+  .postMeta    { flex-wrap: wrap; gap: 6px; }
+}
+
+@media (max-width: 440px) {
+  .content     { padding: 12px 14px; }
+  .postHeader  { padding: 14px; }
+  .postTitle   { font-size: 18px; }
+  .postBody    { padding: 14px; font-size: 14px; }
+  .postImages  { padding: 0 14px 14px; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+  .postActions { padding: 10px 14px; }
+  .commentsHeader { padding: 12px 14px; }
+  .commentForm { padding: 12px 14px; }
+  .comment     { padding: 12px 14px; }
+  .replies     { padding-left: 10px; }
 }

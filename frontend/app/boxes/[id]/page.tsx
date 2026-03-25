@@ -419,7 +419,7 @@ export default function BoxDetailPage() {
               <span>·</span>
               <span>{box.city} {box.district}</span>
             </div>
-            <div style={{ display: "flex", gap: 10, alignItems: "center", marginTop: 8 }}>
+            <div style={{ display: "flex", gap: 10, alignItems: "center", marginTop: 8, flexWrap: "wrap" }}>
               {isLoggedIn() && (
                 <button
                   className={s.favBtn}

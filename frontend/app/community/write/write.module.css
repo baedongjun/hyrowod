@@ -134,3 +134,11 @@
   .content { padding: 24px; }
   .card    { padding: 24px; }
 }
+
+@media (max-width: 440px) {
+  .content  { padding: 14px 16px; }
+  .card     { padding: 16px; }
+  .pageTitle { font-size: 28px; }
+  .actions  { flex-wrap: wrap; }
+  .actions > * { flex: 1; }
+}

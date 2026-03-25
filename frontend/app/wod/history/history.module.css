@@ -194,3 +194,9 @@
   .item { padding: 16px; }
   .itemContent { display: none; }
 }
+
+@media (max-width: 440px) {
+  .inner { padding: 16px; }
+  .title { font-size: 28px; }
+  .item  { padding: 12px 14px; }
+}

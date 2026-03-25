@@ -197,3 +197,8 @@
   .formGrid { grid-template-columns: 1fr 1fr; }
   .header { flex-direction: column; gap: 12px; }
 }
+
+@media (max-width: 440px) {
+  .formGrid { grid-template-columns: 1fr; }
+  .inner    { padding: 16px; }
+}

@@ -244,6 +244,16 @@
 
 @media (max-width: 768px) {
   .heroContent { left: 24px; right: 24px; bottom: 24px; }
-  .content { grid-template-columns: 1fr; padding: 24px; }
-  .sidebar { order: -1; }
+  .heroMeta    { flex-wrap: wrap; gap: 4px 6px; }
+  .content     { grid-template-columns: 1fr; padding: 24px; }
+  .sidebar     { order: -1; }
+  .resultsCard { overflow-x: auto; }
+}
+
+@media (max-width: 440px) {
+  .heroContent { left: 14px; right: 14px; bottom: 16px; }
+  .heroTitle   { font-size: clamp(22px, 5vw, 32px); }
+  .content     { padding: 14px 16px; }
+  .infoCard, .descCard, .regCard, .levelCard, .resultsCard { padding: 16px; }
+  .levelBig    { font-size: 36px; }
 }

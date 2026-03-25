@@ -216,3 +216,9 @@
   .itemDate { min-width: 36px; }
   .itemDateNum { font-size: 20px; }
 }
+
+@media (max-width: 440px) {
+  .pageTitle  { font-size: 22px; }
+  .formCard   { padding: 16px; }
+  .item       { padding: 10px 14px; }
+}

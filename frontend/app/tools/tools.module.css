@@ -161,3 +161,8 @@
   .formRow { grid-template-columns: 1fr 1fr; }
   .header { flex-direction: column; align-items: flex-start; gap: 12px; }
 }
+
+@media (max-width: 440px) {
+  .formRow { grid-template-columns: 1fr; }
+  .tableWrap { overflow-x: auto; }
+}

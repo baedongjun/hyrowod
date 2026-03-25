@@ -216,3 +216,7 @@
   .formGrid { grid-template-columns: 1fr; }
   .pageHeader { flex-direction: column; align-items: flex-start; gap: 12px; }
 }
+
+@media (max-width: 440px) {
+  .actions { flex-wrap: wrap; }
+}

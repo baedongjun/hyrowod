@@ -545,6 +545,19 @@
   .calDay  { font-size: 12px; }
   .recordFormRow { flex-direction: column; }
   .myRecord { padding: 20px; }
+  .leaderboard { padding: 20px; }
+  .recordRow { flex-wrap: wrap; gap: 12px; }
+}
+
+@media (max-width: 440px) {
+  .hero    { padding: 28px 16px; }
+  .content { padding: 20px 16px; }
+  .heroTitle { font-size: 36px; }
+  .wodCard { padding: 16px; }
+  .wodCardHeader { padding: 14px 14px 0; }
+  .wodBody { padding: 14px; }
+  .myRecord { padding: 14px 16px; }
+  .leaderboard { padding: 14px 16px; }
 }
 
 /* ── 협소한 화면 (440px 이하) ── */

@@ -398,3 +398,9 @@
   .ownerBanner { padding: 10px 24px; }
   .premiumGrid { grid-template-columns: 1fr; }
 }
+
+@media (max-width: 440px) {
+  .content    { padding: 20px 16px; }
+  .cityPills  { padding-left: 16px; padding-right: 16px; }
+  .ownerBanner { padding: 8px 16px; flex-wrap: wrap; gap: 6px; }
+}

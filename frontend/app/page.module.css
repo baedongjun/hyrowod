@@ -584,6 +584,11 @@
   .quickNavItem:nth-child(5),
   .quickNavItem:nth-child(6) { border-bottom: none; }
 
+  .statsBarInner { padding: 0; grid-template-columns: repeat(2, 1fr); }
+  .statItem:nth-child(2) { border-right: none; }
+  .statItem:nth-child(3),
+  .statItem:nth-child(4) { border-top: 1px solid rgba(232,34,10,0.1); }
+
   .highlight { padding: 48px 0; }
   .highlightInner {
     padding: 0 24px;
@@ -605,9 +610,36 @@
 
   .myBoxSection { padding: 40px 0; }
   .myBoxInner { padding: 0 24px; }
+  .myBoxCard { flex-wrap: wrap; gap: 12px; padding: 20px 20px; }
 
   .cta { padding: 60px 0; }
   .cta::before { display: none; }
   .ctaInner { padding: 0 24px; }
   .ctaInner .btn-primary { width: 100%; }
+}
+
+@media (max-width: 440px) {
+  .heroContent { padding: 40px 16px; }
+  .heroCta .btn-primary,
+  .heroCta .btn-secondary { padding: 14px 16px; font-size: 13px; }
+
+  .quickNavGrid { grid-template-columns: repeat(3, 1fr); }
+  .quickNavItem { padding: 14px 6px; }
+  .quickNavIcon { width: 36px; height: 36px; }
+  .quickNavLabel { font-size: 12px; }
+  .quickNavSub { display: none; }
+
+  .statsBarInner { grid-template-columns: repeat(2, 1fr); }
+  .statVal { font-size: 22px; }
+
+  .highlightInner { padding: 0 16px; }
+  .wodCard { padding: 20px; }
+
+  .communityInner { padding: 0 16px; }
+  .challengeInner { padding: 0 16px; }
+  .rankInner { padding: 0 16px; }
+  .rankItem { padding: 14px 16px; gap: 12px; }
+
+  .myBoxInner { padding: 0 16px; }
+  .ctaInner { padding: 0 16px; }
 }
