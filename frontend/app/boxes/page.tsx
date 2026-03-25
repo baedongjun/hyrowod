@@ -83,6 +83,25 @@ function BoxesContent() {
   const allBoxes = data?.pages.flatMap((p) => p.content) ?? [];
   const totalElements = data?.pages[0]?.totalElements ?? 0;
 
+  // 지도 모드 전용: verified 박스 전체 조회 (페이지네이션 없이 최대 500개)
+  const { data: mapBoxesData } = useQuery({
+    queryKey: ["boxes", "map", selectedCity, debouncedKeyword],
+    queryFn: async () => {
+      const res = await boxApi.search({
+        city: selectedCity === "전체" ? undefined : selectedCity,
+        keyword: debouncedKeyword || undefined,
+        verified: true,
+        page: 0,
+        size: 500,
+        sort: "createdAt,desc",
+      });
+      return (res.data.data as Page<Box>).content;
+    },
+    enabled: viewMode === "map",
+    staleTime: 1000 * 60 * 5,
+  });
+  const mapBoxes = mapBoxesData ?? [];
+
   // IntersectionObserver for infinite scroll (list mode only)
   const handleObserver = useCallback(
     (entries: IntersectionObserverEntry[]) => {
@@ -245,7 +264,7 @@ function BoxesContent() {
       {/* Content */}
       <div className={s.content}>
         {viewMode === "map" ? (
-          <BoxMap boxes={allBoxes} />
+          <BoxMap boxes={mapBoxes} />
         ) : (
           <>
             <div className={s.contentHeader}>

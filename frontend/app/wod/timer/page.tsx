@@ -60,6 +60,14 @@ export default function WodTimerPage() {
 
   const totalSeconds = minutes * 60 + seconds;
 
+  // 설정값 변경 시 디스플레이 즉시 반영 (타이머 미동작 상태에서만)
+  useEffect(() => {
+    if (running || finished || countdown !== null || elapsed > 0) return;
+    if (mode === "amrap") setRemaining(minutes * 60 + seconds);
+    else if (mode === "emom") setRemaining(emomMinutes * 60);
+    else if (mode === "tabata") setTabataPhaseRemain(workSec);
+  }, [minutes, seconds, emomMinutes, workSec, mode, running, finished, countdown, elapsed]);
+
   // AudioContext를 생성/재개하는 헬퍼 (모바일 unlock 포함)
   const getCtx = useCallback(() => {
     if (!beepRef.current) beepRef.current = new AudioContext();

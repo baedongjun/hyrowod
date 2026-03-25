@@ -1,4 +1,4 @@
-.page { padding-top: 64px; min-height: 100vh; }
+.page { padding-top: 64px; min-height: 100vh; overflow-x: hidden; }
 
 /* Hero */
 .hero {
@@ -226,7 +226,11 @@
   gap: 32px;
   padding-top: 32px;
   padding-bottom: 64px;
+  width: 100%;
 }
+
+/* Prevent grid children from overflowing */
+.layout > * { min-width: 0; }
 
 /* Tabs */
 .tabs {
@@ -484,7 +488,7 @@
 .reviewPageInfo { font-size: 13px; color: var(--muted); min-width: 50px; text-align: center; }
 
 /* Sidebar */
-.sidebar { display: flex; flex-direction: column; gap: 16px; }
+.sidebar { display: flex; flex-direction: column; gap: 16px; min-width: 0; overflow: hidden; }
 .sideCard {
   background: var(--bg-card);
   border: 1px solid var(--border);
@@ -868,7 +872,7 @@
   .heroContent  { padding: 20px; }
   .heroName     { font-size: 36px; }
   .heroMeta     { flex-wrap: wrap; gap: 4px 6px; }
-  .layout       { grid-template-columns: 1fr; padding: 20px; }
+  .layout       { grid-template-columns: 1fr; padding: 20px; gap: 20px; }
   .infoGrid     { grid-template-columns: 1fr; }
   .coachGrid    { grid-template-columns: 1fr; }
   .ratingDistWrap { flex-direction: column; gap: 16px; }
@@ -882,18 +886,25 @@
   .announcementItem { padding: 14px 16px; }
   .wodCard      { padding: 14px 16px; }
   .reviewHeader { flex-wrap: wrap; gap: 6px; }
+  .snsRow       { flex-wrap: wrap; }
 }
 
 @media (max-width: 440px) {
   .hero         { height: 260px; }
-  .heroContent  { padding: 14px 16px; }
-  .heroName     { font-size: 28px; }
+  .heroContent  { padding: 12px 14px; }
+  .heroName     { font-size: 26px; letter-spacing: 1px; }
   .heroMeta     { font-size: 12px; }
-  .layout       { padding: 14px 16px; }
-  .scheduleTime { min-width: 70px; font-size: 14px; }
-  .coachCard    { padding: 16px; gap: 12px; }
-  .coachAvatar  { width: 52px; height: 52px; }
+  .heroBadges   { flex-wrap: wrap; }
+  .layout       { padding: 12px 14px; gap: 16px; }
+  .scheduleTime { min-width: 64px; font-size: 14px; }
+  .scheduleClass { font-size: 13px; }
+  .scheduleCoach { font-size: 12px; }
+  .coachCard    { padding: 14px; gap: 10px; }
+  .coachAvatar  { width: 48px; height: 48px; font-size: 18px; }
+  .coachName    { font-size: 14px; }
   .ratingDistBig { font-size: 36px; }
   .feeValue     { font-size: 32px; }
-  .infoItem     { padding: 14px; }
+  .infoItem     { padding: 12px; gap: 10px; }
+  .reviewPagination { gap: 10px; }
+  .reviewPageBtn { padding: 6px 12px; font-size: 12px; }
 }
