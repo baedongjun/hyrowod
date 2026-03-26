@@ -381,7 +381,7 @@ export default function AdminRankingPage() {
                       </div>
 
                       <div className={s.recordScore}>
-                        <span className={s.userName}>{record.userName}</span>
+                        <span className={s.userName}>{record.userName ?? "-"}</span>
                         <span style={{ fontSize: 11, color: "var(--muted)" }}>·</span>
                         <span className={s.scoreValue}>{record.scoreFormatted}</span>
                         {record.scoreUnit && (

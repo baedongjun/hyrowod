@@ -308,6 +308,7 @@ export interface NamedWodRecord {
   id: number;
   namedWodId: number;
   namedWodName: string;
+  userName?: string;
   scoreType: ScoreType;
   scoreUnit?: string;
   score: number;

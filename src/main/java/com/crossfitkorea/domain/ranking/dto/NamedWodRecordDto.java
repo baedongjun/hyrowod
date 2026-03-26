@@ -15,6 +15,7 @@ public class NamedWodRecordDto {
     private Long id;
     private Long namedWodId;
     private String namedWodName;
+    private String userName;
     private ScoreType scoreType;
     private String scoreUnit;
     private Double score;
@@ -36,6 +37,7 @@ public class NamedWodRecordDto {
                 .id(r.getId())
                 .namedWodId(r.getNamedWod().getId())
                 .namedWodName(r.getNamedWod().getName())
+                .userName(r.getUser().getName())
                 .scoreType(scoreType)
                 .scoreUnit(r.getNamedWod().getScoreUnit())
                 .score(r.getScore())
