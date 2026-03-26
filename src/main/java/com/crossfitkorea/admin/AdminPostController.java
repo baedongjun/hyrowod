@@ -5,6 +5,7 @@ import com.crossfitkorea.common.exception.BusinessException;
 import com.crossfitkorea.common.exception.ErrorCode;
 import com.crossfitkorea.domain.community.dto.PostDto;
 import com.crossfitkorea.domain.community.entity.Post;
+import com.crossfitkorea.domain.community.entity.PostCategory;
 import com.crossfitkorea.domain.community.service.PostService;
 import com.crossfitkorea.domain.community.repository.PostRepository;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,13 +27,18 @@ public class AdminPostController {
     private final PostService postService;
     private final PostRepository postRepository;
 
-    @Operation(summary = "[어드민] 전체 게시글 목록")
+    @Operation(summary = "[어드민] 전체 게시글 목록 (필터)")
     @GetMapping("/posts")
     @Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<Page<PostDto>>> getAllPosts(
+        @RequestParam(required = false) PostCategory category,
+        @RequestParam(required = false) String keyword,
+        @RequestParam(required = false) Boolean pinned,
+        @RequestParam(defaultValue = "false") boolean reportedOnly,
         @PageableDefault(size = 20) Pageable pageable
     ) {
-        Page<PostDto> posts = postRepository.findByActiveTrueOrderByPinnedDescCreatedAtDesc(pageable)
+        String kw = (keyword != null && !keyword.isBlank()) ? keyword : null;
+        Page<PostDto> posts = postRepository.searchPostsAdmin(category, kw, pinned, reportedOnly, pageable)
             .map(PostDto::from);
         return ResponseEntity.ok(ApiResponse.success(posts));
     }

@@ -38,14 +38,22 @@ public class AdminBoxController {
     private final CompetitionService competitionService;
     private final WodService wodService;
 
-    @Operation(summary = "[어드민] 전체 박스 목록")
+    @Operation(summary = "[어드민] 전체 박스 목록 (필터)")
     @GetMapping("/boxes")
     @Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<Page<BoxDto>>> getAllBoxes(
-        @RequestParam(defaultValue = "true") boolean active,
+        @RequestParam(required = false) Boolean active,
+        @RequestParam(required = false) String city,
+        @RequestParam(required = false) String keyword,
+        @RequestParam(required = false) Boolean verified,
+        @RequestParam(required = false) Boolean premium,
         @PageableDefault(size = 20) Pageable pageable
     ) {
-        Page<BoxDto> boxes = boxRepository.findByActive(active, pageable).map(BoxDto::from);
+        Page<BoxDto> boxes = boxRepository.searchBoxesAdmin(
+            active, city,
+            (keyword != null && !keyword.isBlank()) ? keyword : null,
+            verified, premium, pageable
+        ).map(BoxDto::from);
         return ResponseEntity.ok(ApiResponse.success(boxes));
     }
 

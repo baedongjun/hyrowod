@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { adminApi, uploadApi } from "@/lib/api";
 import { Box } from "@/types";
@@ -91,7 +91,19 @@ type PageTab = "boxes" | "claims";
 export default function AdminBoxesPage() {
   const [pageTab, setPageTab] = useState<PageTab>("boxes");
   const [page, setPage] = useState(0);
-  const [showInactive, setShowInactive] = useState(false);
+
+  // 필터
+  const [keyword, setKeyword] = useState("");
+  const [debouncedKeyword, setDebouncedKeyword] = useState("");
+  const [filterCity, setFilterCity] = useState("");
+  const [filterVerified, setFilterVerified] = useState<"" | "true" | "false">("");
+  const [filterPremium, setFilterPremium] = useState<"" | "true" | "false">("");
+  const [filterActive, setFilterActive] = useState<"" | "true" | "false">("");
+
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedKeyword(keyword), 400);
+    return () => clearTimeout(t);
+  }, [keyword]);
   const [claimsPage, setClaimsPage] = useState(0);
   const [editTarget, setEditTarget] = useState<Box | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Box | null>(null);
@@ -106,9 +118,17 @@ export default function AdminBoxesPage() {
   const [claimNoteMap, setClaimNoteMap] = useState<Record<number, string>>({});
   const queryClient = useQueryClient();
 
+  const filters = {
+    active: filterActive === "" ? null : filterActive === "true",
+    city: filterCity || undefined,
+    keyword: debouncedKeyword || undefined,
+    verified: filterVerified === "" ? null : filterVerified === "true",
+    premium: filterPremium === "" ? null : filterPremium === "true",
+  };
+
   const { data, isLoading } = useQuery({
-    queryKey: ["admin", "boxes", page, showInactive],
-    queryFn: async () => (await adminApi.getBoxes(page, !showInactive)).data.data,
+    queryKey: ["admin", "boxes", page, filters],
+    queryFn: async () => (await adminApi.getBoxes(page, filters)).data.data,
   });
 
   const { data: claimsData, isLoading: claimsLoading } = useQuery({
@@ -296,20 +316,61 @@ export default function AdminBoxesPage() {
 
       {pageTab === "boxes" && (
         <div className={s.tableWrap}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
-            <label style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", fontSize: 13, color: "var(--muted)" }}>
-              <input
-                type="checkbox"
-                checked={showInactive}
-                onChange={(e) => { setShowInactive(e.target.checked); setPage(0); }}
-                style={{ accentColor: "var(--red)" }}
-              />
-              삭제된 박스 포함
-            </label>
-            {showInactive && (
-              <span style={{ fontSize: 11, color: "var(--red)", fontWeight: 700, letterSpacing: 1 }}>
-                비활성 박스 포함 조회 중
-              </span>
+          {/* 필터 바 */}
+          <div className={s.filterBar}>
+            <input
+              className={s.filterInput}
+              placeholder="박스명 / 주소 검색"
+              value={keyword}
+              onChange={(e) => { setKeyword(e.target.value); setPage(0); }}
+            />
+            <select
+              className={s.filterSelect}
+              value={filterCity}
+              onChange={(e) => { setFilterCity(e.target.value); setPage(0); }}
+            >
+              <option value="">전체 지역</option>
+              {["서울","경기","부산","인천","대구","대전","광주","울산","세종","강원","충북","충남","전북","전남","경북","경남","제주"].map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+            <select
+              className={s.filterSelect}
+              value={filterVerified}
+              onChange={(e) => { setFilterVerified(e.target.value as "" | "true" | "false"); setPage(0); }}
+            >
+              <option value="">인증 전체</option>
+              <option value="true">인증됨</option>
+              <option value="false">미인증</option>
+            </select>
+            <select
+              className={s.filterSelect}
+              value={filterPremium}
+              onChange={(e) => { setFilterPremium(e.target.value as "" | "true" | "false"); setPage(0); }}
+            >
+              <option value="">프리미엄 전체</option>
+              <option value="true">프리미엄</option>
+              <option value="false">일반</option>
+            </select>
+            <select
+              className={s.filterSelect}
+              value={filterActive}
+              onChange={(e) => { setFilterActive(e.target.value as "" | "true" | "false"); setPage(0); }}
+            >
+              <option value="">활성 전체</option>
+              <option value="true">활성</option>
+              <option value="false">삭제됨</option>
+            </select>
+            {(keyword || filterCity || filterVerified || filterPremium || filterActive) && (
+              <button
+                className={s.filterReset}
+                onClick={() => { setKeyword(""); setDebouncedKeyword(""); setFilterCity(""); setFilterVerified(""); setFilterPremium(""); setFilterActive(""); setPage(0); }}
+              >
+                초기화
+              </button>
+            )}
+            {data && (
+              <span className={s.filterCount}>{data.totalElements}개</span>
             )}
           </div>
           <table className={s.table}>

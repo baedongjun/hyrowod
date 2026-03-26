@@ -40,6 +40,29 @@ public interface BoxRepository extends JpaRepository<Box, Long> {
         Pageable pageable
     );
 
+    /** 어드민 전용 — active 여부 포함 필터 검색 */
+    @Query(value = "SELECT b FROM Box b LEFT JOIN FETCH b.owner WHERE " +
+           "(:active IS NULL OR b.active = :active) " +
+           "AND (:city IS NULL OR b.city = :city) " +
+           "AND (:keyword IS NULL OR b.name LIKE %:keyword% OR b.address LIKE %:keyword%) " +
+           "AND (:verified IS NULL OR b.verified = :verified) " +
+           "AND (:premium IS NULL OR b.premium = :premium) " +
+           "ORDER BY b.createdAt DESC",
+           countQuery = "SELECT COUNT(b) FROM Box b WHERE " +
+           "(:active IS NULL OR b.active = :active) " +
+           "AND (:city IS NULL OR b.city = :city) " +
+           "AND (:keyword IS NULL OR b.name LIKE %:keyword% OR b.address LIKE %:keyword%) " +
+           "AND (:verified IS NULL OR b.verified = :verified) " +
+           "AND (:premium IS NULL OR b.premium = :premium)")
+    Page<Box> searchBoxesAdmin(
+        @Param("active") Boolean active,
+        @Param("city") String city,
+        @Param("keyword") String keyword,
+        @Param("verified") Boolean verified,
+        @Param("premium") Boolean premium,
+        Pageable pageable
+    );
+
     List<Box> findByPremiumTrueAndActiveTrueOrderByCreatedAtDesc();
 
     Page<Box> findByOwnerEmailAndActiveTrue(String email, Pageable pageable);

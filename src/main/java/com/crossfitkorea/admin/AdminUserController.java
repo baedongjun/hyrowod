@@ -26,15 +26,16 @@ public class AdminUserController {
 
     private final UserRepository userRepository;
 
-    @Operation(summary = "[어드민] 전체 회원 목록 (키워드 검색)")
+    @Operation(summary = "[어드민] 전체 회원 목록 (필터)")
     @GetMapping("/users")
     public ResponseEntity<ApiResponse<Page<UserDto>>> getAllUsers(
         @RequestParam(required = false) String keyword,
+        @RequestParam(required = false) UserRole role,
+        @RequestParam(required = false) Boolean active,
         @PageableDefault(size = 20) Pageable pageable
     ) {
-        Page<UserDto> users = (keyword != null && !keyword.isBlank())
-            ? userRepository.searchUsers(keyword, pageable).map(UserDto::from)
-            : userRepository.findAll(pageable).map(UserDto::from);
+        String kw = (keyword != null && !keyword.isBlank()) ? keyword : null;
+        Page<UserDto> users = userRepository.searchUsersAdmin(kw, role, active, pageable).map(UserDto::from);
         return ResponseEntity.ok(ApiResponse.success(users));
     }
 

@@ -29,6 +29,25 @@ public interface PostRepository extends JpaRepository<Post, Long> {
         Pageable pageable
     );
 
+    @Query("SELECT p FROM Post p LEFT JOIN FETCH p.user WHERE p.active = true " +
+        "AND (:category IS NULL OR p.category = :category) " +
+        "AND (:keyword IS NULL OR p.title LIKE %:keyword% OR p.content LIKE %:keyword% OR p.user.name LIKE %:keyword%) " +
+        "AND (:pinned IS NULL OR p.pinned = :pinned) " +
+        "AND (:reportedOnly = false OR p.reportCount > 0) " +
+        "ORDER BY p.pinned DESC, p.createdAt DESC",
+        countQuery = "SELECT COUNT(p) FROM Post p WHERE p.active = true " +
+        "AND (:category IS NULL OR p.category = :category) " +
+        "AND (:keyword IS NULL OR p.title LIKE %:keyword% OR p.content LIKE %:keyword% OR p.user.name LIKE %:keyword%) " +
+        "AND (:pinned IS NULL OR p.pinned = :pinned) " +
+        "AND (:reportedOnly = false OR p.reportCount > 0)")
+    Page<Post> searchPostsAdmin(
+        @Param("category") PostCategory category,
+        @Param("keyword") String keyword,
+        @Param("pinned") Boolean pinned,
+        @Param("reportedOnly") boolean reportedOnly,
+        Pageable pageable
+    );
+
     List<Post> findTop5ByActiveTrueOrderByLikeCountDesc();
 
     long countByUserEmailAndActiveTrue(String email);

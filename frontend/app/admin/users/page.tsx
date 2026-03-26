@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { adminApi } from "@/lib/api";
 import { toast } from "react-toastify";
@@ -24,23 +24,30 @@ const ROLE_LABEL: Record<string, string> = {
 
 export default function AdminUsersPage() {
   const [page, setPage] = useState(0);
-  const [keyword, setKeyword] = useState("");
   const [searchInput, setSearchInput] = useState("");
+  const [debouncedKeyword, setDebouncedKeyword] = useState("");
+  const [filterRole, setFilterRole] = useState("");
+  const [filterActive, setFilterActive] = useState("");
   const [editTarget, setEditTarget] = useState<UserItem | null>(null);
   const [editName, setEditName] = useState("");
   const [editPhone, setEditPhone] = useState("");
   const queryClient = useQueryClient();
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["admin", "users", page, keyword],
-    queryFn: async () => (await adminApi.getUsers(page, keyword || undefined)).data.data,
-  });
+  useEffect(() => {
+    const t = setTimeout(() => { setDebouncedKeyword(searchInput); setPage(0); }, 400);
+    return () => clearTimeout(t);
+  }, [searchInput]);
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    setKeyword(searchInput);
-    setPage(0);
+  const filters = {
+    keyword: debouncedKeyword || undefined,
+    role: filterRole || undefined,
+    active: filterActive === "" ? undefined : filterActive === "true",
   };
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["admin", "users", page, filters],
+    queryFn: async () => (await adminApi.getUsers(page, filters)).data.data,
+  });
 
   const activeMutation = useMutation({
     mutationFn: ({ id, active }: { id: number; active: boolean }) =>
@@ -83,19 +90,43 @@ export default function AdminUsersPage() {
     <div>
       <div className={s.pageHeader}>
         <h1 className={s.pageTitle}>회원 관리</h1>
-        <form onSubmit={handleSearch} className={s.searchForm}>
-          <input
-            type="text"
-            className={s.searchInput}
-            placeholder="이름 또는 이메일 검색"
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-          />
-          <button type="submit" className={s.searchBtn}>검색</button>
-          {keyword && (
-            <button type="button" className={s.searchClear} onClick={() => { setKeyword(""); setSearchInput(""); setPage(0); }}>✕ 초기화</button>
-          )}
-        </form>
+        {data && <span className={s.filterCount}>{data.totalElements}명</span>}
+      </div>
+
+      <div className={s.filterBar}>
+        <input
+          className={s.filterInput}
+          placeholder="이름 / 이메일 검색"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+        />
+        <select
+          className={s.filterSelect}
+          value={filterRole}
+          onChange={(e) => { setFilterRole(e.target.value); setPage(0); }}
+        >
+          <option value="">전체 역할</option>
+          <option value="ROLE_USER">일반 회원</option>
+          <option value="ROLE_BOX_OWNER">박스 오너</option>
+          <option value="ROLE_ADMIN">관리자</option>
+        </select>
+        <select
+          className={s.filterSelect}
+          value={filterActive}
+          onChange={(e) => { setFilterActive(e.target.value); setPage(0); }}
+        >
+          <option value="">활성 전체</option>
+          <option value="true">활성</option>
+          <option value="false">비활성</option>
+        </select>
+        {(searchInput || filterRole || filterActive) && (
+          <button
+            className={s.filterReset}
+            onClick={() => { setSearchInput(""); setDebouncedKeyword(""); setFilterRole(""); setFilterActive(""); setPage(0); }}
+          >
+            초기화
+          </button>
+        )}
       </div>
 
       <div className={s.tableWrap}>

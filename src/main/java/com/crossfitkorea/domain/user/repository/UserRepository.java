@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.crossfitkorea.domain.user.entity.UserRole;
+
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -19,4 +21,16 @@ public interface UserRepository extends JpaRepository<User, Long> {
         "(:keyword IS NULL OR LOWER(u.name) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
         "OR LOWER(u.email) LIKE LOWER(CONCAT('%', :keyword, '%')))")
     Page<User> searchUsers(@Param("keyword") String keyword, Pageable pageable);
+
+    @Query("SELECT u FROM User u WHERE " +
+        "(:keyword IS NULL OR LOWER(u.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(u.email) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
+        "AND (:role IS NULL OR u.role = :role) " +
+        "AND (:active IS NULL OR u.active = :active) " +
+        "ORDER BY u.createdAt DESC")
+    Page<User> searchUsersAdmin(
+        @Param("keyword") String keyword,
+        @Param("role") UserRole role,
+        @Param("active") Boolean active,
+        Pageable pageable
+    );
 }

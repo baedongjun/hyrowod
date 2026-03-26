@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { adminApi } from "@/lib/api";
 import { toast } from "react-toastify";
@@ -15,12 +15,28 @@ const CATEGORY_LABEL: Record<string, string> = {
 
 export default function AdminPostsPage() {
   const [page, setPage] = useState(0);
-  const [showReportedOnly, setShowReportedOnly] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
+  const [debouncedKeyword, setDebouncedKeyword] = useState("");
+  const [filterCategory, setFilterCategory] = useState("");
+  const [filterPinned, setFilterPinned] = useState("");
+  const [filterReported, setFilterReported] = useState(false);
   const queryClient = useQueryClient();
 
+  useEffect(() => {
+    const t = setTimeout(() => { setDebouncedKeyword(searchInput); setPage(0); }, 400);
+    return () => clearTimeout(t);
+  }, [searchInput]);
+
+  const filters = {
+    keyword: debouncedKeyword || undefined,
+    category: filterCategory || undefined,
+    pinned: filterPinned === "" ? undefined : filterPinned === "true",
+    reportedOnly: filterReported || undefined,
+  };
+
   const { data, isLoading } = useQuery({
-    queryKey: ["admin", "posts", page],
-    queryFn: async () => (await adminApi.getPosts(page)).data.data,
+    queryKey: ["admin", "posts", page, filters],
+    queryFn: async () => (await adminApi.getPosts(page, filters)).data.data,
   });
 
   const deleteMutation = useMutation({
@@ -50,17 +66,59 @@ export default function AdminPostsPage() {
     <div>
       <div className={s.pageHeader}>
         <h1 className={s.pageTitle}>게시글 관리</h1>
-        <Link href="/admin/posts/reported" className="btn-secondary" style={{ padding: "8px 16px", fontSize: 12, textDecoration: "none", display: "inline-block", color: "var(--red)" }}>
-          ⚠ 신고된 게시글 보기
-        </Link>
+        {data && <span className={s.filterCount}>{data.totalElements}개</span>}
       </div>
 
-      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
-        <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: "var(--muted)", cursor: "pointer" }}>
-          <input type="checkbox" checked={showReportedOnly} onChange={(e) => { setShowReportedOnly(e.target.checked); setPage(0); }} />
-          신고된 게시글만 보기
+      <div className={s.filterBar}>
+        <input
+          className={s.filterInput}
+          placeholder="제목 / 내용 / 작성자 검색"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+        />
+        <select
+          className={s.filterSelect}
+          value={filterCategory}
+          onChange={(e) => { setFilterCategory(e.target.value); setPage(0); }}
+        >
+          <option value="">전체 카테고리</option>
+          <option value="FREE">자유</option>
+          <option value="QNA">Q&A</option>
+          <option value="RECORD">기록</option>
+          <option value="MARKET">장터</option>
+        </select>
+        <select
+          className={s.filterSelect}
+          value={filterPinned}
+          onChange={(e) => { setFilterPinned(e.target.value); setPage(0); }}
+        >
+          <option value="">공지 전체</option>
+          <option value="true">공지 고정</option>
+          <option value="false">일반 게시글</option>
+        </select>
+        <label className={s.filterCheckLabel}>
+          <input
+            type="checkbox"
+            checked={filterReported}
+            onChange={(e) => { setFilterReported(e.target.checked); setPage(0); }}
+            style={{ accentColor: "var(--red)" }}
+          />
+          신고된 게시글만
         </label>
-        {showReportedOnly && <span style={{ fontSize: 12, color: "var(--red)" }}>⚠ 신고 접수된 게시글 필터링 중</span>}
+        {(searchInput || filterCategory || filterPinned || filterReported) && (
+          <button
+            className={s.filterReset}
+            onClick={() => { setSearchInput(""); setDebouncedKeyword(""); setFilterCategory(""); setFilterPinned(""); setFilterReported(false); setPage(0); }}
+          >
+            초기화
+          </button>
+        )}
+        <Link
+          href="/admin/posts/reported"
+          className={s.reportedLink}
+        >
+          ⚠ 신고 목록
+        </Link>
       </div>
 
       <div className={s.tableWrap}>
@@ -86,7 +144,7 @@ export default function AdminPostsPage() {
                 </tr>
               ))
             ) : (
-              data?.content?.filter((post: { reportCount?: number }) => !showReportedOnly || (post.reportCount ?? 0) > 0).map((post: { id: number; category: string; title: string; userName: string; viewCount: number; likeCount: number; commentCount: number; createdAt: string; pinned: boolean; reportCount?: number }) => (
+              data?.content?.map((post: { id: number; category: string; title: string; userName: string; viewCount: number; likeCount: number; commentCount: number; createdAt: string; pinned: boolean; reportCount?: number }) => (
                 <tr key={post.id} className={`${s.tr} ${post.pinned ? ps.pinnedRow : ""}`}>
                   <td className={s.td}>
                     <span className={ps.catBadge}>{CATEGORY_LABEL[post.category] || post.category}</span>

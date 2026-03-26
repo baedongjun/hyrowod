@@ -457,8 +457,8 @@ export const adminApi = {
   getDashboard: (months = 6) =>
     api.get("/api/v1/admin/dashboard", { params: { months } }),
 
-  getBoxes: (page = 0, active = true) =>
-    api.get("/api/v1/admin/boxes", { params: { page, active } }),
+  getBoxes: (page = 0, filters?: { active?: boolean | null; city?: string; keyword?: string; verified?: boolean | null; premium?: boolean | null }) =>
+    api.get("/api/v1/admin/boxes", { params: { page, ...filters } }),
 
   verifyBox: (id: number, verified: boolean) =>
     api.patch(`/api/v1/admin/boxes/${id}/verify`, null, { params: { verified } }),
@@ -475,8 +475,8 @@ export const adminApi = {
   createCommonWod: (data: object) =>
     api.post("/api/v1/admin/wod", data),
 
-  getUsers: (page = 0, keyword?: string) =>
-    api.get("/api/v1/admin/users", { params: { page, keyword } }),
+  getUsers: (page = 0, filters?: { keyword?: string; role?: string; active?: boolean | null }) =>
+    api.get("/api/v1/admin/users", { params: { page, ...filters } }),
 
   toggleUserActive: (id: number, active: boolean) =>
     api.patch(`/api/v1/admin/users/${id}/active`, null, { params: { active } }),
@@ -493,8 +493,8 @@ export const adminApi = {
   deleteBox: (id: number) =>
     api.delete(`/api/v1/boxes/${id}`),
 
-  getPosts: (page = 0) =>
-    api.get("/api/v1/admin/posts", { params: { page } }),
+  getPosts: (page = 0, filters?: { category?: string; keyword?: string; pinned?: boolean | null; reportedOnly?: boolean }) =>
+    api.get("/api/v1/admin/posts", { params: { page, ...filters } }),
 
   deletePost: (id: number) =>
     api.delete(`/api/v1/admin/posts/${id}`),
