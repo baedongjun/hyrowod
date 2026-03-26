@@ -420,14 +420,29 @@ export default function MyBoxPage() {
           <div className={s.layout}>
             {/* 박스 목록 사이드바 */}
             <div className={s.sidebar}>
-              <p className={s.sidebarTitle}>내 박스</p>
-              {boxes.map((box) => (
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+                <p className={s.sidebarTitle} style={{ margin: 0 }}>내 박스 ({boxes.length})</p>
+                <Link
+                  href="/boxes/create"
+                  style={{ fontSize: 11, color: "var(--red)", fontWeight: 700, textDecoration: "none", border: "1px solid var(--red)", padding: "3px 8px" }}
+                >
+                  + 추가
+                </Link>
+              </div>
+              {boxes.map((box, idx) => (
                 <button
                   key={box.id}
                   onClick={() => setSelectedBoxId(box.id)}
                   className={`${s.boxTab} ${(selectedBoxId ?? boxes[0]?.id) === box.id ? s.boxTabActive : ""}`}
                 >
-                  <span className={s.boxTabName}>{box.name}</span>
+                  <span className={s.boxTabName}>
+                    {boxes.length > 1 && (
+                      <span style={{ fontSize: 10, color: "var(--muted)", marginRight: 4 }}>
+                        {idx === 0 ? "[본점]" : "[지점]"}
+                      </span>
+                    )}
+                    {box.name}
+                  </span>
                   <div className={s.boxTabMeta}>
                     {box.verified && <span className="badge badge-approved">인증</span>}
                     {box.premium && <span className="badge badge-premium">프리미엄</span>}
@@ -435,6 +450,11 @@ export default function MyBoxPage() {
                   </div>
                 </button>
               ))}
+              {boxes.length > 1 && (
+                <p style={{ fontSize: 11, color: "var(--muted)", marginTop: 10, lineHeight: 1.5, padding: "8px", background: "var(--bg-card-2)", border: "1px solid var(--border)" }}>
+                  각 박스를 클릭해 개별 관리할 수 있습니다.
+                </p>
+              )}
             </div>
 
             {/* 박스 상세 관리 */}
