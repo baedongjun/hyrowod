@@ -22,92 +22,134 @@ export default function BoxMap({ boxes }: BoxMapProps) {
   const clustererRef = useRef<any>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const openInfoRef = useRef<any>(null);
-  // clusterer 미지원 시 plain 마커 추적용
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const plainMarkersRef = useRef<any[]>([]);
 
-  // 항상 최신 boxes를 가리키는 ref — 렌더마다 동기 업데이트
   const boxesRef = useRef<Box[]>(boxes);
   boxesRef.current = boxes;
 
-  // 마커 생성 헬퍼
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const buildMarkers = (bxs: Box[], map: any) => {
-    return bxs
-      .filter((box) => box.latitude && box.longitude)
-      .map((box) => {
-        const color = box.premium ? "#ff6b1a" : box.verified ? "#e8220a" : "#888888";
+  const buildMarker = (box: Box, lat: number, lng: number, map: any) => {
+    const color = box.premium ? "#ff6b1a" : box.verified ? "#e8220a" : "#888888";
 
-        const marker = new window.kakao.maps.Marker({
-          position: new window.kakao.maps.LatLng(box.latitude, box.longitude),
-          title: box.name,
-        });
+    const marker = new window.kakao.maps.Marker({
+      position: new window.kakao.maps.LatLng(lat, lng),
+      title: box.name,
+    });
 
-        const badgeHtml = box.premium
-          ? `<span style="background:#ff6b1a;color:#fff;font-size:10px;font-weight:700;padding:1px 5px;white-space:nowrap">PREMIUM</span>`
-          : box.verified
-          ? `<span style="background:#e8220a;color:#fff;font-size:10px;font-weight:700;padding:1px 5px;white-space:nowrap">인증</span>`
-          : "";
+    const badgeHtml = box.premium
+      ? `<span style="background:#ff6b1a;color:#fff;font-size:10px;font-weight:700;padding:1px 5px;white-space:nowrap">PREMIUM</span>`
+      : box.verified
+      ? `<span style="background:#e8220a;color:#fff;font-size:10px;font-weight:700;padding:1px 5px;white-space:nowrap">인증</span>`
+      : "";
 
-        const ratingHtml = box.rating
-          ? `<span style="color:#eab308;font-size:12px">★</span><span style="color:#aaa;font-size:12px"> ${Number(box.rating).toFixed(1)}</span>`
-          : "";
+    const ratingHtml = box.rating
+      ? `<span style="color:#eab308;font-size:12px">★</span><span style="color:#aaa;font-size:12px"> ${Number(box.rating).toFixed(1)}</span>`
+      : "";
 
-        const infoWindow = new window.kakao.maps.InfoWindow({
-          content: `
-            <div style="
-              background:#1a1a1a;
-              border:1px solid rgba(255,255,255,0.12);
-              border-top:3px solid ${color};
-              padding:10px 12px;
-              min-width:160px;
-              max-width:200px;
-              font-family:sans-serif;
-            ">
-              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:4px">
-                <span style="font-size:13px;font-weight:700;color:#f5f0e8;line-height:1.3">${box.name}</span>
-                ${badgeHtml}
-              </div>
-              <p style="font-size:11px;color:#888;margin:0 0 8px">${box.city} ${box.district}</p>
-              <div style="display:flex;align-items:center;justify-content:space-between">
-                <span>${ratingHtml}</span>
-                <a href="/boxes/${box.id}" style="font-size:11px;color:${color};font-weight:700;text-decoration:none">상세 보기 →</a>
-              </div>
-            </div>`,
-          removable: true,
-        });
+    const infoWindow = new window.kakao.maps.InfoWindow({
+      content: `
+        <div style="
+          background:#1a1a1a;
+          border:1px solid rgba(255,255,255,0.12);
+          border-top:3px solid ${color};
+          padding:10px 12px;
+          min-width:160px;
+          max-width:200px;
+          font-family:sans-serif;
+        ">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:6px;margin-bottom:4px">
+            <span style="font-size:13px;font-weight:700;color:#f5f0e8;line-height:1.3">${box.name}</span>
+            ${badgeHtml}
+          </div>
+          <p style="font-size:11px;color:#888;margin:0 0 8px">${box.city} ${box.district}</p>
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <span>${ratingHtml}</span>
+            <a href="/boxes/${box.id}" style="font-size:11px;color:${color};font-weight:700;text-decoration:none">상세 보기 →</a>
+          </div>
+        </div>`,
+      removable: true,
+    });
 
-        window.kakao.maps.event.addListener(marker, "click", () => {
-          if (openInfoRef.current && openInfoRef.current !== infoWindow) {
-            openInfoRef.current.close();
-          }
-          infoWindow.open(map, marker);
-          openInfoRef.current = infoWindow;
-        });
+    window.kakao.maps.event.addListener(marker, "click", () => {
+      if (openInfoRef.current && openInfoRef.current !== infoWindow) {
+        openInfoRef.current.close();
+      }
+      infoWindow.open(map, marker);
+      openInfoRef.current = infoWindow;
+    });
 
-        return marker;
-      });
+    return marker;
   };
 
-  // 마커 갱신 — clusterer 없을 때 plain 마커로 폴백
-  const updateMarkers = (bxs: Box[]) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const addMarkersToMap = (markers: any[]) => {
     const map = mapInstanceRef.current;
     if (!map) return;
-
-    const markers = buildMarkers(bxs, map);
 
     if (clustererRef.current) {
       clustererRef.current.clear();
       clustererRef.current.addMarkers(markers);
     } else {
-      // clusterer 라이브러리 미로드 시 plain 마커로 표시
       plainMarkersRef.current.forEach((m) => m.setMap(null));
       plainMarkersRef.current = markers;
       markers.forEach((m) => m.setMap(map));
     }
   };
 
-  // 지도 초기화 — boxesRef.current로 항상 최신 boxes 사용
+  // 박스 배열을 받아 마커 생성 (좌표 없는 박스는 주소로 지오코딩)
+  const updateMarkers = (bxs: Box[]) => {
+    const map = mapInstanceRef.current;
+    if (!map || bxs.length === 0) return;
+
+    // 좌표 있는 박스 → 바로 마커 생성
+    const markers = bxs
+      .filter((b) => b.latitude && b.longitude)
+      .map((b) => buildMarker(b, b.latitude, b.longitude, map));
+
+    // 좌표 없는 박스 → 주소로 지오코딩
+    const noCoordBoxes = bxs.filter((b) => !b.latitude || !b.longitude);
+
+    if (noCoordBoxes.length === 0) {
+      addMarkersToMap(markers);
+      return;
+    }
+
+    // services 라이브러리 확인
+    if (!window.kakao?.maps?.services?.Geocoder) {
+      addMarkersToMap(markers);
+      return;
+    }
+
+    const geocoder = new window.kakao.maps.services.Geocoder();
+    let pending = noCoordBoxes.length;
+
+    noCoordBoxes.forEach((box) => {
+      if (!box.address) {
+        pending--;
+        if (pending === 0) addMarkersToMap(markers);
+        return;
+      }
+
+      geocoder.addressSearch(
+        box.address,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (result: any[], status: string) => {
+          if (
+            status === window.kakao.maps.services.Status.OK &&
+            result.length > 0
+          ) {
+            const lat = parseFloat(result[0].y);
+            const lng = parseFloat(result[0].x);
+            markers.push(buildMarker(box, lat, lng, map));
+          }
+          pending--;
+          if (pending === 0) addMarkersToMap(markers);
+        }
+      );
+    });
+  };
+
   const initMap = () => {
     if (!mapRef.current || mapInstanceRef.current) return;
 
@@ -141,7 +183,6 @@ export default function BoxMap({ boxes }: BoxMapProps) {
     updateMarkers(boxesRef.current);
   };
 
-  // 카카오 SDK 로드 및 지도 초기화 (마운트 시 1회)
   useEffect(() => {
     const load = () => {
       if (window.kakao.maps.Map) {
@@ -175,7 +216,6 @@ export default function BoxMap({ boxes }: BoxMapProps) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // boxes 변경 시 마커 갱신
   useEffect(() => {
     updateMarkers(boxes);
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -183,7 +223,7 @@ export default function BoxMap({ boxes }: BoxMapProps) {
 
   const verifiedCount = boxes.filter((b) => b.verified && !b.premium).length;
   const premiumCount = boxes.filter((b) => b.premium).length;
-  const hasCoords = boxes.filter((b) => b.latitude && b.longitude).length;
+  const totalCount = boxes.length;
 
   return (
     <div style={{ position: "relative" }}>
@@ -202,7 +242,7 @@ export default function BoxMap({ boxes }: BoxMapProps) {
           display: "flex", flexDirection: "column", gap: 4,
         }}>
           <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "1px", color: "#888", textTransform: "uppercase", margin: "0 0 4px" }}>
-            총 {hasCoords}개 박스
+            총 {totalCount}개 박스
           </p>
           {premiumCount > 0 && (
             <div style={{ display: "flex", alignItems: "center", gap: 6 }}>

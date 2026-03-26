@@ -60,7 +60,6 @@ export default function AddressSearch({ onSelect, buttonStyle, buttonClassName }
       new window.daum.Postcode({
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         oncomplete: (data: any) => {
-          // 도로명 우선, 없으면 지번
           const address = data.roadAddress || data.jibunAddress;
           const sido = SIDO_MAP[data.sido] || data.sido;
           const district = data.sigungu || "";
@@ -72,7 +71,6 @@ export default function AddressSearch({ onSelect, buttonStyle, buttonClassName }
     if (window.daum?.Postcode) {
       open();
     } else {
-      // 스크립트 로드 대기
       const script = document.getElementById(SCRIPT_ID) as HTMLScriptElement | null;
       if (script) {
         script.onload = open;
