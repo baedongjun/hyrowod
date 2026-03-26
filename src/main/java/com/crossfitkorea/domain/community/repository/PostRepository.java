@@ -29,7 +29,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
         Pageable pageable
     );
 
-    @Query("SELECT p FROM Post p LEFT JOIN FETCH p.user WHERE p.active = true " +
+    @Query(value = "SELECT p FROM Post p LEFT JOIN FETCH p.user WHERE p.active = true " +
         "AND (:category IS NULL OR p.category = :category) " +
         "AND (:keyword IS NULL OR p.title LIKE %:keyword% OR p.content LIKE %:keyword% OR p.user.name LIKE %:keyword%) " +
         "AND (:pinned IS NULL OR p.pinned = :pinned) " +
