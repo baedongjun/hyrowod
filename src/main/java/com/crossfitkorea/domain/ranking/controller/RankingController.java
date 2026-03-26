@@ -26,6 +26,12 @@ public class RankingController {
         return ResponseEntity.ok(ApiResponse.success(rankingService.getNamedWods()));
     }
 
+    /** 종합 랭킹 개요 — WOD별 TOP 3 [PUBLIC] */
+    @GetMapping("/overview")
+    public ResponseEntity<ApiResponse<List<RankingOverviewDto>>> getOverview() {
+        return ResponseEntity.ok(ApiResponse.success(rankingService.getOverview()));
+    }
+
     /** Named WOD 상세 + 랭킹 [PUBLIC+AUTH] */
     @GetMapping("/wods/{id}")
     public ResponseEntity<ApiResponse<NamedWodDetailDto>> getWodDetail(

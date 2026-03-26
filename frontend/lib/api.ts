@@ -708,6 +708,7 @@ export const goalApi = {
 // Ranking API
 export const rankingApi = {
   getWods: () => api.get("/api/v1/ranking/wods"),
+  getOverview: () => api.get("/api/v1/ranking/overview"),
   getWodDetail: (id: number) => api.get(`/api/v1/ranking/wods/${id}`),
   submitRecord: (data: { namedWodId: number; score: number; videoUrl: string; recordedAt?: string; notes?: string }) =>
     api.post("/api/v1/ranking/records", data),

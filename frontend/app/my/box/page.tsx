@@ -233,6 +233,15 @@ export default function MyBoxPage() {
     enabled: activeBoxTab === "기록 인증",
   });
 
+  // 탭 배지용: 항상 대기 건수 조회
+  const { data: pendingCountData } = useQuery({
+    queryKey: ["ranking", "pending", "count"],
+    queryFn: async () => (await rankingApi.getPendingRecords(0, 1)).data.data,
+    enabled: !!boxId,
+    staleTime: 1000 * 30,
+  });
+  const pendingCount = pendingCountData?.totalElements ?? 0;
+
   const verifyMutation = useMutation({
     mutationFn: ({ id, comment }: { id: number; comment?: string }) => rankingApi.verifyRecord(id, comment),
     onSuccess: () => {
@@ -476,6 +485,20 @@ export default function MyBoxPage() {
                       onClick={() => setActiveBoxTab(t)}
                     >
                       {t}
+                      {t === "기록 인증" && pendingCount > 0 && (
+                        <span style={{
+                          marginLeft: 6,
+                          background: "#e8220a",
+                          color: "#fff",
+                          fontSize: 10,
+                          fontWeight: 700,
+                          padding: "1px 5px",
+                          borderRadius: 0,
+                          verticalAlign: "middle",
+                        }}>
+                          {pendingCount}
+                        </span>
+                      )}
                     </button>
                   ))}
                 </div>

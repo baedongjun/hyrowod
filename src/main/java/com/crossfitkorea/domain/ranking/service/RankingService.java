@@ -201,4 +201,36 @@ public class RankingService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.NAMED_WOD_NOT_FOUND));
         wod.setActive(active);
     }
+
+    /** 종합 랭킹 개요 — WOD별 TOP 3 */
+    public List<RankingOverviewDto> getOverview() {
+        return namedWodRepository.findByActiveTrueOrderByCategoryAscNameAsc()
+                .stream()
+                .map(wod -> {
+                    List<NamedWodRecord> verified =
+                            recordRepository.findByNamedWodAndStatusOrderByScoreAsc(wod, VerificationStatus.VERIFIED);
+
+                    if (wod.getScoreType() != ScoreType.TIME) {
+                        verified = new ArrayList<>(verified);
+                        java.util.Collections.reverse(verified);
+                    }
+
+                    AtomicInteger rank = new AtomicInteger(1);
+                    List<RankingEntryDto> top3 = verified.stream()
+                            .limit(3)
+                            .map(r -> RankingEntryDto.from(r, rank.getAndIncrement()))
+                            .collect(Collectors.toList());
+
+                    return RankingOverviewDto.builder()
+                            .wodId(wod.getId())
+                            .wodName(wod.getName())
+                            .category(wod.getCategory())
+                            .scoreType(wod.getScoreType())
+                            .scoreUnit(wod.getScoreUnit())
+                            .totalVerified(verified.size())
+                            .top3(top3)
+                            .build();
+                })
+                .collect(Collectors.toList());
+    }
 }

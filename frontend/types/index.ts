@@ -293,6 +293,16 @@ export interface NamedWodDetail {
   myLatestRecord?: NamedWodRecord;
 }
 
+export interface RankingOverview {
+  wodId: number;
+  wodName: string;
+  category: NamedWodCategory;
+  scoreType: ScoreType;
+  scoreUnit?: string;
+  totalVerified: number;
+  top3: RankingEntry[];
+}
+
 export interface NamedWodRecord {
   id: number;
   namedWodId: number;
