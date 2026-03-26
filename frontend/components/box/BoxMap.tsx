@@ -22,20 +22,18 @@ export default function BoxMap({ boxes }: BoxMapProps) {
   const clustererRef = useRef<any>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const openInfoRef = useRef<any>(null);
+  // clusterer 미지원 시 plain 마커 추적용
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const plainMarkersRef = useRef<any[]>([]);
 
   // 항상 최신 boxes를 가리키는 ref — 렌더마다 동기 업데이트
   const boxesRef = useRef<Box[]>(boxes);
   boxesRef.current = boxes;
 
-  // 마커 갱신
-  const updateMarkers = (bxs: Box[]) => {
-    const clusterer = clustererRef.current;
-    const map = mapInstanceRef.current;
-    if (!clusterer || !map) return;
-
-    clusterer.clear();
-
-    const markers = bxs
+  // 마커 생성 헬퍼
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const buildMarkers = (bxs: Box[], map: any) => {
+    return bxs
       .filter((box) => box.latitude && box.longitude)
       .map((box) => {
         const color = box.premium ? "#ff6b1a" : box.verified ? "#e8220a" : "#888888";
@@ -89,8 +87,24 @@ export default function BoxMap({ boxes }: BoxMapProps) {
 
         return marker;
       });
+  };
 
-    clusterer.addMarkers(markers);
+  // 마커 갱신 — clusterer 없을 때 plain 마커로 폴백
+  const updateMarkers = (bxs: Box[]) => {
+    const map = mapInstanceRef.current;
+    if (!map) return;
+
+    const markers = buildMarkers(bxs, map);
+
+    if (clustererRef.current) {
+      clustererRef.current.clear();
+      clustererRef.current.addMarkers(markers);
+    } else {
+      // clusterer 라이브러리 미로드 시 plain 마커로 표시
+      plainMarkersRef.current.forEach((m) => m.setMap(null));
+      plainMarkersRef.current = markers;
+      markers.forEach((m) => m.setMap(map));
+    }
   };
 
   // 지도 초기화 — boxesRef.current로 항상 최신 boxes 사용
@@ -103,24 +117,26 @@ export default function BoxMap({ boxes }: BoxMapProps) {
     });
     mapInstanceRef.current = map;
 
-    const clusterer = new window.kakao.maps.MarkerClusterer({
-      map,
-      averageCenter: true,
-      minLevel: 6,
-      disableClickZoom: false,
-      styles: [{
-        width: "46px",
-        height: "46px",
-        background: "rgba(232,34,10,0.85)",
-        color: "#fff",
-        textAlign: "center",
-        fontWeight: "bold",
-        lineHeight: "46px",
-        fontSize: "13px",
-        borderRadius: "23px",
-      }],
-    });
-    clustererRef.current = clusterer;
+    if (window.kakao.maps.MarkerClusterer) {
+      const clusterer = new window.kakao.maps.MarkerClusterer({
+        map,
+        averageCenter: true,
+        minLevel: 6,
+        disableClickZoom: false,
+        styles: [{
+          width: "46px",
+          height: "46px",
+          background: "rgba(232,34,10,0.85)",
+          color: "#fff",
+          textAlign: "center",
+          fontWeight: "bold",
+          lineHeight: "46px",
+          fontSize: "13px",
+          borderRadius: "23px",
+        }],
+      });
+      clustererRef.current = clusterer;
+    }
 
     updateMarkers(boxesRef.current);
   };
@@ -147,7 +163,7 @@ export default function BoxMap({ boxes }: BoxMapProps) {
     }
 
     const script = document.createElement("script");
-    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_KEY}&autoload=false&libraries=clusterer`;
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_KEY}&autoload=false&libraries=services,clusterer`;
     script.async = true;
     document.head.appendChild(script);
     script.onload = load;

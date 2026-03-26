@@ -76,7 +76,7 @@ export default function BoxDetailMap({ name, address, latitude, longitude }: Box
 
     // 새 스크립트 로드 (services 라이브러리 포함 — 주소→좌표 변환용)
     const script = document.createElement("script");
-    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_KEY}&autoload=false&libraries=services`;
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_KEY}&autoload=false&libraries=services,clusterer`;
     script.async = true;
     script.onload = initMap;
     document.head.appendChild(script);

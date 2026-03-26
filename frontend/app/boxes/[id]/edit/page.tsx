@@ -19,7 +19,7 @@ export default function BoxEditPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [form, setForm] = useState({
-    name: "", address: "", city: "서울", district: "", phone: "",
+    name: "", address: "", addressDetail: "", city: "서울", district: "", phone: "",
     website: "", instagram: "", youtube: "", description: "",
     monthlyFee: "", openTime: "06:00", closeTime: "22:00",
   });
@@ -87,6 +87,9 @@ export default function BoxEditPage() {
     mutationFn: () =>
       boxApi.update(id, {
         ...form,
+        address: form.addressDetail.trim()
+          ? `${form.address} ${form.addressDetail.trim()}`
+          : form.address,
         monthlyFee: form.monthlyFee ? parseInt(form.monthlyFee) : null,
         imageUrls,
       }),
@@ -151,10 +154,19 @@ export default function BoxEditPage() {
                   buttonClassName="btn-secondary"
                   buttonStyle={{ padding: "0 16px", fontSize: 13, whiteSpace: "nowrap" }}
                   onSelect={({ address, city, district }) =>
-                    setForm((f) => ({ ...f, address, city, district }))
+                    setForm((f) => ({ ...f, address, city, district, addressDetail: "" }))
                   }
                 />
               </div>
+              {form.address && (
+                <input
+                  className="input-field"
+                  style={{ marginTop: 8 }}
+                  placeholder="상세 주소 입력 (예: 3층, B1호, 지하 1층)"
+                  value={form.addressDetail}
+                  onChange={set("addressDetail")}
+                />
+              )}
             </div>
             <div className={s.grid2}>
               <div className={s.field}>
