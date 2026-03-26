@@ -5,7 +5,7 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import Link from "next/link";
 import { rankingApi, followApi, userApi } from "@/lib/api";
 import { isLoggedIn } from "@/lib/auth";
-import { NamedWod, NamedWodCategory, NamedWodDetail } from "@/types";
+import { NamedWod, NamedWodCategory, NamedWodDetail, RankingEntry } from "@/types";
 import s from "./ranking.module.css";
 
 const CATEGORY_LABEL: Record<NamedWodCategory, string> = {

@@ -32,7 +32,7 @@
 .heroDesc {
   font-size: 14px;
   color: var(--muted);
-  max-width: 480px;
+  max-width: 720px;
   margin: 0 auto 12px;
   line-height: 1.6;
 }
