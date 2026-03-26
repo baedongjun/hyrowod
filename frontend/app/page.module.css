@@ -566,6 +566,167 @@
 .ctaInner .btn-primary { padding: 18px 48px; font-size: 15px; }
 
 /* =======================================
+   Join Box CTA (미가입 유도)
+   ======================================= */
+.joinBoxSection {
+  padding: 64px 0;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.joinBoxInner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 80px;
+  display: flex;
+  position: relative;
+}
+.joinBoxAccent {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(to bottom, var(--red), var(--orange));
+}
+.joinBoxBody {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 48px;
+  align-items: center;
+  width: 100%;
+}
+.joinBoxLeft { display: flex; flex-direction: column; }
+.joinBoxTag {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 14px;
+}
+.joinBoxTitle {
+  font-family: 'Black Han Sans', sans-serif;
+  font-size: clamp(26px, 3vw, 36px);
+  color: var(--text);
+  line-height: 1.35;
+  margin-bottom: 14px;
+}
+.joinBoxDesc {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.85;
+  margin-bottom: 24px;
+  max-width: 480px;
+}
+.joinBoxBenefits {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+.joinBoxBenefit {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.joinBoxBenefitIcon { font-size: 16px; line-height: 1; }
+.joinBoxBenefitText {
+  font-size: 13px;
+  color: var(--text);
+  font-weight: 600;
+}
+.joinBoxCta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.joinBoxCta .btn-primary { padding: 13px 28px; font-size: 14px; }
+.joinBoxMapBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 20px;
+  border: 1px solid rgba(255,255,255,0.15);
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s, border-color 0.2s;
+}
+.joinBoxMapBtn:hover { color: var(--text); border-color: rgba(255,255,255,0.3); }
+
+/* 오른쪽 비주얼 */
+.joinBoxRight { display: flex; justify-content: center; align-items: center; }
+.joinBoxVisual {
+  position: relative;
+  width: 100%;
+  background: var(--bg-card-2);
+  border: 1px solid var(--border);
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+.joinBoxBigText {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 72px;
+  color: rgba(232, 34, 10, 0.12);
+  letter-spacing: 8px;
+  line-height: 1;
+  user-select: none;
+}
+.joinBoxSteps {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  width: 100%;
+  justify-content: center;
+}
+.joinBoxStep {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+  flex: 1;
+}
+.joinBoxStepLine {
+  position: absolute;
+  left: -50%;
+  top: 16px;
+  right: 50%;
+  height: 1px;
+  background: var(--border);
+  width: 100%;
+}
+.joinBoxStepNum {
+  width: 32px;
+  height: 32px;
+  background: var(--red);
+  color: #fff;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+.joinBoxStepLabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--muted);
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* =======================================
    Responsive
    ======================================= */
 @media (max-width: 768px) {
@@ -612,6 +773,11 @@
   .myBoxInner { padding: 0 24px; }
   .myBoxCard { flex-wrap: wrap; gap: 12px; padding: 20px 20px; }
 
+  .joinBoxSection { padding: 48px 0; }
+  .joinBoxInner { padding: 0 24px; }
+  .joinBoxBody { grid-template-columns: 1fr; gap: 32px; }
+  .joinBoxRight { display: none; }
+
   .cta { padding: 60px 0; }
   .cta::before { display: none; }
   .ctaInner { padding: 0 24px; }
@@ -642,4 +808,9 @@
 
   .myBoxInner { padding: 0 16px; }
   .ctaInner { padding: 0 16px; }
+  .joinBoxInner { padding: 0 16px; }
+  .joinBoxTitle { font-size: 24px; }
+  .joinBoxCta { flex-direction: column; align-items: flex-start; }
+  .joinBoxCta .btn-primary { width: 100%; text-align: center; }
+  .joinBoxMapBtn { width: 100%; justify-content: center; }
 }

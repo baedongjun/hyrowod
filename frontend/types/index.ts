@@ -253,3 +253,60 @@ export interface UserGoal {
   notes?: string;
   createdAt: string;
 }
+
+// Ranking
+export type NamedWodCategory = "GIRLS" | "HEROES" | "BENCHMARK" | "CUSTOM";
+export type ScoreType = "TIME" | "REPS" | "WEIGHT" | "ROUNDS";
+export type VerificationStatus = "PENDING" | "VERIFIED" | "REJECTED";
+
+export interface NamedWod {
+  id: number;
+  name: string;
+  description?: string;
+  category: NamedWodCategory;
+  scoreType: ScoreType;
+  scoreUnit?: string;
+  verifiedCount: number;
+}
+
+export interface RankingEntry {
+  recordId: number;
+  rank: number;
+  userId: number;
+  userName: string;
+  userProfileImageUrl?: string;
+  score: number;
+  scoreFormatted: string;
+  videoUrl: string;
+  recordedAt: string;
+  verifiedBoxName?: string;
+}
+
+export interface NamedWodDetail {
+  id: number;
+  name: string;
+  description?: string;
+  category: NamedWodCategory;
+  scoreType: ScoreType;
+  scoreUnit?: string;
+  leaderboard: RankingEntry[];
+  myLatestRecord?: NamedWodRecord;
+}
+
+export interface NamedWodRecord {
+  id: number;
+  namedWodId: number;
+  namedWodName: string;
+  scoreType: ScoreType;
+  scoreUnit?: string;
+  score: number;
+  scoreFormatted: string;
+  videoUrl: string;
+  recordedAt: string;
+  notes?: string;
+  status: VerificationStatus;
+  verifiedBoxName?: string;
+  verifiedByName?: string;
+  verificationComment?: string;
+  createdAt: string;
+}

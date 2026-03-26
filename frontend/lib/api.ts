@@ -704,3 +704,26 @@ export const goalApi = {
   delete: (id: number) => api.delete(`/api/v1/goals/${id}`),
   achieve: (id: number) => api.patch(`/api/v1/goals/${id}/achieve`),
 };
+
+// Ranking API
+export const rankingApi = {
+  getWods: () => api.get("/api/v1/ranking/wods"),
+  getWodDetail: (id: number) => api.get(`/api/v1/ranking/wods/${id}`),
+  submitRecord: (data: { namedWodId: number; score: number; videoUrl: string; recordedAt?: string; notes?: string }) =>
+    api.post("/api/v1/ranking/records", data),
+  getMyRecords: (page = 0, size = 10) =>
+    api.get("/api/v1/ranking/records/my", { params: { page, size } }),
+  getPendingRecords: (page = 0, size = 20) =>
+    api.get("/api/v1/ranking/records/pending", { params: { page, size } }),
+  verifyRecord: (id: number, comment?: string) =>
+    api.patch(`/api/v1/ranking/records/${id}/verify`, { comment }),
+  rejectRecord: (id: number, comment?: string) =>
+    api.patch(`/api/v1/ranking/records/${id}/reject`, { comment }),
+  // Admin
+  createWod: (data: { name: string; description?: string; category: string; scoreType: string; scoreUnit?: string }) =>
+    api.post("/api/v1/admin/ranking/wods", data),
+  updateWod: (id: number, data: { name: string; description?: string; category: string; scoreType: string; scoreUnit?: string }) =>
+    api.put(`/api/v1/admin/ranking/wods/${id}`, data),
+  toggleWodActive: (id: number, active: boolean) =>
+    api.patch(`/api/v1/admin/ranking/wods/${id}/active`, null, { params: { active } }),
+};

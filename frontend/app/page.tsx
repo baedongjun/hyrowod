@@ -363,6 +363,69 @@ export default function HomePage() {
         </section>
       )}
 
+      {/* 박스 미가입 유도 (로그인 + ROLE_USER + 박스 없음) */}
+      {loggedIn && !myBox && currentUser?.role === "ROLE_USER" && (
+        <section className={s.joinBoxSection}>
+          <div className={s.joinBoxInner}>
+            <div className={s.joinBoxAccent} />
+            <div className={s.joinBoxBody}>
+              <div className={s.joinBoxLeft}>
+                <p className={s.joinBoxTag}>MY BOX</p>
+                <h2 className={s.joinBoxTitle}>
+                  아직 소속 박스가<br />없으신가요?
+                </h2>
+                <p className={s.joinBoxDesc}>
+                  박스에 가입하면 WOD 공유, 박스 공지사항, 코치 정보,
+                  멤버들과의 커뮤니티까지 모두 함께할 수 있습니다.
+                </p>
+                <div className={s.joinBoxBenefits}>
+                  {[
+                    { icon: "🏋️", text: "박스 WOD 함께 기록" },
+                    { icon: "📢", text: "공지사항 & 스케줄 확인" },
+                    { icon: "👥", text: "멤버 커뮤니티 참여" },
+                  ].map((b) => (
+                    <div key={b.text} className={s.joinBoxBenefit}>
+                      <span className={s.joinBoxBenefitIcon}>{b.icon}</span>
+                      <span className={s.joinBoxBenefitText}>{b.text}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className={s.joinBoxCta}>
+                  <Link href="/boxes" className="btn-primary">
+                    내 주변 박스 찾기
+                  </Link>
+                  <Link href="/boxes?view=map" className={s.joinBoxMapBtn}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/>
+                      <line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/>
+                    </svg>
+                    지도로 보기
+                  </Link>
+                </div>
+              </div>
+              <div className={s.joinBoxRight}>
+                <div className={s.joinBoxVisual}>
+                  <span className={s.joinBoxBigText}>CF</span>
+                  <div className={s.joinBoxSteps}>
+                    {[
+                      { step: "01", label: "박스 검색" },
+                      { step: "02", label: "상세 확인" },
+                      { step: "03", label: "가입 신청" },
+                    ].map((item, i) => (
+                      <div key={item.step} className={s.joinBoxStep}>
+                        {i > 0 && <div className={s.joinBoxStepLine} />}
+                        <div className={s.joinBoxStepNum}>{item.step}</div>
+                        <div className={s.joinBoxStepLabel}>{item.label}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* CTA */}
       <section className={s.cta}>
         <div className={s.ctaInner}>

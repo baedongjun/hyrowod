@@ -19,6 +19,7 @@ dayjs.locale("ko");
 const NAV_ITEMS = [
   { href: "/boxes",        label: "박스 찾기" },
   { href: "/wod",          label: "오늘의 WOD" },
+  { href: "/ranking",      label: "랭킹" },
   { href: "/competitions", label: "대회 일정" },
   { href: "/community",    label: "커뮤니티" },
   { href: "/challenges",   label: "챌린지" },

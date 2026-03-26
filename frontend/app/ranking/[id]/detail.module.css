@@ -1,0 +1,428 @@
+.page {
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: var(--muted);
+}
+
+.header {
+  background: #111;
+  border-bottom: 3px solid var(--red);
+  padding: 48px 24px 36px;
+}
+
+.headerInner {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.headerMeta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.category {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--red);
+  text-transform: uppercase;
+}
+
+.scoreTypeBadge {
+  font-size: 11px;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  padding: 2px 8px;
+}
+
+.wodName {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: clamp(48px, 8vw, 80px);
+  color: var(--text);
+  margin: 0 0 10px;
+  letter-spacing: 2px;
+}
+
+.wodDesc {
+  font-size: 14px;
+  color: var(--muted);
+  white-space: pre-line;
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 0 16px;
+}
+
+.headerStats {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.body {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 36px 24px;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* My Record */
+.myRecord {
+  background: var(--bg-card);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  border-left: 3px solid #22c55e;
+  padding: 16px 20px;
+}
+
+.myRecordLabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #22c55e;
+  text-transform: uppercase;
+  margin: 0 0 8px;
+}
+
+.myRecordRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.myRecordScore {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 32px;
+  color: var(--text);
+}
+
+.myRecordUnit {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.myRecordBox {
+  font-size: 12px;
+  color: #22c55e;
+  margin: 6px 0 0;
+}
+
+.myRecordComment {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 4px 0 0;
+  font-style: italic;
+}
+
+/* Submit */
+.submitBtn {
+  background: var(--red);
+  color: var(--text);
+  border: none;
+  padding: 12px 28px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: opacity 0.2s;
+}
+
+.submitBtn:hover { opacity: 0.85; }
+
+.loginPrompt {
+  font-size: 13px;
+  color: var(--muted);
+  padding: 16px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+}
+
+.loginLink {
+  color: var(--red);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+/* Form */
+.form {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--red);
+  padding: 28px;
+}
+
+.formTitle {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 22px;
+  color: var(--text);
+  margin: 0 0 24px;
+  letter-spacing: 1px;
+}
+
+.formGroup {
+  margin-bottom: 20px;
+}
+
+.label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.labelHint {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.required {
+  color: var(--red);
+}
+
+.input, .textarea {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 10px 12px;
+  color: var(--text);
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.input:focus, .textarea:focus {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.textarea {
+  resize: vertical;
+  font-family: inherit;
+}
+
+.hint {
+  font-size: 11px;
+  color: var(--muted);
+  margin: 6px 0 0;
+  line-height: 1.5;
+}
+
+.timeHelper {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 12px 16px;
+  margin-bottom: 20px;
+}
+
+.timeHelperLabel {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0 0 8px;
+}
+
+.timeHelperRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.timeInput {
+  width: 80px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 8px;
+  color: var(--text);
+  font-size: 16px;
+  text-align: center;
+  outline: none;
+}
+
+.timeSep {
+  font-size: 20px;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.timeResult {
+  font-size: 13px;
+  color: var(--red);
+  font-weight: 700;
+  margin-left: 8px;
+}
+
+.error {
+  color: var(--red);
+  font-size: 13px;
+  margin: 0 0 16px;
+}
+
+.formActions {
+  display: flex;
+  gap: 12px;
+}
+
+.confirmBtn {
+  background: var(--red);
+  color: var(--text);
+  border: none;
+  padding: 12px 28px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.confirmBtn:hover:not(:disabled) { opacity: 0.85; }
+.confirmBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.cancelBtn {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  padding: 12px 24px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.cancelBtn:hover { border-color: rgba(255,255,255,0.3); }
+
+.notice {
+  font-size: 11px;
+  color: var(--muted);
+  margin: 16px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+/* Leaderboard */
+.leaderboard {}
+
+.leaderboardTitle {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 26px;
+  letter-spacing: 2px;
+  color: var(--text);
+  margin: 0 0 20px;
+  border-bottom: 2px solid var(--red);
+  padding-bottom: 10px;
+  display: inline-block;
+}
+
+.leaderboardEmpty {
+  padding: 40px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+}
+
+.table {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.tableHead, .tableRow {
+  display: grid;
+  grid-template-columns: 60px 1fr 120px 160px 90px;
+  align-items: center;
+  padding: 12px 16px;
+}
+
+.tableHead {
+  background: var(--bg-card-2);
+  border-bottom: 1px solid var(--border);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.tableRow {
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+}
+
+.tableRow:last-child { border-bottom: none; }
+.tableRow:hover { background: rgba(255,255,255,0.03); }
+.tableRowMe { background: rgba(34, 197, 94, 0.05) !important; border-left: 3px solid #22c55e; }
+
+.colRank { text-align: center; }
+.colAthlete { display: flex; align-items: center; gap: 8px; }
+.colScore { display: flex; align-items: center; gap: 8px; }
+.colVerif {}
+.colDate {}
+
+.athleteName {
+  color: var(--text);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.athleteName:hover { color: var(--red); }
+
+.meTag {
+  font-size: 10px;
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+  border: 1px solid #22c55e;
+  padding: 1px 6px;
+  font-weight: 700;
+}
+
+.videoLink {
+  font-size: 12px;
+  color: var(--red);
+  text-decoration: none;
+  padding: 2px 6px;
+  border: 1px solid var(--red);
+  transition: background 0.15s;
+}
+
+.videoLink:hover { background: rgba(232, 34, 10, 0.15); }
+
+.verifiedBox {
+  font-size: 11px;
+  color: #22c55e;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .tableHead { display: none; }
+  .tableRow {
+    grid-template-columns: 50px 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 4px;
+  }
+  .colVerif { grid-column: 2; }
+  .colDate { grid-column: 3; text-align: right; }
+  .formActions { flex-direction: column; }
+  .confirmBtn, .cancelBtn { width: 100%; }
+}
+
+@media (max-width: 440px) {
+  .header { padding: 32px 16px 24px; }
+  .body { padding: 24px 16px; }
+  .form { padding: 20px 16px; }
+}

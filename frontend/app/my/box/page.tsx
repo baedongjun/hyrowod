@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { boxApi, wodApi, membershipApi, adminApi, checkInApi, reservationApi } from "@/lib/api";
+import { boxApi, wodApi, membershipApi, adminApi, checkInApi, reservationApi, rankingApi } from "@/lib/api";
 import { isLoggedIn, getUser } from "@/lib/auth";
 import { Box, Review } from "@/types";
 import { toast } from "react-toastify";
@@ -22,7 +22,7 @@ const WOD_COLORS: Record<string, string> = {
   REST_DAY: "#888", CUSTOM: "#888",
 };
 
-const BOX_TABS = ["관리", "WOD 프로그래밍", "멤버 통계", "출석 관리", "예약 현황"] as const;
+const BOX_TABS = ["관리", "WOD 프로그래밍", "멤버 통계", "출석 관리", "예약 현황", "기록 인증"] as const;
 type BoxTab = typeof BOX_TABS[number];
 
 interface WodEntry {
@@ -223,6 +223,32 @@ export default function MyBoxPage() {
     queryKey: ["box-reservations", boxId],
     queryFn: async () => (await reservationApi.getBoxReservations(boxId!)).data.data as Array<{ id: number; userId: number; userName: string; scheduleId: number; className: string; startTime: string; classDate: string }>,
     enabled: !!boxId && activeBoxTab === "예약 현황",
+  });
+
+  // 기록 인증: 인증 대기 기록
+  const [pendingPage, setPendingPage] = useState(0);
+  const { data: pendingRecordsPage, isLoading: pendingLoading } = useQuery({
+    queryKey: ["ranking", "pending", pendingPage],
+    queryFn: async () => (await rankingApi.getPendingRecords(pendingPage, 10)).data.data,
+    enabled: activeBoxTab === "기록 인증",
+  });
+
+  const verifyMutation = useMutation({
+    mutationFn: ({ id, comment }: { id: number; comment?: string }) => rankingApi.verifyRecord(id, comment),
+    onSuccess: () => {
+      toast.success("기록이 인증되었습니다.");
+      queryClient.invalidateQueries({ queryKey: ["ranking", "pending"] });
+    },
+    onError: () => toast.error("인증에 실패했습니다."),
+  });
+
+  const rejectMutation = useMutation({
+    mutationFn: ({ id, comment }: { id: number; comment?: string }) => rankingApi.rejectRecord(id, comment),
+    onSuccess: () => {
+      toast.success("기록이 거절되었습니다.");
+      queryClient.invalidateQueries({ queryKey: ["ranking", "pending"] });
+    },
+    onError: () => toast.error("거절 처리에 실패했습니다."),
   });
 
   // WOD Programming: load WODs for current calendar month
@@ -1125,6 +1151,97 @@ export default function MyBoxPage() {
                         </div>
                       )}
                     </div>
+                  </div>
+                )}
+
+                {/* 기록 인증 탭 */}
+                {activeBoxTab === "기록 인증" && (
+                  <div className={s.card}>
+                    <div className={s.cardHeader}>
+                      <h3 className={s.cardTitle}>기록 인증</h3>
+                      <span style={{ fontSize: 12, color: "var(--muted)" }}>
+                        인증 대기 {pendingRecordsPage?.totalElements ?? 0}건
+                      </span>
+                    </div>
+                    {pendingLoading ? (
+                      <p className={s.emptyText}>로딩 중...</p>
+                    ) : !pendingRecordsPage || pendingRecordsPage.content.length === 0 ? (
+                      <p className={s.emptyText}>인증 대기 중인 기록이 없습니다.</p>
+                    ) : (
+                      <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+                        {pendingRecordsPage.content.map((record: { id: number; namedWodName: string; userName: string; score: number; scoreFormatted: string; scoreType: string; scoreUnit?: string; videoUrl: string; recordedAt: string; notes?: string }) => (
+                          <div key={record.id} style={{ borderBottom: "1px solid var(--border)", padding: "16px 0" }}>
+                            <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+                              <div style={{ flex: 1, minWidth: 0 }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                                  <span style={{ fontSize: 13, fontWeight: 700, color: "var(--text)" }}>{record.userName}</span>
+                                  <span style={{ fontSize: 10, color: "var(--muted)", border: "1px solid var(--border)", padding: "1px 6px" }}>{record.namedWodName}</span>
+                                </div>
+                                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 6 }}>
+                                  <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 22, color: "var(--red)" }}>
+                                    {record.scoreFormatted}
+                                    {record.scoreUnit && <span style={{ fontSize: 13, color: "var(--muted)", marginLeft: 4 }}>{record.scoreUnit}</span>}
+                                  </span>
+                                  <span style={{ fontSize: 11, color: "var(--muted)" }}>{record.recordedAt}</span>
+                                </div>
+                                {record.notes && (
+                                  <p style={{ fontSize: 11, color: "var(--muted)", margin: "0 0 6px", fontStyle: "italic" }}>{record.notes}</p>
+                                )}
+                                <a
+                                  href={record.videoUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  style={{ fontSize: 12, color: "var(--red)", textDecoration: "none", fontWeight: 700 }}
+                                >
+                                  ▶ YouTube 영상 확인
+                                </a>
+                              </div>
+                              <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
+                                <button
+                                  style={{ background: "#22c55e", color: "#fff", border: "none", padding: "8px 16px", fontSize: 12, fontWeight: 700, cursor: "pointer" }}
+                                  disabled={verifyMutation.isPending}
+                                  onClick={() => verifyMutation.mutate({ id: record.id })}
+                                >
+                                  인증
+                                </button>
+                                <button
+                                  style={{ background: "transparent", color: "var(--red)", border: "1px solid var(--red)", padding: "8px 16px", fontSize: 12, fontWeight: 700, cursor: "pointer" }}
+                                  disabled={rejectMutation.isPending}
+                                  onClick={() => {
+                                    const comment = prompt("거절 사유를 입력하세요 (선택):");
+                                    rejectMutation.mutate({ id: record.id, comment: comment || undefined });
+                                  }}
+                                >
+                                  거절
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                        {/* Pagination */}
+                        {pendingRecordsPage.totalPages > 1 && (
+                          <div style={{ display: "flex", gap: 8, justifyContent: "center", paddingTop: 16 }}>
+                            <button
+                              style={{ background: "transparent", border: "1px solid var(--border)", color: "var(--muted)", padding: "6px 12px", fontSize: 12, cursor: "pointer" }}
+                              disabled={pendingPage === 0}
+                              onClick={() => setPendingPage((p) => p - 1)}
+                            >
+                              이전
+                            </button>
+                            <span style={{ fontSize: 12, color: "var(--muted)", display: "flex", alignItems: "center" }}>
+                              {pendingPage + 1} / {pendingRecordsPage.totalPages}
+                            </span>
+                            <button
+                              style={{ background: "transparent", border: "1px solid var(--border)", color: "var(--muted)", padding: "6px 12px", fontSize: 12, cursor: "pointer" }}
+                              disabled={pendingRecordsPage.last}
+                              onClick={() => setPendingPage((p) => p + 1)}
+                            >
+                              다음
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>

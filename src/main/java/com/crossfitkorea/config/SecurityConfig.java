@@ -78,6 +78,10 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/v1/challenges/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/v1/competitions/*/results").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/v1/boxes/*/announcements").permitAll()
+                // 랭킹: WOD 목록/상세는 공개, 기록제출/인증은 인증 필요
+                .requestMatchers(HttpMethod.GET, "/api/v1/ranking/wods").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/ranking/wods/**").permitAll()
+                // 인증 대기 목록, 인증/거절은 BOX_OWNER or ADMIN (anyRequest().authenticated() + 서비스 레이어 권한 체크)
                 // Swagger
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 // Actuator
