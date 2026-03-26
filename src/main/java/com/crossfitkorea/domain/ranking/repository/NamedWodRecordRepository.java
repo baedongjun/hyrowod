@@ -38,4 +38,7 @@ public interface NamedWodRecordRepository extends JpaRepository<NamedWodRecord, 
 
     /** 전체 인증 대기 수 */
     long countByStatus(VerificationStatus status);
+
+    /** 상태별 전체 기록 (최신순) — 어드민 관리용 */
+    Page<NamedWodRecord> findByStatusOrderByCreatedAtDesc(VerificationStatus status, Pageable pageable);
 }

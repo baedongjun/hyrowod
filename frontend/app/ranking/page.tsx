@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useState, useEffect, useCallback } from "react";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import Link from "next/link";
-import { rankingApi } from "@/lib/api";
-import { NamedWod, NamedWodCategory, NamedWodDetail, RankingEntry } from "@/types";
+import { rankingApi, followApi, userApi } from "@/lib/api";
+import { isLoggedIn } from "@/lib/auth";
+import { NamedWod, NamedWodCategory, NamedWodDetail } from "@/types";
 import s from "./ranking.module.css";
 
 const CATEGORY_LABEL: Record<NamedWodCategory, string> = {
@@ -27,6 +28,35 @@ const SCORE_TYPE_LABEL: Record<string, string> = {
 export default function RankingPage() {
   const [view, setView] = useState<"overview" | "list">("overview");
   const [selectedWodId, setSelectedWodId] = useState<number | null>(null);
+  // userId → following 상태 (undefined = 아직 모름, true/false = 알고 있음)
+  const [followMap, setFollowMap] = useState<Record<number, boolean>>({});
+  const [followingUserId, setFollowingUserId] = useState<number | null>(null);
+
+  const loggedIn = isLoggedIn();
+
+  const { data: meData } = useQuery({
+    queryKey: ["me"],
+    queryFn: async () => (await userApi.getMe()).data.data,
+    enabled: loggedIn,
+    staleTime: 1000 * 60 * 5,
+  });
+  const myUserId: number | undefined = meData?.id;
+
+  const followMutation = useMutation({
+    mutationFn: (userId: number) => followApi.toggle(userId),
+    onMutate: (userId) => setFollowingUserId(userId),
+    onSuccess: (res, userId) => {
+      const following: boolean = res.data.data?.following ?? res.data.data;
+      setFollowMap((prev) => ({ ...prev, [userId]: following }));
+      setFollowingUserId(null);
+    },
+    onError: () => setFollowingUserId(null),
+  });
+
+  const handleFollow = useCallback((userId: number) => {
+    if (!loggedIn) return;
+    followMutation.mutate(userId);
+  }, [loggedIn, followMutation]);
 
   // WOD 목록
   const { data: wods = [], isLoading: wodsLoading } = useQuery<NamedWod[]>({
@@ -46,7 +76,7 @@ export default function RankingPage() {
     queryKey: ["ranking", "detail", selectedWodId],
     queryFn: async () => (await rankingApi.getWodDetail(selectedWodId!)).data.data,
     enabled: !!selectedWodId && view === "overview",
-    staleTime: 1000 * 60 * 2,
+    staleTime: 0,
   });
 
   const grouped = CATEGORY_ORDER.reduce<Record<NamedWodCategory, NamedWod[]>>(
@@ -206,37 +236,68 @@ export default function RankingPage() {
                         </tr>
                       </thead>
                       <tbody>
-                        {leaderboard.map((entry, idx) => (
-                          <tr key={entry.recordId} className={idx < 3 ? s.rankRowTop : ""}>
-                            <td>
-                              {idx < 3 ? (
-                                <span className={s.rankMedal}>{RANK_MEDAL[idx]}</span>
-                              ) : (
-                                <span className={s.rankNum}>{entry.rank}</span>
-                              )}
-                            </td>
-                            <td className={s.rankName}>{entry.userName}</td>
-                            <td className={s.rankScore}>{entry.scoreFormatted}</td>
-                            <td className={s.rankBox}>
-                              {entry.verifiedBoxName ? (
-                                <span>✓ {entry.verifiedBoxName}</span>
-                              ) : (
-                                <span style={{ color: "var(--muted)" }}>-</span>
-                              )}
-                            </td>
-                            <td className={s.rankDate}>{entry.recordedAt}</td>
-                            <td>
-                              <a
-                                href={entry.videoUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className={s.rankVideo}
-                              >
-                                ▶ 보기
-                              </a>
-                            </td>
-                          </tr>
-                        ))}
+                        {leaderboard.map((entry, idx) => {
+                          const isSelf = !loggedIn || entry.userId === myUserId;
+                          const isFollowing = followMap[entry.userId];
+                          const isPending = followingUserId === entry.userId;
+                          return (
+                            <tr key={entry.recordId} className={idx < 3 ? s.rankRowTop : ""}>
+                              <td>
+                                {idx < 3 ? (
+                                  <span className={s.rankMedal}>{RANK_MEDAL[idx]}</span>
+                                ) : (
+                                  <span className={s.rankNum}>{entry.rank}</span>
+                                )}
+                              </td>
+                              <td>
+                                <div className={s.rankNameCell}>
+                                  {entry.userProfileImageUrl ? (
+                                    <img
+                                      src={entry.userProfileImageUrl}
+                                      alt={entry.userName}
+                                      className={s.rankAvatar}
+                                    />
+                                  ) : (
+                                    <div className={s.rankAvatarPlaceholder}>
+                                      {entry.userName.charAt(0).toUpperCase()}
+                                    </div>
+                                  )}
+                                  <Link href={`/users/${entry.userId}`} className={s.rankName}>
+                                    {entry.userName}
+                                  </Link>
+                                  {loggedIn && !isSelf && (
+                                    <button
+                                      className={`${s.followBtn} ${isFollowing ? s.followBtnActive : ""}`}
+                                      onClick={() => handleFollow(entry.userId)}
+                                      disabled={isPending}
+                                    >
+                                      {isPending ? "..." : isFollowing ? "✓ 팔로잉" : "+ 팔로우"}
+                                    </button>
+                                  )}
+                                </div>
+                              </td>
+                              <td className={s.rankScore}>{entry.scoreFormatted}</td>
+                              <td className={s.rankBox}>
+                                {entry.verifiedBoxName ? (
+                                  <span>✓ {entry.verifiedBoxName}</span>
+                                ) : (
+                                  <span style={{ color: "var(--muted)" }}>-</span>
+                                )}
+                              </td>
+                              <td className={s.rankDate}>{entry.recordedAt}</td>
+                              <td>
+                                <a
+                                  href={entry.videoUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className={s.rankVideo}
+                                >
+                                  ▶ 보기
+                                </a>
+                              </td>
+                            </tr>
+                          );
+                        })}
                       </tbody>
                     </table>
                   )}

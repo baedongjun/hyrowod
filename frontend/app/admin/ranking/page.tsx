@@ -31,7 +31,7 @@ const STATUS_COLOR: Record<string, string> = {
 
 export default function AdminRankingPage() {
   const qc = useQueryClient();
-  const [tab, setTab] = useState<"wods" | "verify">("wods");
+  const [tab, setTab] = useState<"wods" | "verify" | "records">("wods");
 
   // ── WOD 관리 상태 ──
   const [showForm, setShowForm] = useState(false);
@@ -41,6 +41,10 @@ export default function AdminRankingPage() {
   // ── 기록 인증 상태 ──
   const [pendingPage, setPendingPage] = useState(0);
   const [rejectComment, setRejectComment] = useState<Record<number, string>>({});
+
+  // ── 인증 기록 관리 상태 ──
+  const [verifiedPage, setVerifiedPage] = useState(0);
+  const [deleteConfirmId, setDeleteConfirmId] = useState<number | null>(null);
 
   // ── 쿼리 ──
   const { data: wods = [], isLoading: wodsLoading } = useQuery<NamedWod[]>({
@@ -57,8 +61,20 @@ export default function AdminRankingPage() {
   });
 
   const pendingRecords: NamedWodRecord[] = pendingPageData?.content ?? [];
-  const totalPages: number = pendingPageData?.totalPages ?? 0;
-  const totalElements: number = pendingPageData?.totalElements ?? 0;
+  const pendingTotalPages: number = pendingPageData?.totalPages ?? 0;
+  const pendingTotalElements: number = pendingPageData?.totalElements ?? 0;
+
+  // 인증된 기록 목록
+  const { data: verifiedPageData, isLoading: verifiedLoading } = useQuery({
+    queryKey: ["admin", "ranking", "verified", verifiedPage],
+    queryFn: async () => (await rankingApi.getVerifiedRecords(verifiedPage, 20)).data.data,
+    enabled: tab === "records",
+    staleTime: 1000 * 60,
+  });
+
+  const verifiedRecords: NamedWodRecord[] = verifiedPageData?.content ?? [];
+  const verifiedTotalPages: number = verifiedPageData?.totalPages ?? 0;
+  const verifiedTotalElements: number = verifiedPageData?.totalElements ?? 0;
 
   // ── WOD 뮤테이션 ──
   const createMutation = useMutation({
@@ -102,6 +118,8 @@ export default function AdminRankingPage() {
     onSuccess: () => {
       toast.success("기록이 인증되었습니다.");
       qc.invalidateQueries({ queryKey: ["admin", "ranking", "pending"] });
+      qc.invalidateQueries({ queryKey: ["admin", "ranking", "verified"] });
+      qc.invalidateQueries({ queryKey: ["ranking"] });
     },
     onError: () => toast.error("인증에 실패했습니다."),
   });
@@ -119,6 +137,18 @@ export default function AdminRankingPage() {
       qc.invalidateQueries({ queryKey: ["admin", "ranking", "pending"] });
     },
     onError: () => toast.error("거절 처리에 실패했습니다."),
+  });
+
+  // ── 기록 삭제 뮤테이션 ──
+  const deleteMutation = useMutation({
+    mutationFn: ({ id }: { id: number }) => rankingApi.deleteRecord(id),
+    onSuccess: () => {
+      toast.success("기록이 삭제되었습니다.");
+      setDeleteConfirmId(null);
+      qc.invalidateQueries({ queryKey: ["admin", "ranking", "verified"] });
+      qc.invalidateQueries({ queryKey: ["ranking"] });
+    },
+    onError: () => toast.error("삭제에 실패했습니다."),
   });
 
   const handleEdit = (wod: NamedWod) => {
@@ -174,9 +204,15 @@ export default function AdminRankingPage() {
           onClick={() => setTab("verify")}
         >
           기록 인증
-          {totalElements > 0 && tab !== "verify" && (
-            <span className={s.tabBadge}>{totalElements}</span>
+          {pendingTotalElements > 0 && tab !== "verify" && (
+            <span className={s.tabBadge}>{pendingTotalElements}</span>
           )}
+        </button>
+        <button
+          className={`${s.tab} ${tab === "records" ? s.tabActive : ""}`}
+          onClick={() => setTab("records")}
+        >
+          인증 기록 관리
         </button>
       </div>
 
@@ -206,9 +242,7 @@ export default function AdminRankingPage() {
                     }
                   >
                     {CATEGORY_OPTIONS.map((c) => (
-                      <option key={c} value={c}>
-                        {c}
-                      </option>
+                      <option key={c} value={c}>{c}</option>
                     ))}
                   </select>
                 </div>
@@ -224,9 +258,7 @@ export default function AdminRankingPage() {
                     }
                   >
                     {SCORE_TYPES.map((t) => (
-                      <option key={t} value={t}>
-                        {t}
-                      </option>
+                      <option key={t} value={t}>{t}</option>
                     ))}
                   </select>
                 </div>
@@ -262,10 +294,7 @@ export default function AdminRankingPage() {
                 <button
                   type="button"
                   className="btn-secondary"
-                  onClick={() => {
-                    setShowForm(false);
-                    setEditId(null);
-                  }}
+                  onClick={() => { setShowForm(false); setEditId(null); }}
                 >
                   취소
                 </button>
@@ -302,9 +331,7 @@ export default function AdminRankingPage() {
                       </td>
                       <td>
                         <div className={s.actions}>
-                          <button className={s.btnEdit} onClick={() => handleEdit(wod)}>
-                            수정
-                          </button>
+                          <button className={s.btnEdit} onClick={() => handleEdit(wod)}>수정</button>
                           {wod.active !== false ? (
                             <button
                               className={s.btnDeactivate}
@@ -336,7 +363,7 @@ export default function AdminRankingPage() {
         <div>
           <p className={s.verifyInfo}>
             인증 대기 기록{" "}
-            <strong style={{ color: "var(--text)" }}>{totalElements}건</strong> — YouTube
+            <strong style={{ color: "var(--text)" }}>{pendingTotalElements}건</strong> — YouTube
             영상을 확인 후 인증 또는 거절하세요.
           </p>
 
@@ -352,57 +379,27 @@ export default function AdminRankingPage() {
                   className={s.recordCard}
                   style={{ borderLeft: `3px solid ${STATUS_COLOR[record.status]}` }}
                 >
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "flex-start",
-                      justifyContent: "space-between",
-                      gap: 16,
-                      flexWrap: "wrap",
-                    }}
-                  >
-                    {/* 기록 정보 */}
+                  <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div className={s.recordMeta}>
                         <span className={s.recordWodName}>{record.namedWodName}</span>
                         <span className={s.scoreBadge}>{record.scoreType}</span>
-                        <span
-                          style={{
-                            fontSize: 11,
-                            background: `${STATUS_COLOR[record.status]}20`,
-                            color: STATUS_COLOR[record.status],
-                            border: `1px solid ${STATUS_COLOR[record.status]}`,
-                            padding: "1px 6px",
-                            fontWeight: 700,
-                          }}
-                        >
+                        <span style={{ fontSize: 11, background: `${STATUS_COLOR[record.status]}20`, color: STATUS_COLOR[record.status], border: `1px solid ${STATUS_COLOR[record.status]}`, padding: "1px 6px", fontWeight: 700 }}>
                           {STATUS_LABEL[record.status]}
                         </span>
                       </div>
-
                       <div className={s.recordScore}>
                         <span className={s.userName}>{record.userName ?? "-"}</span>
                         <span style={{ fontSize: 11, color: "var(--muted)" }}>·</span>
                         <span className={s.scoreValue}>{record.scoreFormatted}</span>
-                        {record.scoreUnit && (
-                          <span className={s.scoreUnit}>{record.scoreUnit}</span>
-                        )}
+                        {record.scoreUnit && <span className={s.scoreUnit}>{record.scoreUnit}</span>}
                         <span className={s.recordDate}>{record.recordedAt}</span>
                       </div>
-
                       {record.notes && <p className={s.recordNotes}>{record.notes}</p>}
-
-                      <a
-                        href={record.videoUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={s.ytBtn}
-                      >
+                      <a href={record.videoUrl} target="_blank" rel="noopener noreferrer" className={s.ytBtn}>
                         ▶ YouTube 영상 확인
                       </a>
                     </div>
-
-                    {/* 인증/거절 액션 */}
                     <div className={s.verifyActions}>
                       <button
                         className={s.btnVerify}
@@ -411,29 +408,18 @@ export default function AdminRankingPage() {
                       >
                         ✓ 인증
                       </button>
-
                       <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
                         <input
                           type="text"
                           className={s.rejectInput}
                           placeholder="거절 사유 (선택)"
                           value={rejectComment[record.id] ?? ""}
-                          onChange={(e) =>
-                            setRejectComment((prev) => ({
-                              ...prev,
-                              [record.id]: e.target.value,
-                            }))
-                          }
+                          onChange={(e) => setRejectComment((prev) => ({ ...prev, [record.id]: e.target.value }))}
                         />
                         <button
                           className={s.btnReject}
                           disabled={rejectMutation.isPending}
-                          onClick={() =>
-                            rejectMutation.mutate({
-                              id: record.id,
-                              comment: rejectComment[record.id] ?? "",
-                            })
-                          }
+                          onClick={() => rejectMutation.mutate({ id: record.id, comment: rejectComment[record.id] ?? "" })}
                         >
                           ✕ 거절
                         </button>
@@ -443,31 +429,112 @@ export default function AdminRankingPage() {
                 </div>
               ))}
 
-              {/* 페이지네이션 */}
-              {totalPages > 1 && (
+              {pendingTotalPages > 1 && (
                 <div className={s.pagination}>
-                  <button
-                    className="btn-secondary"
-                    style={{ fontSize: 12, padding: "6px 16px" }}
-                    disabled={pendingPage === 0}
-                    onClick={() => setPendingPage((p) => p - 1)}
-                  >
-                    이전
-                  </button>
-                  <span className={s.pageInfo}>
-                    {pendingPage + 1} / {totalPages}
-                  </span>
-                  <button
-                    className="btn-secondary"
-                    style={{ fontSize: 12, padding: "6px 16px" }}
-                    disabled={pendingPage >= totalPages - 1}
-                    onClick={() => setPendingPage((p) => p + 1)}
-                  >
-                    다음
-                  </button>
+                  <button className="btn-secondary" style={{ fontSize: 12, padding: "6px 16px" }} disabled={pendingPage === 0} onClick={() => setPendingPage((p) => p - 1)}>이전</button>
+                  <span className={s.pageInfo}>{pendingPage + 1} / {pendingTotalPages}</span>
+                  <button className="btn-secondary" style={{ fontSize: 12, padding: "6px 16px" }} disabled={pendingPage >= pendingTotalPages - 1} onClick={() => setPendingPage((p) => p + 1)}>다음</button>
                 </div>
               )}
             </div>
+          )}
+        </div>
+      )}
+
+      {/* ── 인증 기록 관리 탭 ── */}
+      {tab === "records" && (
+        <div>
+          <p className={s.verifyInfo}>
+            인증 완료 기록{" "}
+            <strong style={{ color: "var(--text)" }}>{verifiedTotalElements}건</strong> — 잘못된 기록을 삭제할 수 있습니다.
+          </p>
+
+          {verifiedLoading ? (
+            <p className={s.loading}>LOADING...</p>
+          ) : verifiedRecords.length === 0 ? (
+            <div className={s.empty}>인증된 기록이 없습니다.</div>
+          ) : (
+            <>
+              <div className={s.tableWrap}>
+                <table className={s.table}>
+                  <thead>
+                    <tr>
+                      <th>WOD</th>
+                      <th>제출자</th>
+                      <th>점수</th>
+                      <th>인증 박스</th>
+                      <th>기록일</th>
+                      <th>영상</th>
+                      <th>삭제</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {verifiedRecords.map((record) => (
+                      <tr key={record.id}>
+                        <td>
+                          <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 15, color: "var(--red)", letterSpacing: 1 }}>
+                            {record.namedWodName}
+                          </span>
+                        </td>
+                        <td style={{ fontWeight: 600 }}>{record.userName ?? "-"}</td>
+                        <td>
+                          <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 18, color: "var(--text)" }}>
+                            {record.scoreFormatted}
+                          </span>
+                          {record.scoreUnit && (
+                            <span style={{ fontSize: 11, color: "var(--muted)", marginLeft: 4 }}>{record.scoreUnit}</span>
+                          )}
+                        </td>
+                        <td style={{ fontSize: 12, color: "#22c55e" }}>
+                          {record.verifiedBoxName ? `✓ ${record.verifiedBoxName}` : <span style={{ color: "var(--muted)" }}>-</span>}
+                        </td>
+                        <td style={{ fontSize: 12, color: "var(--muted)" }}>{record.recordedAt}</td>
+                        <td>
+                          <a href={record.videoUrl} target="_blank" rel="noopener noreferrer" className={s.ytBtn} style={{ fontSize: 11 }}>
+                            ▶ 보기
+                          </a>
+                        </td>
+                        <td>
+                          {deleteConfirmId === record.id ? (
+                            <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                              <span style={{ fontSize: 11, color: "var(--muted)" }}>삭제?</span>
+                              <button
+                                style={{ background: "var(--red)", color: "#fff", border: "none", padding: "4px 10px", fontSize: 11, fontWeight: 700, cursor: "pointer" }}
+                                disabled={deleteMutation.isPending}
+                                onClick={() => deleteMutation.mutate({ id: record.id })}
+                              >
+                                확인
+                              </button>
+                              <button
+                                style={{ background: "transparent", color: "var(--muted)", border: "1px solid var(--border)", padding: "4px 10px", fontSize: 11, cursor: "pointer" }}
+                                onClick={() => setDeleteConfirmId(null)}
+                              >
+                                취소
+                              </button>
+                            </div>
+                          ) : (
+                            <button
+                              className={s.btnDeactivate}
+                              onClick={() => setDeleteConfirmId(record.id)}
+                            >
+                              삭제
+                            </button>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {verifiedTotalPages > 1 && (
+                <div className={s.pagination}>
+                  <button className="btn-secondary" style={{ fontSize: 12, padding: "6px 16px" }} disabled={verifiedPage === 0} onClick={() => setVerifiedPage((p) => p - 1)}>이전</button>
+                  <span className={s.pageInfo}>{verifiedPage + 1} / {verifiedTotalPages}</span>
+                  <button className="btn-secondary" style={{ fontSize: 12, padding: "6px 16px" }} disabled={verifiedPage >= verifiedTotalPages - 1} onClick={() => setVerifiedPage((p) => p + 1)}>다음</button>
+                </div>
+              )}
+            </>
           )}
         </div>
       )}

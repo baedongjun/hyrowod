@@ -727,4 +727,8 @@ export const rankingApi = {
     api.put(`/api/v1/admin/ranking/wods/${id}`, data),
   toggleWodActive: (id: number, active: boolean) =>
     api.patch(`/api/v1/admin/ranking/wods/${id}/active`, null, { params: { active } }),
+  getVerifiedRecords: (page = 0, size = 20) =>
+    api.get("/api/v1/admin/ranking/records", { params: { page, size } }),
+  deleteRecord: (id: number) =>
+    api.delete(`/api/v1/admin/ranking/records/${id}`),
 };

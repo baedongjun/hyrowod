@@ -169,6 +169,21 @@ public class RankingService {
         return NamedWodRecordDto.from(recordRepository.save(record));
     }
 
+    /** 인증된 기록 목록 — 어드민 관리용 */
+    public Page<NamedWodRecordDto> getVerifiedRecords(int page, int size) {
+        return recordRepository.findByStatusOrderByCreatedAtDesc(
+                VerificationStatus.VERIFIED, PageRequest.of(page, size))
+                .map(NamedWodRecordDto::from);
+    }
+
+    /** 기록 삭제 (어드민) */
+    @Transactional
+    public void deleteRecord(Long recordId) {
+        NamedWodRecord record = recordRepository.findById(recordId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.NAMED_WOD_RECORD_NOT_FOUND));
+        recordRepository.delete(record);
+    }
+
     /** Named WOD 등록 (어드민) */
     @Transactional
     public NamedWodDto createNamedWod(NamedWodCreateRequest request) {
