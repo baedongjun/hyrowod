@@ -88,7 +88,11 @@
       "Bash(npx next:*)",
       "Bash(xargs head:*)",
       "Bash(npx eslint:*)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(for f:*)",
+      "Bash(do echo:*)",
+      "Read(//d/gitWorkspace/workspace/crossfitkorea/**)",
+      "Bash(done)"
     ]
   }
 }

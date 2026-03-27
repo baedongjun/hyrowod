@@ -525,13 +525,20 @@ Box (1) ──── (N) BoxMembership
 
 ### 백엔드
 - [ ] Elasticsearch 실제 연동 (현재 DB LIKE 쿼리로 대체)
+- [ ] 어드민 대회 결과 입력 UI (백엔드 API는 있음: `POST /api/v1/competitions/{id}/results`)
 
 ### 프론트엔드
-- [ ] SNS 로그인 (OAuth2 — 카카오/구글)
-- [ ] 앱 푸시 알림 (PWA)
+- [ ] 앱 푸시 알림 — Web Push API (알림 권한 요청 → 서버 구독 저장 → 서버 발송) 미구현. `sw.js`는 캐싱만 있음
+- [ ] 시간표 탭 → 예약 버튼 연동 확인 (`/boxes/[id]` 시간표 탭에서 예약 버튼)
 
 ### 인프라
-- [ ] 토스페이먼츠 실제 결제 테스트 (현재 sandbox 미검증)
+- [ ] 토스페이먼츠 실제 결제 검증 — 수익모델 확정 후 처리 예정 (현재 sandbox 미검증)
+
+### 완료 처리
+- [x] SNS 로그인 (OAuth2 — 카카오/구글) — 코드 구현 완료, 실제 테스트 완료
+- [x] Google Search Console 등록 — DNS TXT 레코드로 인증 완료
+- [x] Naver Search Advisor 등록 — `public/` HTML 파일로 인증 완료
+- [x] PWA 기본 설치/오프라인 — `manifest.json`, `sw.js`, `ServiceWorkerRegistrar.tsx` 구현 완료
 
 ---
 
