@@ -1,882 +1,886 @@
-﻿2026-03-27T04:50:15.4277859Z Current runner version: '2.333.0'
-2026-03-27T04:50:15.4305582Z ##[group]Runner Image Provisioner
-2026-03-27T04:50:15.4306534Z Hosted Compute Agent
-2026-03-27T04:50:15.4307174Z Version: 20260213.493
-2026-03-27T04:50:15.4308184Z Commit: 5c115507f6dd24b8de37d8bbe0bb4509d0cc0fa3
-2026-03-27T04:50:15.4308990Z Build Date: 2026-02-13T00:28:41Z
-2026-03-27T04:50:15.4309845Z Worker ID: {efcbdda5-8501-4b54-a1e7-195a7d5f5ef5}
-2026-03-27T04:50:15.4310648Z Azure Region: eastus
-2026-03-27T04:50:15.4311650Z ##[endgroup]
-2026-03-27T04:50:15.4313566Z ##[group]Operating System
-2026-03-27T04:50:15.4314357Z Ubuntu
-2026-03-27T04:50:15.4314991Z 24.04.4
-2026-03-27T04:50:15.4315567Z LTS
-2026-03-27T04:50:15.4316227Z ##[endgroup]
-2026-03-27T04:50:15.4316829Z ##[group]Runner Image
-2026-03-27T04:50:15.4317562Z Image: ubuntu-24.04
-2026-03-27T04:50:15.4318185Z Version: 20260323.65.1
-2026-03-27T04:50:15.4319557Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260323.65/images/ubuntu/Ubuntu2404-Readme.md
-2026-03-27T04:50:15.4321247Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260323.65
-2026-03-27T04:50:15.4322525Z ##[endgroup]
-2026-03-27T04:50:15.4323963Z ##[group]GITHUB_TOKEN Permissions
-2026-03-27T04:50:15.4326137Z Contents: read
-2026-03-27T04:50:15.4326949Z Metadata: read
-2026-03-27T04:50:15.4327600Z Packages: read
-2026-03-27T04:50:15.4328263Z ##[endgroup]
-2026-03-27T04:50:15.4330437Z Secret source: Actions
-2026-03-27T04:50:15.4331513Z Prepare workflow directory
-2026-03-27T04:50:15.4660041Z Prepare all required actions
-2026-03-27T04:50:15.4697759Z Getting action download info
-2026-03-27T04:50:15.8374183Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
-2026-03-27T04:50:15.9709701Z Download action repository 'aws-actions/configure-aws-credentials@v4' (SHA:7474bc4690e29a8392af63c5b98e7449536d5c3a)
-2026-03-27T04:50:16.2548063Z Download action repository 'aws-actions/amazon-ecr-login@v2' (SHA:183a1442edf41672e66566b7fc560e297a290896)
-2026-03-27T04:50:16.4813079Z Download action repository 'appleboy/scp-action@v0.1.7' (SHA:917f8b81dfc1ccd331fef9e2d61bdc6c8be94634)
-2026-03-27T04:50:16.6810788Z Download action repository 'appleboy/ssh-action@v1.0.3' (SHA:029f5b4aeeeb58fdfe1410a5d17f967dacf36262)
-2026-03-27T04:50:16.9926284Z Complete job name: Deploy
-2026-03-27T04:50:17.0457469Z ##[group]Build container for action use: '/home/runner/work/_actions/appleboy/scp-action/v0.1.7/Dockerfile'.
-2026-03-27T04:50:17.0551182Z ##[command]/usr/bin/docker build -t 0db6b7:8cf4b68a89894a92bcc7d872e170c45a -f "/home/runner/work/_actions/appleboy/scp-action/v0.1.7/Dockerfile" "/home/runner/work/_actions/appleboy/scp-action/v0.1.7"
-2026-03-27T04:50:17.4394873Z #0 building with "default" instance using docker driver
-2026-03-27T04:50:17.4396048Z
-2026-03-27T04:50:17.4396966Z #1 [internal] load build definition from Dockerfile
-2026-03-27T04:50:17.4398765Z #1 transferring dockerfile: 150B done
-2026-03-27T04:50:17.4400367Z #1 DONE 0.0s
-2026-03-27T04:50:17.4400944Z
-2026-03-27T04:50:17.4402317Z #2 [internal] load metadata for ghcr.io/appleboy/drone-scp:1.6.14
-2026-03-27T04:50:17.5427006Z #2 DONE 0.3s
-2026-03-27T04:50:17.6588509Z
-2026-03-27T04:50:17.6590832Z #3 [internal] load .dockerignore
-2026-03-27T04:50:17.6595123Z #3 transferring context: 2B done
-2026-03-27T04:50:17.6598088Z #3 DONE 0.0s
-2026-03-27T04:50:17.6599010Z
-2026-03-27T04:50:17.6599714Z #4 [internal] load build context
-2026-03-27T04:50:17.6603099Z #4 transferring context: 187B done
-2026-03-27T04:50:17.6605001Z #4 DONE 0.0s
-2026-03-27T04:50:17.6605829Z
-2026-03-27T04:50:17.6608110Z #5 [1/2] FROM ghcr.io/appleboy/drone-scp:1.6.14@sha256:0e0597678b948b0aa09888c66ac75af904cce81baf6af955208527d259c61818
-2026-03-27T04:50:17.6613630Z #5 resolve ghcr.io/appleboy/drone-scp:1.6.14@sha256:0e0597678b948b0aa09888c66ac75af904cce81baf6af955208527d259c61818 done
-2026-03-27T04:50:17.6618290Z #5 extracting sha256:1207c741d8c9b028d98c4006013f9de959da3c55f85b91ed5e4583438a0112ca
-2026-03-27T04:50:17.6622743Z #5 sha256:c5ff66ca7e6bad6eb2c1b483c6c580ef147d04552f3bba4b13ac1b05cf474013 125B / 125B 0.1s done
-2026-03-27T04:50:17.6627731Z #5 sha256:103b78775db928290fb85c370d3e47361a507a82b3b7c69c628783e018a9ffb8 1.05MB / 2.49MB 0.1s
-2026-03-27T04:50:17.6632357Z #5 sha256:0e0597678b948b0aa09888c66ac75af904cce81baf6af955208527d259c61818 2.38kB / 2.38kB done
-2026-03-27T04:50:17.6636719Z #5 sha256:b49e06fc857838320ee2682058d609a527fd05056650f6f6387b8a320d25aed5 1.24kB / 1.24kB done
-2026-03-27T04:50:17.6641132Z #5 sha256:6e1933d0a1a550dee7c2be05d0c681372d8661e12dec2bd66f028fd3f2e1eccb 3.65kB / 3.65kB done
-2026-03-27T04:50:17.6645840Z #5 sha256:1207c741d8c9b028d98c4006013f9de959da3c55f85b91ed5e4583438a0112ca 3.38MB / 3.38MB 0.0s done
-2026-03-27T04:50:17.6650628Z #5 sha256:57fce42a8fe3138af514e9b1be611ec437fe87def8a6946cad1d6b7608188ce2 284.84kB / 284.84kB 0.1s done
-2026-03-27T04:50:17.6655648Z #5 sha256:a7e706a435c2a53ff172ba5b50e2a06c2eaf63d2f764bdaabcca52d378beeb35 1.20kB / 1.20kB 0.1s done
-2026-03-27T04:50:17.8222828Z #5 extracting sha256:1207c741d8c9b028d98c4006013f9de959da3c55f85b91ed5e4583438a0112ca 0.1s done
-2026-03-27T04:50:17.8227133Z #5 sha256:103b78775db928290fb85c370d3e47361a507a82b3b7c69c628783e018a9ffb8 2.49MB / 2.49MB 0.1s done
-2026-03-27T04:50:17.8230239Z #5 extracting sha256:57fce42a8fe3138af514e9b1be611ec437fe87def8a6946cad1d6b7608188ce2 0.0s done
-2026-03-27T04:50:17.8233759Z #5 extracting sha256:a7e706a435c2a53ff172ba5b50e2a06c2eaf63d2f764bdaabcca52d378beeb35
-2026-03-27T04:50:17.9300097Z #5 extracting sha256:a7e706a435c2a53ff172ba5b50e2a06c2eaf63d2f764bdaabcca52d378beeb35 done
-2026-03-27T04:50:17.9305785Z #5 extracting sha256:c5ff66ca7e6bad6eb2c1b483c6c580ef147d04552f3bba4b13ac1b05cf474013 done
-2026-03-27T04:50:17.9309425Z #5 extracting sha256:103b78775db928290fb85c370d3e47361a507a82b3b7c69c628783e018a9ffb8 0.0s done
-2026-03-27T04:50:17.9311765Z #5 DONE 0.4s
-2026-03-27T04:50:18.0340525Z
-2026-03-27T04:50:18.0341235Z #6 [2/2] COPY entrypoint.sh /bin/entrypoint.sh
-2026-03-27T04:50:18.0342768Z #6 DONE 0.0s
-2026-03-27T04:50:18.0343121Z
-2026-03-27T04:50:18.0343506Z #7 exporting to image
-2026-03-27T04:50:18.0344130Z #7 exporting layers 0.1s done
-2026-03-27T04:50:18.0345148Z #7 writing image sha256:9e5f5b49de4ac09b0d0558d4636d9bce25fdc19f756bcf20f516c2bf46539b4b done
-2026-03-27T04:50:18.0346861Z #7 naming to docker.io/library/0db6b7:8cf4b68a89894a92bcc7d872e170c45a done
-2026-03-27T04:50:18.0347794Z #7 DONE 0.1s
-2026-03-27T04:50:18.0418971Z ##[endgroup]
-2026-03-27T04:50:18.0450485Z ##[group]Build container for action use: '/home/runner/work/_actions/appleboy/ssh-action/v1.0.3/Dockerfile'.
-2026-03-27T04:50:18.0452340Z ##[command]/usr/bin/docker build -t 0db6b7:a414ca42890341c09dbf5faba6b6fb79 -f "/home/runner/work/_actions/appleboy/ssh-action/v1.0.3/Dockerfile" "/home/runner/work/_actions/appleboy/ssh-action/v1.0.3"
-2026-03-27T04:50:18.3003265Z #0 building with "default" instance using docker driver
-2026-03-27T04:50:18.3003935Z
-2026-03-27T04:50:18.3004268Z #1 [internal] load build definition from Dockerfile
-2026-03-27T04:50:18.3005133Z #1 transferring dockerfile: 149B done
-2026-03-27T04:50:18.3005857Z #1 DONE 0.0s
-2026-03-27T04:50:18.3006156Z
-2026-03-27T04:50:18.3006538Z #2 [internal] load metadata for ghcr.io/appleboy/drone-ssh:1.7.3
-2026-03-27T04:50:18.3477011Z #2 DONE 0.2s
-2026-03-27T04:50:18.4554207Z
-2026-03-27T04:50:18.4557734Z #3 [internal] load .dockerignore
-2026-03-27T04:50:18.4558510Z #3 transferring context: 2B done
-2026-03-27T04:50:18.4559194Z #3 DONE 0.0s
-2026-03-27T04:50:18.4559507Z
-2026-03-27T04:50:18.4560272Z #4 [internal] load build context
-2026-03-27T04:50:18.4560890Z #4 transferring context: 108B done
-2026-03-27T04:50:18.4561474Z #4 DONE 0.0s
-2026-03-27T04:50:18.4561757Z
-2026-03-27T04:50:18.4567302Z #5 [1/2] FROM ghcr.io/appleboy/drone-ssh:1.7.3@sha256:179cbd253771007f2ebcaf7a3860afe059207351de1f3378efafac93bd310158
-2026-03-27T04:50:18.4568943Z #5 resolve ghcr.io/appleboy/drone-ssh:1.7.3@sha256:179cbd253771007f2ebcaf7a3860afe059207351de1f3378efafac93bd310158 done
-2026-03-27T04:50:18.4570582Z #5 extracting sha256:654aaee5654be60f81172539ecd74485cf8bbe2e9137bab0d429862c31c676f6 0.0s done
-2026-03-27T04:50:18.5775254Z #5 sha256:47353a6f9201a145b687290e5ae0278ac269faf4bb61bee3e9246c37a8d74277 2.44MB / 2.44MB 0.1s done
-2026-03-27T04:50:18.5778492Z #5 sha256:179cbd253771007f2ebcaf7a3860afe059207351de1f3378efafac93bd310158 2.38kB / 2.38kB done
-2026-03-27T04:50:18.5780913Z #5 sha256:1a52f94820e830bc9734623deb03bbafa6a248fba19cdc2e5605c70d90d91441 1.24kB / 1.24kB done
-2026-03-27T04:50:18.5782517Z #5 sha256:c4781b8d012b16b6c7468dc9104fad0a63f2a8815b2af8b7176bb544253ea8c7 3.86kB / 3.86kB done
-2026-03-27T04:50:18.5783896Z #5 sha256:654aaee5654be60f81172539ecd74485cf8bbe2e9137bab0d429862c31c676f6 284.83kB / 284.83kB 0.0s done
-2026-03-27T04:50:18.5785449Z #5 sha256:7e20f48a19643465f486f59127b8f4e0f4114bedc8bd5260fb4f92d5fda95f1c 1.20kB / 1.20kB 0.1s done
-2026-03-27T04:50:18.5787772Z #5 sha256:066e5b821e26d8313055e0314c056e6c297847bcf963e5df10e7aa03107f2246 125B / 125B 0.1s done
-2026-03-27T04:50:18.5788912Z #5 extracting sha256:7e20f48a19643465f486f59127b8f4e0f4114bedc8bd5260fb4f92d5fda95f1c done
-2026-03-27T04:50:18.5790204Z #5 extracting sha256:066e5b821e26d8313055e0314c056e6c297847bcf963e5df10e7aa03107f2246 done
-2026-03-27T04:50:18.5791530Z #5 extracting sha256:47353a6f9201a145b687290e5ae0278ac269faf4bb61bee3e9246c37a8d74277 0.0s done
-2026-03-27T04:50:18.7711101Z #5 DONE 0.2s
-2026-03-27T04:50:18.7711518Z
-2026-03-27T04:50:18.7711906Z #6 [2/2] COPY entrypoint.sh /bin/entrypoint.sh
-2026-03-27T04:50:18.7712647Z #6 DONE 0.0s
-2026-03-27T04:50:18.7712907Z
-2026-03-27T04:50:18.7713074Z #7 exporting to image
-2026-03-27T04:50:18.7713468Z #7 exporting layers
-2026-03-27T04:50:19.0133530Z #7 exporting layers 0.4s done
-2026-03-27T04:50:19.0462852Z #7 writing image sha256:8758180f7ee58269b16cc3f776d4964242b5b02c1365db6714aa515c72a2c645 done
-2026-03-27T04:50:19.0464132Z #7 naming to docker.io/library/0db6b7:a414ca42890341c09dbf5faba6b6fb79 done
-2026-03-27T04:50:19.0465167Z #7 DONE 0.4s
-2026-03-27T04:50:19.0531917Z ##[endgroup]
-2026-03-27T04:50:19.0799248Z ##[group]Run actions/checkout@v4
-2026-03-27T04:50:19.0799868Z with:
-2026-03-27T04:50:19.0800119Z   repository: baedongjun/hyrowod
-2026-03-27T04:50:19.0800558Z   token: ***
-2026-03-27T04:50:19.0800797Z   ssh-strict: true
-2026-03-27T04:50:19.0801031Z   ssh-user: git
-2026-03-27T04:50:19.0801270Z   persist-credentials: true
-2026-03-27T04:50:19.0801520Z   clean: true
-2026-03-27T04:50:19.0801754Z   sparse-checkout-cone-mode: true
-2026-03-27T04:50:19.0802313Z   fetch-depth: 1
-2026-03-27T04:50:19.0802650Z   fetch-tags: false
-2026-03-27T04:50:19.0802887Z   show-progress: true
-2026-03-27T04:50:19.0803126Z   lfs: false
-2026-03-27T04:50:19.0803339Z   submodules: false
-2026-03-27T04:50:19.0803575Z   set-safe-directory: true
-2026-03-27T04:50:19.0804127Z ##[endgroup]
-2026-03-27T04:50:19.1909846Z Syncing repository: baedongjun/hyrowod
-2026-03-27T04:50:19.1911889Z ##[group]Getting Git version info
-2026-03-27T04:50:19.1912893Z Working directory is '/home/runner/work/hyrowod/hyrowod'
-2026-03-27T04:50:19.1913963Z [command]/usr/bin/git version
-2026-03-27T04:50:19.1924017Z git version 2.53.0
-2026-03-27T04:50:19.1950282Z ##[endgroup]
-2026-03-27T04:50:19.1970130Z Temporarily overriding HOME='/home/runner/work/_temp/b9f9aecf-01c7-47ad-aeac-b297e42963b7' before making global git config changes
-2026-03-27T04:50:19.1970974Z Adding repository directory to the temporary git global config as a safe directory
-2026-03-27T04:50:19.1975351Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/hyrowod/hyrowod
-2026-03-27T04:50:19.2007622Z Deleting the contents of '/home/runner/work/hyrowod/hyrowod'
-2026-03-27T04:50:19.2010972Z ##[group]Initializing the repository
-2026-03-27T04:50:19.2015336Z [command]/usr/bin/git init /home/runner/work/hyrowod/hyrowod
-2026-03-27T04:50:19.2123050Z hint: Using 'master' as the name for the initial branch. This default branch name
-2026-03-27T04:50:19.2124125Z hint: will change to "main" in Git 3.0. To configure the initial branch name
-2026-03-27T04:50:19.2125144Z hint: to use in all of your new repositories, which will suppress this warning,
-2026-03-27T04:50:19.2126290Z hint: call:
-2026-03-27T04:50:19.2126688Z hint:
-2026-03-27T04:50:19.2127242Z hint: 	git config --global init.defaultBranch <name>
-2026-03-27T04:50:19.2127864Z hint:
-2026-03-27T04:50:19.2128464Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
-2026-03-27T04:50:19.2129466Z hint: 'development'. The just-created branch can be renamed via this command:
-2026-03-27T04:50:19.2130345Z hint:
-2026-03-27T04:50:19.2130785Z hint: 	git branch -m <name>
-2026-03-27T04:50:19.2131270Z hint:
-2026-03-27T04:50:19.2131902Z hint: Disable this message with "git config set advice.defaultBranchName false"
-2026-03-27T04:50:19.2133236Z Initialized empty Git repository in /home/runner/work/hyrowod/hyrowod/.git/
-2026-03-27T04:50:19.2138034Z [command]/usr/bin/git remote add origin https://github.com/baedongjun/hyrowod
-2026-03-27T04:50:19.2167312Z ##[endgroup]
-2026-03-27T04:50:19.2168059Z ##[group]Disabling automatic garbage collection
-2026-03-27T04:50:19.2172285Z [command]/usr/bin/git config --local gc.auto 0
-2026-03-27T04:50:19.2199147Z ##[endgroup]
-2026-03-27T04:50:19.2199569Z ##[group]Setting up auth
-2026-03-27T04:50:19.2207883Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
-2026-03-27T04:50:19.2238102Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
-2026-03-27T04:50:19.2550601Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
-2026-03-27T04:50:19.2578804Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
-2026-03-27T04:50:19.2791273Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
-2026-03-27T04:50:19.2823744Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
-2026-03-27T04:50:19.3042993Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
-2026-03-27T04:50:19.3075291Z ##[endgroup]
-2026-03-27T04:50:19.3076096Z ##[group]Fetching the repository
-2026-03-27T04:50:19.3084437Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +caa907fe37bf2626589a2fc5a0e96af43c9764d9:refs/remotes/origin/main
-2026-03-27T04:50:19.5954338Z From https://github.com/baedongjun/hyrowod
-2026-03-27T04:50:19.5956477Z  * [new ref]         caa907fe37bf2626589a2fc5a0e96af43c9764d9 -> origin/main
-2026-03-27T04:50:19.5986882Z ##[endgroup]
-2026-03-27T04:50:19.5987649Z ##[group]Determining the checkout info
-2026-03-27T04:50:19.5989140Z ##[endgroup]
-2026-03-27T04:50:19.5995215Z [command]/usr/bin/git sparse-checkout disable
-2026-03-27T04:50:19.6033185Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
-2026-03-27T04:50:19.6059657Z ##[group]Checking out the ref
-2026-03-27T04:50:19.6065342Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
-2026-03-27T04:50:19.6434781Z Switched to a new branch 'main'
-2026-03-27T04:50:19.6436672Z branch 'main' set up to track 'origin/main'.
-2026-03-27T04:50:19.6444161Z ##[endgroup]
-2026-03-27T04:50:19.6480177Z [command]/usr/bin/git log -1 --format=%H
-2026-03-27T04:50:19.6501446Z caa907fe37bf2626589a2fc5a0e96af43c9764d9
-2026-03-27T04:50:19.6733207Z ##[group]Run aws-actions/configure-aws-credentials@v4
-2026-03-27T04:50:19.6733582Z with:
-2026-03-27T04:50:19.6733927Z   aws-access-key-id: ***
-2026-03-27T04:50:19.6734304Z   aws-secret-access-key: ***
-2026-03-27T04:50:19.6734580Z   aws-region: ap-northeast-2
-2026-03-27T04:50:19.6734854Z   audience: sts.amazonaws.com
-2026-03-27T04:50:19.6735128Z   output-env-credentials: true
-2026-03-27T04:50:19.6735393Z ##[endgroup]
-2026-03-27T04:50:20.7019336Z Proceeding with IAM user credentials
-2026-03-27T04:50:20.7122472Z ##[group]Run aws-actions/amazon-ecr-login@v2
-2026-03-27T04:50:20.7122970Z with:
-2026-03-27T04:50:20.7123213Z   mask-password: true
-2026-03-27T04:50:20.7123487Z   registry-type: private
-2026-03-27T04:50:20.7123738Z   skip-logout: false
-2026-03-27T04:50:20.7123955Z env:
-2026-03-27T04:50:20.7124165Z   AWS_DEFAULT_REGION: ap-northeast-2
-2026-03-27T04:50:20.7124455Z   AWS_REGION: ap-northeast-2
-2026-03-27T04:50:20.7125030Z   AWS_ACCESS_KEY_ID: ***
-2026-03-27T04:50:20.7125384Z   AWS_SECRET_ACCESS_KEY: ***
-2026-03-27T04:50:20.7125641Z ##[endgroup]
-2026-03-27T04:50:20.8206698Z Using environment variable credentials.
-2026-03-27T04:50:21.7775253Z Logging into registry ***
-2026-03-27T04:50:23.5082949Z ##[group]Run docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-2026-03-27T04:50:23.5083563Z [36;1mdocker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .[0m
-2026-03-27T04:50:23.5084038Z [36;1mdocker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG[0m
-2026-03-27T04:50:23.5084590Z [36;1mdocker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest[0m
-2026-03-27T04:50:23.5085120Z [36;1mdocker push $ECR_REGISTRY/$ECR_REPOSITORY:latest[0m
-2026-03-27T04:50:23.5115345Z shell: /usr/bin/bash -e {0}
-2026-03-27T04:50:23.5115624Z env:
-2026-03-27T04:50:23.5115854Z   AWS_DEFAULT_REGION: ap-northeast-2
-2026-03-27T04:50:23.5116158Z   AWS_REGION: ap-northeast-2
-2026-03-27T04:50:23.5116502Z   AWS_ACCESS_KEY_ID: ***
-2026-03-27T04:50:23.5116856Z   AWS_SECRET_ACCESS_KEY: ***
-2026-03-27T04:50:23.5117227Z   ECR_REGISTRY: ***
-2026-03-27T04:50:23.5117470Z   ECR_REPOSITORY: hyrowod-backend
-2026-03-27T04:50:23.5117847Z   IMAGE_TAG: caa907fe37bf2626589a2fc5a0e96af43c9764d9
-2026-03-27T04:50:23.5118185Z ##[endgroup]
-2026-03-27T04:50:23.8053263Z #0 building with "default" instance using docker driver
-2026-03-27T04:50:23.8053704Z
-2026-03-27T04:50:23.8053928Z #1 [internal] load build definition from Dockerfile
-2026-03-27T04:50:23.8054411Z #1 transferring dockerfile: 434B done
-2026-03-27T04:50:23.8054840Z #1 DONE 0.0s
-2026-03-27T04:50:23.8055027Z
-2026-03-27T04:50:23.8055298Z #2 [auth] library/eclipse-temurin:pull token for registry-1.docker.io
-2026-03-27T04:50:23.8055817Z #2 DONE 0.0s
-2026-03-27T04:50:23.8055996Z
-2026-03-27T04:50:23.8056279Z #3 [internal] load metadata for docker.io/library/eclipse-temurin:21-jdk
-2026-03-27T04:50:23.9635872Z #3 ...
-2026-03-27T04:50:23.9636221Z
-2026-03-27T04:50:23.9636827Z #4 [internal] load metadata for docker.io/library/eclipse-temurin:21-jre
-2026-03-27T04:50:23.9637533Z #4 DONE 0.3s
-2026-03-27T04:50:24.0978295Z
-2026-03-27T04:50:24.0979419Z #3 [internal] load metadata for docker.io/library/eclipse-temurin:21-jdk
-2026-03-27T04:50:24.0981044Z #3 DONE 0.3s
-2026-03-27T04:50:24.0981354Z
-2026-03-27T04:50:24.0981534Z #5 [internal] load .dockerignore
-2026-03-27T04:50:24.0989262Z #5 transferring context: 2B done
-2026-03-27T04:50:24.0989684Z #5 DONE 0.0s
-2026-03-27T04:50:24.0989871Z
-2026-03-27T04:50:24.0990032Z #6 [internal] load build context
-2026-03-27T04:50:24.0990536Z #6 transferring context: 566.37kB 0.1s done
-2026-03-27T04:50:24.0990968Z #6 DONE 0.1s
-2026-03-27T04:50:24.0991166Z
-2026-03-27T04:50:24.0991665Z #7 [stage-1 1/3] FROM docker.io/library/eclipse-temurin:21-jre@sha256:9d4453b48613404e1fa6e5e7eabc687ea57edfb8a1ad413956c5168f84b66af9
-2026-03-27T04:50:24.0993538Z #7 resolve docker.io/library/eclipse-temurin:21-jre@sha256:9d4453b48613404e1fa6e5e7eabc687ea57edfb8a1ad413956c5168f84b66af9 done
-2026-03-27T04:50:24.0994475Z #7 sha256:ded334408097f08dde9507428976abc2f844eae59856aecc45671fb699f88f74 159B / 159B 0.0s done
-2026-03-27T04:50:24.0997536Z #7 sha256:bf6ab2a4ddd47ce46630077d0e137301e2294ad28cbbd10ed888d2782bc027be 2.28kB / 2.28kB 0.1s done
-2026-03-27T04:50:24.1000288Z #7 sha256:9d4453b48613404e1fa6e5e7eabc687ea57edfb8a1ad413956c5168f84b66af9 7.18kB / 7.18kB done
-2026-03-27T04:50:24.1003187Z #7 sha256:be2ed5af8104188957a9f8ba1e440cc357f4d0f6f5a5628e84c9b9c5843214e6 1.94kB / 1.94kB done
-2026-03-27T04:50:24.1005681Z #7 sha256:dd76195e056190975fc0e795f6bf567787a191b4fc390cf9ea37ebf2249f58a1 5.82kB / 5.82kB done
-2026-03-27T04:50:24.1007575Z #7 sha256:6502333748a9e5b5a7e8aaabb484e42b3cc861ca1dcf4d70331259c318eb596d 11.53MB / 16.98MB 0.1s
-2026-03-27T04:50:24.1008617Z #7 sha256:92b331859550d0b667a6ab32159d398031b1c5ed2e351a645be1e3dcd633f6ab 2.10MB / 52.99MB 0.1s
-2026-03-27T04:50:24.2029660Z #7 sha256:6502333748a9e5b5a7e8aaabb484e42b3cc861ca1dcf4d70331259c318eb596d 16.98MB / 16.98MB 0.1s done
-2026-03-27T04:50:24.2034294Z #7 sha256:92b331859550d0b667a6ab32159d398031b1c5ed2e351a645be1e3dcd633f6ab 28.31MB / 52.99MB 0.2s
-2026-03-27T04:50:24.2035576Z #7 extracting sha256:6502333748a9e5b5a7e8aaabb484e42b3cc861ca1dcf4d70331259c318eb596d
-2026-03-27T04:50:24.3574352Z #7 sha256:92b331859550d0b667a6ab32159d398031b1c5ed2e351a645be1e3dcd633f6ab 52.43MB / 52.99MB 0.3s
-2026-03-27T04:50:24.4707552Z #7 sha256:92b331859550d0b667a6ab32159d398031b1c5ed2e351a645be1e3dcd633f6ab 52.99MB / 52.99MB 0.3s done
-2026-03-27T04:50:25.2136235Z #7 extracting sha256:6502333748a9e5b5a7e8aaabb484e42b3cc861ca1dcf4d70331259c318eb596d 1.0s done
-2026-03-27T04:50:25.3434114Z #7 extracting sha256:92b331859550d0b667a6ab32159d398031b1c5ed2e351a645be1e3dcd633f6ab
-2026-03-27T04:50:26.2843796Z #7 extracting sha256:92b331859550d0b667a6ab32159d398031b1c5ed2e351a645be1e3dcd633f6ab 0.9s done
-2026-03-27T04:50:26.7014854Z #7 extracting sha256:ded334408097f08dde9507428976abc2f844eae59856aecc45671fb699f88f74 done
-2026-03-27T04:50:26.9485940Z #7 extracting sha256:bf6ab2a4ddd47ce46630077d0e137301e2294ad28cbbd10ed888d2782bc027be done
-2026-03-27T04:50:27.0496710Z #7 DONE 3.0s
-2026-03-27T04:50:27.0496958Z
-2026-03-27T04:50:27.0497112Z #8 [stage-1 2/3] WORKDIR /app
-2026-03-27T04:50:27.0497562Z #8 DONE 0.0s
-2026-03-27T04:50:27.0497816Z
-2026-03-27T04:50:27.0498313Z #9 [build 1/9] FROM docker.io/library/eclipse-temurin:21-jdk@sha256:3b0a98dfbdf1067c20a7854cec159551777d2ee1381bc76cd4bd0719f543b148
-2026-03-27T04:50:27.0499388Z #9 resolve docker.io/library/eclipse-temurin:21-jdk@sha256:3b0a98dfbdf1067c20a7854cec159551777d2ee1381bc76cd4bd0719f543b148 0.0s done
-2026-03-27T04:50:27.0500360Z #9 sha256:4be4245dd281acbc975d308746964a5fe8161c94e3ccdc47344c63a88e0a858e 1.94kB / 1.94kB done
-2026-03-27T04:50:27.0501014Z #9 sha256:774e91c1da134e2b2588ad02265c09f97b46b0e78ee3670dd9573ca1422a09e3 6.20kB / 6.20kB done
-2026-03-27T04:50:27.0501836Z #9 sha256:7e9e66015a4106ba6a33506aa8681e1e826f3acd628c6ef01dcc42970432c062 22.96MB / 22.96MB 0.2s done
-2026-03-27T04:50:27.0504185Z #9 sha256:3b0a98dfbdf1067c20a7854cec159551777d2ee1381bc76cd4bd0719f543b148 7.18kB / 7.18kB done
-2026-03-27T04:50:27.0505575Z #9 sha256:c25811b013510224fb88be99e66652561dfb1e6878aced0885c7da14e1245164 157.87MB / 157.87MB 0.8s done
-2026-03-27T04:50:27.0506824Z #9 extracting sha256:7e9e66015a4106ba6a33506aa8681e1e826f3acd628c6ef01dcc42970432c062 1.1s done
-2026-03-27T04:50:27.0508206Z #9 sha256:9b1a2f3bb5f3b740bf5ee456c4430e1f1cd3944bb8dfd30eddb42c39222cc651 158B / 158B 0.3s done
-2026-03-27T04:50:27.0509278Z #9 sha256:91e1054453cc8ad0c2fc8f173ab87276807c498c0f9856f5ed9c62761776bf51 2.28kB / 2.28kB 0.3s done
-2026-03-27T04:50:27.0510461Z #9 extracting sha256:c25811b013510224fb88be99e66652561dfb1e6878aced0885c7da14e1245164 1.6s
-2026-03-27T04:50:27.1674213Z #9 extracting sha256:c25811b013510224fb88be99e66652561dfb1e6878aced0885c7da14e1245164 1.7s done
-2026-03-27T04:50:27.1675520Z #9 extracting sha256:9b1a2f3bb5f3b740bf5ee456c4430e1f1cd3944bb8dfd30eddb42c39222cc651
-2026-03-27T04:50:27.2720314Z #9 extracting sha256:9b1a2f3bb5f3b740bf5ee456c4430e1f1cd3944bb8dfd30eddb42c39222cc651 done
-2026-03-27T04:50:27.2721762Z #9 extracting sha256:91e1054453cc8ad0c2fc8f173ab87276807c498c0f9856f5ed9c62761776bf51 done
-2026-03-27T04:50:27.2722948Z #9 DONE 3.2s
-2026-03-27T04:50:27.2723192Z
-2026-03-27T04:50:27.2723429Z #10 [build 2/9] WORKDIR /app
-2026-03-27T04:50:27.2723892Z #10 DONE 0.0s
-2026-03-27T04:50:27.2724122Z
-2026-03-27T04:50:27.2724291Z #11 [build 3/9] COPY gradlew .
-2026-03-27T04:50:27.2724765Z #11 DONE 0.0s
-2026-03-27T04:50:27.2724990Z
-2026-03-27T04:50:27.2725175Z #12 [build 4/9] COPY gradle gradle
-2026-03-27T04:50:27.2725990Z #12 DONE 0.0s
-2026-03-27T04:50:27.2726156Z
-2026-03-27T04:50:27.2726274Z #13 [build 5/9] COPY build.gradle .
-2026-03-27T04:50:27.2726572Z #13 DONE 0.0s
-2026-03-27T04:50:27.4837112Z
-2026-03-27T04:50:27.4837705Z #14 [build 6/9] COPY settings.gradle .
-2026-03-27T04:50:27.4838119Z #14 DONE 0.0s
-2026-03-27T04:50:27.4838274Z
-2026-03-27T04:50:27.4838387Z #15 [build 7/9] COPY src src
-2026-03-27T04:50:27.4838670Z #15 DONE 0.0s
-2026-03-27T04:50:27.4838803Z
-2026-03-27T04:50:27.4838916Z #16 [build 8/9] RUN chmod +x gradlew
-2026-03-27T04:50:27.5516760Z #16 DONE 0.2s
-2026-03-27T04:50:27.7032158Z
-2026-03-27T04:50:27.7032961Z #17 [build 9/9] RUN ./gradlew build -x test --no-daemon
-2026-03-27T04:50:27.9798925Z #17 0.427 Downloading https://services.gradle.org/distributions/gradle-9.3.1-bin.zip
-2026-03-27T04:50:29.5813006Z #17 0.977 .............10%.............20%.............30%.............40%.............50%.............60%.............70%.............80%.............90%.............100%
-2026-03-27T04:50:30.9610838Z #17 3.407
-2026-03-27T04:50:31.2113478Z #17 3.408 Welcome to Gradle 9.3.1!
-2026-03-27T04:50:31.2114002Z #17 3.408
-2026-03-27T04:50:31.2114418Z #17 3.408 Here are the highlights of this release:
-2026-03-27T04:50:31.2115021Z #17 3.408  - Test reporting improvements
-2026-03-27T04:50:31.2115552Z #17 3.408  - Error and warning improvements
-2026-03-27T04:50:31.2116061Z #17 3.408  - Build authoring improvements
-2026-03-27T04:50:31.2116492Z #17 3.408
-2026-03-27T04:50:31.2117061Z #17 3.408 For more details see https://docs.gradle.org/9.3.1/release-notes.html
-2026-03-27T04:50:31.2117724Z #17 3.408
-2026-03-27T04:50:31.2119280Z #17 3.507 To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.3.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
-2026-03-27T04:50:32.3113971Z #17 4.607 Daemon will be stopped at the end of the build
-2026-03-27T04:51:03.1605622Z #17 35.61
-2026-03-27T04:51:03.3120307Z #17 35.61 > Task :compileJava
-2026-03-27T04:51:03.3124047Z #17 35.61 Note: /app/src/main/java/com/hyrowod/security/oauth2/HttpCookieOAuth2AuthorizationRequestRepository.java uses or overrides a deprecated API.
-2026-03-27T04:51:03.3129572Z #17 35.61 Note: Recompile with -Xlint:deprecation for details.
-2026-03-27T04:51:10.9600170Z #17 43.41
-2026-03-27T04:51:11.0616674Z #17 43.41 > Task :processResources
-2026-03-27T04:51:11.0621598Z #17 43.41 > Task :classes
-2026-03-27T04:51:11.0623179Z #17 43.51 > Task :resolveMainClassName
-2026-03-27T04:51:14.5601399Z #17 47.01 > Task :bootJar
-2026-03-27T04:51:14.8048188Z #17 47.10 > Task :jar
-2026-03-27T04:51:14.8048699Z #17 47.10 > Task :assemble
-2026-03-27T04:51:14.8049482Z #17 47.10 > Task :check
-2026-03-27T04:51:14.8049898Z #17 47.10 > Task :build
-2026-03-27T04:51:14.8050281Z #17 47.10
-2026-03-27T04:51:14.8051057Z #17 47.10 [Incubating] Problems report is available at: file:///app/build/reports/problems/problems-report.html
-2026-03-27T04:51:14.8051961Z #17 47.10
-2026-03-27T04:51:14.8053345Z #17 47.10 BUILD SUCCESSFUL in 46s
-2026-03-27T04:51:14.8053828Z #17 47.10 5 actionable tasks: 5 executed
-2026-03-27T04:51:14.8054907Z #17 47.10 Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.3.1/userguide/configuration_cache_enabling.html
-2026-03-27T04:51:14.8521415Z #17 DONE 47.3s
-2026-03-27T04:51:15.4731780Z
-2026-03-27T04:51:15.4732610Z #18 [stage-1 3/3] COPY --from=build /app/build/libs/*.jar app.jar
-2026-03-27T04:51:15.6977048Z #18 DONE 0.1s
-2026-03-27T04:51:15.6978583Z
-2026-03-27T04:51:15.6978789Z #19 exporting to image
-2026-03-27T04:51:15.6979232Z #19 exporting layers
-2026-03-27T04:51:16.0091399Z #19 exporting layers 0.5s done
-2026-03-27T04:51:16.0305186Z #19 writing image sha256:080013e227132f5d6f6c3b6d95d6de13d3cacf969641f750b9b12514a13e247c done
-2026-03-27T04:51:16.0306981Z #19 naming to ***/hyrowod-backend:caa907fe37bf2626589a2fc5a0e96af43c9764d9 done
-2026-03-27T04:51:16.0307890Z #19 DONE 0.5s
-2026-03-27T04:51:16.3158525Z The push refers to repository [***/hyrowod-backend]
-2026-03-27T04:51:17.0936288Z 1b880c34dbd6: Preparing
-2026-03-27T04:51:17.0936742Z 0655c814e6d3: Preparing
-2026-03-27T04:51:17.0937146Z 893a46e3a22c: Preparing
-2026-03-27T04:51:17.0937405Z 0f99089255e7: Preparing
-2026-03-27T04:51:17.0937706Z 2e2ba023e037: Preparing
-2026-03-27T04:51:17.0938115Z c4e3850aa7d4: Preparing
-2026-03-27T04:51:17.0938500Z f2a7f0726353: Preparing
-2026-03-27T04:51:17.0938818Z c4e3850aa7d4: Waiting
-2026-03-27T04:51:17.0939136Z f2a7f0726353: Waiting
-2026-03-27T04:51:17.8906243Z 2e2ba023e037: Layer already exists
-2026-03-27T04:51:17.8989923Z 0f99089255e7: Layer already exists
-2026-03-27T04:51:17.9150245Z 893a46e3a22c: Layer already exists
-2026-03-27T04:51:18.6712612Z c4e3850aa7d4: Layer already exists
-2026-03-27T04:51:19.4924983Z f2a7f0726353: Layer already exists
-2026-03-27T04:51:20.5685285Z 0655c814e6d3: Pushed
-2026-03-27T04:51:27.6132749Z 1b880c34dbd6: Pushed
-2026-03-27T04:51:33.1937984Z caa907fe37bf2626589a2fc5a0e96af43c9764d9: digest: sha256:4ec7d033287fc751166dfe2490002aef066cb410fa0dca8b3fbfa0c403a3bc13 size: 1786
-2026-03-27T04:51:33.3040198Z The push refers to repository [***/hyrowod-backend]
-2026-03-27T04:51:34.1109654Z 1b880c34dbd6: Preparing
-2026-03-27T04:51:34.1112247Z 0655c814e6d3: Preparing
-2026-03-27T04:51:34.1112881Z 893a46e3a22c: Preparing
-2026-03-27T04:51:34.1113185Z 0f99089255e7: Preparing
-2026-03-27T04:51:34.1113439Z 2e2ba023e037: Preparing
-2026-03-27T04:51:34.1113791Z c4e3850aa7d4: Preparing
-2026-03-27T04:51:34.1114112Z f2a7f0726353: Preparing
-2026-03-27T04:51:34.1114399Z c4e3850aa7d4: Waiting
-2026-03-27T04:51:34.1114649Z f2a7f0726353: Waiting
-2026-03-27T04:51:34.8901670Z 0f99089255e7: Layer already exists
-2026-03-27T04:51:34.8914676Z 893a46e3a22c: Layer already exists
-2026-03-27T04:51:34.8927217Z 1b880c34dbd6: Layer already exists
-2026-03-27T04:51:34.9031716Z 2e2ba023e037: Layer already exists
-2026-03-27T04:51:34.9119830Z 0655c814e6d3: Layer already exists
-2026-03-27T04:51:35.7549386Z c4e3850aa7d4: Layer already exists
-2026-03-27T04:51:35.7610754Z f2a7f0726353: Layer already exists
-2026-03-27T04:51:37.4037672Z latest: digest: sha256:4ec7d033287fc751166dfe2490002aef066cb410fa0dca8b3fbfa0c403a3bc13 size: 1786
-2026-03-27T04:51:37.4106958Z ##[group]Run docker build \
-2026-03-27T04:51:37.4107299Z [36;1mdocker build \[0m
-2026-03-27T04:51:37.4107686Z [36;1m  --build-arg NEXT_PUBLIC_API_URL=https://hyrowod.com \[0m
-2026-03-27T04:51:37.4108289Z [36;1m  --build-arg NEXT_PUBLIC_KAKAO_MAP_KEY=*** \[0m
-2026-03-27T04:51:37.4108645Z [36;1m  -f Dockerfile.frontend \[0m
-2026-03-27T04:51:37.4109001Z [36;1m  -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \[0m
-2026-03-27T04:51:37.4109331Z [36;1m  frontend/[0m
-2026-03-27T04:51:37.4109641Z [36;1mdocker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG[0m
-2026-03-27T04:51:37.4110181Z [36;1mdocker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest[0m
-2026-03-27T04:51:37.4110706Z [36;1mdocker push $ECR_REGISTRY/$ECR_REPOSITORY:latest[0m
-2026-03-27T04:51:37.4136884Z shell: /usr/bin/bash -e {0}
-2026-03-27T04:51:37.4137154Z env:
-2026-03-27T04:51:37.4137370Z   AWS_DEFAULT_REGION: ap-northeast-2
-2026-03-27T04:51:37.4137701Z   AWS_REGION: ap-northeast-2
-2026-03-27T04:51:37.4138019Z   AWS_ACCESS_KEY_ID: ***
-2026-03-27T04:51:37.4138457Z   AWS_SECRET_ACCESS_KEY: ***
-2026-03-27T04:51:37.4139009Z   ECR_REGISTRY: ***
-2026-03-27T04:51:37.4139274Z   ECR_REPOSITORY: hyrowod-frontend
-2026-03-27T04:51:37.4139593Z   IMAGE_TAG: caa907fe37bf2626589a2fc5a0e96af43c9764d9
-2026-03-27T04:51:37.4139909Z ##[endgroup]
-2026-03-27T04:51:37.7284489Z #0 building with "default" instance using docker driver
-2026-03-27T04:51:37.7285014Z
-2026-03-27T04:51:37.7285338Z #1 [internal] load build definition from Dockerfile.frontend
-2026-03-27T04:51:37.7285990Z #1 transferring dockerfile: 1.06kB done
-2026-03-27T04:51:37.7286486Z #1 DONE 0.0s
-2026-03-27T04:51:37.7286703Z
-2026-03-27T04:51:37.7286986Z #2 [auth] library/node:pull token for registry-1.docker.io
-2026-03-27T04:51:37.7288017Z #2 DONE 0.0s
-2026-03-27T04:51:37.7288233Z
-2026-03-27T04:51:37.7288543Z #3 [internal] load metadata for docker.io/library/node:20-alpine
-2026-03-27T04:51:37.8947735Z #3 DONE 0.4s
-2026-03-27T04:51:38.0205119Z
-2026-03-27T04:51:38.0205745Z #4 [internal] load .dockerignore
-2026-03-27T04:51:38.0206435Z #4 transferring context: 2B done
-2026-03-27T04:51:38.0207019Z #4 DONE 0.0s
-2026-03-27T04:51:38.0207280Z
-2026-03-27T04:51:38.0207682Z #5 [internal] load build context
-2026-03-27T04:51:38.0208352Z #5 transferring context: 1.89MB 0.0s done
-2026-03-27T04:51:38.0208843Z #5 DONE 0.1s
-2026-03-27T04:51:38.0209036Z
-2026-03-27T04:51:38.0209652Z #6 [deps 1/4] FROM docker.io/library/node:20-alpine@sha256:f598378b5240225e6beab68fa9f356db1fb8efe55173e6d4d8153113bb8f333c
-2026-03-27T04:51:38.0211057Z #6 resolve docker.io/library/node:20-alpine@sha256:f598378b5240225e6beab68fa9f356db1fb8efe55173e6d4d8153113bb8f333c done
-2026-03-27T04:51:38.0211857Z #6 sha256:f598378b5240225e6beab68fa9f356db1fb8efe55173e6d4d8153113bb8f333c 7.67kB / 7.67kB done
-2026-03-27T04:51:38.0213766Z #6 sha256:42d1d5b07c84257b55d409f4e6e3be3b55d42867afce975a5648a3f231bf7e81 1.72kB / 1.72kB done
-2026-03-27T04:51:38.0214726Z #6 sha256:ccfb9f0dc7ac7e788325fd0b8eb985ed6a16db60914c61245ddee06acb16e029 6.52kB / 6.52kB done
-2026-03-27T04:51:38.0215536Z #6 sha256:d7f6aca05b78f475975eeac3898b7ef0a618937174c469650e05e81cbf8c5f46 12.58MB / 43.23MB 0.1s
-2026-03-27T04:51:38.0219490Z #6 sha256:62e0e1181d88da8ed0e2fda221e9446ad0f09a004a375193ad7a38e31ec4eab4 1.26MB / 1.26MB 0.1s
-2026-03-27T04:51:38.0220215Z #6 sha256:c7734204880fafbd6297ce1844e07c137d82ee814ac8b5fa6ac1a3659101d503 446B / 446B 0.1s done
-2026-03-27T04:51:38.1510338Z #6 sha256:d7f6aca05b78f475975eeac3898b7ef0a618937174c469650e05e81cbf8c5f46 43.23MB / 43.23MB 0.2s
-2026-03-27T04:51:38.1511437Z #6 sha256:62e0e1181d88da8ed0e2fda221e9446ad0f09a004a375193ad7a38e31ec4eab4 1.26MB / 1.26MB 0.1s done
-2026-03-27T04:51:38.1513390Z #6 extracting sha256:d7f6aca05b78f475975eeac3898b7ef0a618937174c469650e05e81cbf8c5f46
-2026-03-27T04:51:38.2529366Z #6 sha256:d7f6aca05b78f475975eeac3898b7ef0a618937174c469650e05e81cbf8c5f46 43.23MB / 43.23MB 0.2s done
-2026-03-27T04:51:39.3176709Z #6 extracting sha256:d7f6aca05b78f475975eeac3898b7ef0a618937174c469650e05e81cbf8c5f46 1.0s done
-2026-03-27T04:51:39.3177696Z #6 extracting sha256:62e0e1181d88da8ed0e2fda221e9446ad0f09a004a375193ad7a38e31ec4eab4
-2026-03-27T04:51:39.4286348Z #6 extracting sha256:62e0e1181d88da8ed0e2fda221e9446ad0f09a004a375193ad7a38e31ec4eab4 0.0s done
-2026-03-27T04:51:39.4287803Z #6 extracting sha256:c7734204880fafbd6297ce1844e07c137d82ee814ac8b5fa6ac1a3659101d503 done
-2026-03-27T04:51:39.4353300Z #6 DONE 1.5s
-2026-03-27T04:51:39.4366617Z
-2026-03-27T04:51:39.4368391Z #7 [deps 2/4] WORKDIR /app
-2026-03-27T04:51:39.4378466Z #7 DONE 0.0s
-2026-03-27T04:51:39.4379383Z
-2026-03-27T04:51:39.4380106Z #8 [deps 3/4] COPY package.json package-lock.json ./
-2026-03-27T04:51:39.4382381Z #8 DONE 0.0s
-2026-03-27T04:51:39.4382607Z
-2026-03-27T04:51:39.4383627Z #9 [runner 3/6] RUN addgroup --system --gid 1001 nodejs &&     adduser  --system --uid 1001 nextjs
-2026-03-27T04:51:39.5947515Z #9 DONE 0.2s
-2026-03-27T04:51:39.5962575Z
-2026-03-27T04:51:39.5962810Z #10 [deps 4/4] RUN npm ci
-2026-03-27T04:51:41.9229113Z #10 2.493 npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
-2026-03-27T04:51:42.5062677Z #10 3.077 npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
-2026-03-27T04:51:42.7300965Z #10 3.150 npm warn deprecated glob@7.2.3: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
-2026-03-27T04:51:43.3794470Z #10 3.950 npm warn deprecated @humanwhocodes/object-schema@2.0.3: Use @eslint/object-schema instead
-2026-03-27T04:51:43.5418982Z #10 3.961 npm warn deprecated @humanwhocodes/config-array@0.13.0: Use @eslint/config-array instead
-2026-03-27T04:51:45.3819023Z #10 5.952 npm warn deprecated eslint@8.57.1: This version is no longer supported. Please see https://eslint.org/version-support for other options.
-2026-03-27T04:51:53.8275186Z #10 14.40 npm warn deprecated next@15.2.1: This version has a security vulnerability. Please upgrade to a patched version. See https://nextjs.org/blog/CVE-2025-66478 for more details.
-2026-03-27T04:51:54.0533597Z #10 14.62
-2026-03-27T04:51:54.0534175Z #10 14.62 added 422 packages, and audited 423 packages in 14s
-2026-03-27T04:51:54.0534757Z #10 14.62
-2026-03-27T04:51:54.1899951Z #10 14.62 156 packages are looking for funding
-2026-03-27T04:51:54.1900702Z #10 14.62   run `npm fund` for details
-2026-03-27T04:51:54.1901285Z #10 14.76
-2026-03-27T04:51:54.1901664Z #10 14.76 16 vulnerabilities (13 moderate, 2 high, 1 critical)
-2026-03-27T04:51:54.1902447Z #10 14.76
-2026-03-27T04:51:54.1902836Z #10 14.76 To address issues that do not require attention, run:
-2026-03-27T04:51:54.1903289Z #10 14.76   npm audit fix
-2026-03-27T04:51:54.1903577Z #10 14.76
-2026-03-27T04:51:54.1903935Z #10 14.76 To address all issues (including breaking changes), run:
-2026-03-27T04:51:54.1904395Z #10 14.76   npm audit fix --force
-2026-03-27T04:51:54.1904701Z #10 14.76
-2026-03-27T04:51:54.1904963Z #10 14.76 Run `npm audit` for details.
-2026-03-27T04:51:54.3416892Z #10 14.76 npm notice
-2026-03-27T04:51:54.3417381Z #10 14.76 npm notice New major version of npm available! 10.8.2 -> 11.12.1
-2026-03-27T04:51:54.3418572Z #10 14.76 npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.12.1
-2026-03-27T04:51:54.3419445Z #10 14.76 npm notice To update run: npm install -g npm@11.12.1
-2026-03-27T04:51:54.3420233Z #10 14.76 npm notice
-2026-03-27T04:51:55.6898136Z #10 DONE 16.3s
-2026-03-27T04:51:57.5691962Z
-2026-03-27T04:51:57.5693068Z #11 [builder 3/5] COPY --from=deps /app/node_modules ./node_modules
-2026-03-27T04:52:02.1240083Z #11 DONE 4.6s
-2026-03-27T04:52:02.3229877Z
-2026-03-27T04:52:02.3230373Z #12 [builder 4/5] COPY . .
-2026-03-27T04:52:02.3230722Z #12 DONE 0.0s
-2026-03-27T04:52:02.3231256Z
-2026-03-27T04:52:02.3231383Z #13 [builder 5/5] RUN npm run build
-2026-03-27T04:52:02.6548463Z #13 0.482
-2026-03-27T04:52:02.6549132Z #13 0.482 > hyrowod-frontend@0.1.0 build
-2026-03-27T04:52:02.6549645Z #13 0.482 > next build
-2026-03-27T04:52:02.6550014Z #13 0.482
-2026-03-27T04:52:03.3997342Z #13 1.227    ▲ Next.js 15.2.1
-2026-03-27T04:52:03.5814391Z #13 1.228
-2026-03-27T04:52:03.5814772Z #13 1.258    Creating an optimized production build ...
-2026-03-27T04:52:30.3101553Z #13 28.14  ✓ Compiled successfully
-2026-03-27T04:52:30.4627271Z #13 28.14    Linting and checking validity of types ...
-2026-03-27T04:52:38.0887032Z #13 35.92
-2026-03-27T04:52:38.0890744Z #13 35.92 ./app/boxes/[id]/page.tsx
-2026-03-27T04:52:38.0892777Z #13 35.92 766:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-27T04:52:38.0894101Z #13 35.92
-2026-03-27T04:52:38.0894346Z #13 35.92 ./app/challenges/[id]/page.tsx
-2026-03-27T04:52:38.0895615Z #13 35.92 216:13  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-27T04:52:38.0897818Z #13 35.92 274:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-27T04:52:38.0900362Z #13 35.92 345:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-27T04:52:38.0902727Z #13 35.92 392:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-27T04:52:38.0904890Z #13 35.92 415:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-27T04:52:38.0906125Z #13 35.92
-2026-03-27T04:52:38.0906353Z #13 35.92 ./app/challenges/page.tsx
-2026-03-27T04:52:38.0907560Z #13 35.92 42:9  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-27T04:52:38.0908782Z #13 35.92
-2026-03-27T04:52:38.0909004Z #13 35.92 ./app/community/[id]/page.tsx
-2026-03-27T04:52:38.0910214Z #13 35.92 329:17  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-27T04:52:38.0913543Z #13 35.92
-2026-03-27T04:52:38.0913945Z #13 35.92 ./app/competitions/[id]/page.tsx
-2026-03-27T04:52:38.0916310Z #13 35.92 313:27  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-27T04:52:38.0918374Z #13 35.92
-2026-03-27T04:52:38.0918743Z #13 35.92 ./app/feed/page.tsx
-2026-03-27T04:52:38.0920712Z #13 35.92 69:9  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-27T04:52:38.0923516Z #13 35.92 103:9  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-27T04:52:38.0925670Z #13 35.92 155:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-27T04:52:38.0926860Z #13 35.92
-2026-03-27T04:52:38.0927069Z #13 35.92 ./app/layout.tsx
-2026-03-27T04:52:38.0927909Z #13 35.92 52:9  Warning: Custom fonts not added in `pages/_document.js` will only load for a single page. This is discouraged. See: https://nextjs.org/docs/messages/no-page-custom-font  @next/next/no-page-custom-font
-2026-03-27T04:52:38.0928952Z #13 35.92
-2026-03-27T04:52:38.0929175Z #13 35.92 ./app/ranking/page.tsx
-2026-03-27T04:52:38.0930403Z #13 35.92 255:37  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-27T04:52:38.0931595Z #13 35.92
-2026-03-27T04:52:38.0931807Z #13 35.92 ./app/search/page.tsx
-2026-03-27T04:52:38.0933268Z #13 35.92 302:33  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-27T04:52:38.0934463Z #13 35.92
-2026-03-27T04:52:38.0934679Z #13 35.92 ./app/users/page.tsx
-2026-03-27T04:52:38.0935903Z #13 35.92 83:21  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-27T04:52:38.0937098Z #13 35.92
-2026-03-27T04:52:38.0937334Z #13 35.92 ./components/common/InstallPwa.tsx
-2026-03-27T04:52:38.0938556Z #13 35.92 56:11  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
-2026-03-27T04:52:38.0939737Z #13 35.92
-2026-03-27T04:52:38.0940296Z #13 35.92 info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
-2026-03-27T04:52:44.6297991Z #13 42.46    Collecting page data ...
-2026-03-27T04:52:45.3529297Z #13 43.18  ⚠ Using edge runtime on a page currently disables static generation for that page
-2026-03-27T04:52:47.6093279Z #13 45.44    Generating static pages (0/67) ...
-2026-03-27T04:52:49.0013741Z #13 46.83    Generating static pages (16/67)
-2026-03-27T04:52:49.5515611Z #13 47.38    Generating static pages (33/67)
-2026-03-27T04:52:49.7021482Z #13 47.38    Generating static pages (50/67)
-2026-03-27T04:52:50.4796235Z #13 48.31  ✓ Generating static pages (67/67)
-2026-03-27T04:52:51.3888367Z #13 49.22    Finalizing page optimization ...
-2026-03-27T04:52:51.3889990Z #13 49.22    Collecting build traces ...
-2026-03-27T04:53:02.5893123Z #13 60.42
-2026-03-27T04:53:02.7333800Z #13 60.42 Route (app)                                 Size  First Load JS  Revalidate  Expire
-2026-03-27T04:53:02.7338835Z #13 60.42 ┌ ○ /                                     8.8 kB         146 kB
-2026-03-27T04:53:02.7344144Z #13 60.42 ├ ○ /_not-found                            178 B         102 kB
-2026-03-27T04:53:02.7351718Z #13 60.42 ├ ○ /admin                                7.5 kB         145 kB
-2026-03-27T04:53:02.7365534Z #13 60.42 ├ ○ /admin/advertisements                4.74 kB         139 kB
-2026-03-27T04:53:02.7375606Z #13 60.42 ├ ○ /admin/badges                        7.78 kB         148 kB
-2026-03-27T04:53:02.7387135Z #13 60.42 ├ ○ /admin/boxes                         8.83 kB         149 kB
-2026-03-27T04:53:02.7388326Z #13 60.42 ├ ○ /admin/challenges                    7.07 kB         148 kB
-2026-03-27T04:53:02.7389447Z #13 60.42 ├ ○ /admin/competitions                  8.76 kB         149 kB
-2026-03-27T04:53:02.7390513Z #13 60.42 ├ ○ /admin/posts                         7.69 kB         151 kB
-2026-03-27T04:53:02.7391711Z #13 60.42 ├ ○ /admin/posts/reported                7.64 kB         151 kB
-2026-03-27T04:53:02.7421687Z #13 60.42 ├ ○ /admin/ranking                       6.13 kB         147 kB
-2026-03-27T04:53:02.7424229Z #13 60.42 ├ ○ /admin/reports                       6.51 kB         150 kB
-2026-03-27T04:53:02.7425367Z #13 60.42 ├ ○ /admin/reviews                       7.02 kB         147 kB
-2026-03-27T04:53:02.7426613Z #13 60.42 ├ ○ /admin/users                         4.61 kB         145 kB
-2026-03-27T04:53:02.7427612Z #13 60.42 ├ ○ /admin/wod                           7.14 kB         148 kB
-2026-03-27T04:53:02.7444830Z #13 60.42 ├ ○ /advertise                             667 B         102 kB
-2026-03-27T04:53:02.7445696Z #13 60.42 ├ ○ /boxes                               8.29 kB         151 kB
-2026-03-27T04:53:02.7446519Z #13 60.42 ├ ƒ /boxes/[id]                          17.5 kB         166 kB
-2026-03-27T04:53:02.7447682Z #13 60.42 ├ ƒ /boxes/[id]/checkin                  10.7 kB         148 kB
-2026-03-27T04:53:02.7448523Z #13 60.42 ├ ƒ /boxes/[id]/edit                     5.81 kB         155 kB
-2026-03-27T04:53:02.7449335Z #13 60.42 ├ ƒ /boxes/[id]/scan                     3.75 kB         141 kB
-2026-03-27T04:53:02.7450235Z #13 60.42 ├ ○ /boxes/create                        5.86 kB         150 kB
-2026-03-27T04:53:02.7451085Z #13 60.42 ├ ○ /challenges                          5.28 kB         142 kB
-2026-03-27T04:53:02.7451947Z #13 60.42 ├ ƒ /challenges/[id]                     9.73 kB         153 kB
-2026-03-27T04:53:02.7453014Z #13 60.42 ├ ○ /community                           8.49 kB         151 kB
-2026-03-27T04:53:02.7453843Z #13 60.42 ├ ƒ /community/[id]                        11 kB         160 kB
-2026-03-27T04:53:02.7454669Z #13 60.42 ├ ƒ /community/[id]/edit                 4.87 kB         154 kB
-2026-03-27T04:53:02.7455516Z #13 60.42 ├ ○ /community/write                     4.83 kB         149 kB
-2026-03-27T04:53:02.7456364Z #13 60.42 ├ ○ /competitions                        7.84 kB         145 kB
-2026-03-27T04:53:02.7457194Z #13 60.42 ├ ƒ /competitions/[id]                   12.5 kB         161 kB
-2026-03-27T04:53:02.7458015Z #13 60.42 ├ ○ /feed                                10.4 kB         154 kB
-2026-03-27T04:53:02.7458831Z #13 60.42 ├ ƒ /feed.xml                              178 B         102 kB
-2026-03-27T04:53:02.7459664Z #13 60.42 ├ ○ /forgot-password                     1.68 kB         131 kB
-2026-03-27T04:53:02.7460752Z #13 60.42 ├ ○ /icon.svg                                0 B            0 B
-2026-03-27T04:53:02.7461600Z #13 60.42 ├ ○ /login                               2.43 kB         159 kB
-2026-03-27T04:53:02.7462753Z #13 60.42 ├ ○ /manifest.webmanifest                  178 B         102 kB
-2026-03-27T04:53:02.7463585Z #13 60.42 ├ ○ /my                                    12 kB         161 kB
-2026-03-27T04:53:02.7464364Z #13 60.42 ├ ○ /my/activity                         6.82 kB         144 kB
-2026-03-27T04:53:02.7465183Z #13 60.42 ├ ○ /my/attendance                       6.79 kB         144 kB
-2026-03-27T04:53:02.7466019Z #13 60.42 ├ ○ /my/bookmarks                        5.62 kB         143 kB
-2026-03-27T04:53:02.7466811Z #13 60.42 ├ ○ /my/box                              14.9 kB         164 kB
-2026-03-27T04:53:02.7467627Z #13 60.42 ├ ○ /my/claim-box                        4.79 kB         148 kB
-2026-03-27T04:53:02.7468444Z #13 60.42 ├ ○ /my/comments                         7.35 kB         151 kB
-2026-03-27T04:53:02.7469271Z #13 60.42 ├ ○ /my/competitions                      7.3 kB         156 kB
-2026-03-27T04:53:02.7470127Z #13 60.42 ├ ○ /my/favorites                        4.24 kB         153 kB
-2026-03-27T04:53:02.7470937Z #13 60.42 ├ ○ /my/goals                            8.33 kB         152 kB
-2026-03-27T04:53:02.7471774Z #13 60.42 ├ ○ /my/notification-settings            2.41 kB         113 kB
-2026-03-27T04:53:02.7472923Z #13 60.42 ├ ○ /my/password                         3.58 kB         142 kB
-2026-03-27T04:53:02.7473766Z #13 60.42 ├ ○ /my/performance                      9.04 kB         150 kB
-2026-03-27T04:53:02.7475943Z #13 60.42 ├ ○ /my/profile                          4.38 kB         153 kB
-2026-03-27T04:53:02.7476827Z #13 60.42 ├ ○ /my/reservations                     6.81 kB         150 kB
-2026-03-27T04:53:02.7477939Z #13 60.42 ├ ○ /my/reviews                          7.53 kB         151 kB
-2026-03-27T04:53:02.7478803Z #13 60.42 ├ ○ /notifications                       8.49 kB         149 kB
-2026-03-27T04:53:02.7479652Z #13 60.42 ├ ○ /oauth2/callback                     1.26 kB         133 kB
-2026-03-27T04:53:02.7480479Z #13 60.42 ├ ○ /oauth2/register                      2.5 kB         135 kB
-2026-03-27T04:53:02.7481296Z #13 60.42 ├ ○ /offline                               717 B         102 kB
-2026-03-27T04:53:02.7482353Z #13 60.42 ├ ƒ /opengraph-image                       178 B         102 kB
-2026-03-27T04:53:02.7483254Z #13 60.42 ├ ○ /payment/fail                        1.03 kB         105 kB
-2026-03-27T04:53:02.7484117Z #13 60.42 ├ ○ /payment/success                     1.38 kB         130 kB
-2026-03-27T04:53:02.7484927Z #13 60.42 ├ ○ /privacy                               363 B         102 kB
-2026-03-27T04:53:02.7485727Z #13 60.42 ├ ○ /ranking                                6 kB         143 kB
-2026-03-27T04:53:02.7486523Z #13 60.42 ├ ƒ /ranking/[id]                        6.03 kB         140 kB
-2026-03-27T04:53:02.7487340Z #13 60.42 ├ ○ /robots.txt                            178 B         102 kB
-2026-03-27T04:53:02.7488232Z #13 60.42 ├ ○ /search                              8.62 kB         146 kB
-2026-03-27T04:53:02.7489025Z #13 60.42 ├ ○ /signup                              2.09 kB         159 kB
-2026-03-27T04:53:02.7489907Z #13 60.42 ├ ○ /sitemap.xml                           178 B         102 kB          1d      1y
-2026-03-27T04:53:02.7490776Z #13 60.42 ├ ○ /terms                                 363 B         102 kB
-2026-03-27T04:53:02.7491554Z #13 60.42 ├ ○ /tools                               1.65 kB         106 kB
-2026-03-27T04:53:02.7492883Z #13 60.42 ├ ○ /users                               1.71 kB         139 kB
-2026-03-27T04:53:02.7493733Z #13 60.42 ├ ƒ /users/[id]                           9.7 kB         159 kB
-2026-03-27T04:53:02.7494522Z #13 60.42 ├ ○ /wod                                 11.8 kB         161 kB
-2026-03-27T04:53:02.7495363Z #13 60.42 ├ ○ /wod/box-ranking                     5.39 kB         143 kB
-2026-03-27T04:53:02.7496395Z #13 60.42 ├ ○ /wod/history                         6.62 kB         144 kB
-2026-03-27T04:53:02.7497250Z #13 60.42 ├ ○ /wod/leaderboard                     5.13 kB         142 kB
-2026-03-27T04:53:02.7498075Z #13 60.42 ├ ○ /wod/records                           13 kB         156 kB
-2026-03-27T04:53:02.7499207Z #13 60.42 └ ○ /wod/timer                           3.18 kB         105 kB
-2026-03-27T04:53:02.7499915Z #13 60.42 + First Load JS shared by all             101 kB
-2026-03-27T04:53:02.7501081Z #13 60.42   ├ chunks/1684-99162278881cb6a3.js      45.8 kB
-2026-03-27T04:53:02.7502104Z #13 60.42   ├ chunks/4bd1b696-46372af164b2af1b.js  53.3 kB
-2026-03-27T04:53:02.7503186Z #13 60.42   └ other shared chunks (total)          2.34 kB
-2026-03-27T04:53:02.7503765Z #13 60.42
-2026-03-27T04:53:02.7504397Z #13 60.42
-2026-03-27T04:53:02.7504969Z #13 60.42 ○  (Static)   prerendered as static content
-2026-03-27T04:53:02.7505967Z #13 60.42 ƒ  (Dynamic)  server-rendered on demand
-2026-03-27T04:53:02.7506768Z #13 60.42
-2026-03-27T04:53:02.7507135Z #13 60.48 npm notice
-2026-03-27T04:53:02.7507978Z #13 60.48 npm notice New major version of npm available! 10.8.2 -> 11.12.1
-2026-03-27T04:53:02.7509196Z #13 60.48 npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.12.1
-2026-03-27T04:53:02.7510322Z #13 60.48 npm notice To update run: npm install -g npm@11.12.1
-2026-03-27T04:53:02.7510929Z #13 60.48 npm notice
-2026-03-27T04:53:02.7511589Z #13 DONE 60.6s
-2026-03-27T04:53:03.4690510Z
-2026-03-27T04:53:03.4691438Z #14 [runner 4/6] COPY --from=builder /app/public ./public
-2026-03-27T04:53:03.6356218Z #14 DONE 0.0s
-2026-03-27T04:53:03.6356431Z
-2026-03-27T04:53:03.6356732Z #15 [runner 5/6] COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-2026-03-27T04:53:03.8755294Z #15 DONE 0.4s
-2026-03-27T04:53:04.0788155Z
-2026-03-27T04:53:04.0790529Z #16 [runner 6/6] COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-2026-03-27T04:53:04.0791059Z #16 DONE 0.1s
-2026-03-27T04:53:04.0791195Z
-2026-03-27T04:53:04.0791313Z #17 exporting to image
-2026-03-27T04:53:04.0791558Z #17 exporting layers
-2026-03-27T04:53:04.5738158Z #17 exporting layers 0.6s done
-2026-03-27T04:53:04.6010910Z #17 writing image sha256:c5b393282cbda3a44f15c173eb06e84f14902ba54b2efb30c068125787c0f477 done
-2026-03-27T04:53:04.6012683Z #17 naming to ***/hyrowod-frontend:caa907fe37bf2626589a2fc5a0e96af43c9764d9 done
-2026-03-27T04:53:04.6013406Z #17 DONE 0.7s
-2026-03-27T04:53:04.6529578Z The push refers to repository [***/hyrowod-frontend]
-2026-03-27T04:53:05.4035874Z fb832ce3bda9: Preparing
-2026-03-27T04:53:05.4036348Z f199a719a5a3: Preparing
-2026-03-27T04:53:05.4036787Z 2536ce74a7d0: Preparing
-2026-03-27T04:53:05.4037213Z 49a3cf4c6ec8: Preparing
-2026-03-27T04:53:05.4037636Z d5490efc9ac7: Preparing
-2026-03-27T04:53:05.4038065Z 52caa5bd1d9d: Preparing
-2026-03-27T04:53:05.4038506Z 5906df279b58: Preparing
-2026-03-27T04:53:05.4038744Z 466f2827c5d1: Preparing
-2026-03-27T04:53:05.4038965Z 989e799e6349: Preparing
-2026-03-27T04:53:05.4039189Z 52caa5bd1d9d: Waiting
-2026-03-27T04:53:05.4039429Z 5906df279b58: Waiting
-2026-03-27T04:53:05.4039756Z 466f2827c5d1: Waiting
-2026-03-27T04:53:05.4039979Z 989e799e6349: Waiting
-2026-03-27T04:53:08.9235176Z 49a3cf4c6ec8: Pushed
-2026-03-27T04:53:09.0054657Z d5490efc9ac7: Pushed
-2026-03-27T04:53:09.5240178Z 2536ce74a7d0: Pushed
-2026-03-27T04:53:09.7061074Z 52caa5bd1d9d: Layer already exists
-2026-03-27T04:53:09.7417267Z fb832ce3bda9: Pushed
-2026-03-27T04:53:09.8407193Z 5906df279b58: Layer already exists
-2026-03-27T04:53:10.3106433Z 466f2827c5d1: Layer already exists
-2026-03-27T04:53:10.4769763Z 989e799e6349: Layer already exists
-2026-03-27T04:53:12.3613568Z f199a719a5a3: Pushed
-2026-03-27T04:53:17.8284026Z caa907fe37bf2626589a2fc5a0e96af43c9764d9: digest: sha256:f929fe78bc0f0a2f7bb757e4ca4fc34ec60e2ec8045f707310c38f0df51b377a size: 2203
-2026-03-27T04:53:17.8602536Z The push refers to repository [***/hyrowod-frontend]
-2026-03-27T04:53:18.7414295Z fb832ce3bda9: Preparing
-2026-03-27T04:53:18.7415067Z f199a719a5a3: Preparing
-2026-03-27T04:53:18.7415824Z 2536ce74a7d0: Preparing
-2026-03-27T04:53:18.7416236Z 49a3cf4c6ec8: Preparing
-2026-03-27T04:53:18.7416676Z d5490efc9ac7: Preparing
-2026-03-27T04:53:18.7417088Z 52caa5bd1d9d: Preparing
-2026-03-27T04:53:18.7417493Z 5906df279b58: Preparing
-2026-03-27T04:53:18.7417744Z 466f2827c5d1: Preparing
-2026-03-27T04:53:18.7417992Z 989e799e6349: Preparing
-2026-03-27T04:53:18.7418232Z 5906df279b58: Waiting
-2026-03-27T04:53:18.7418564Z 466f2827c5d1: Waiting
-2026-03-27T04:53:18.7418822Z 989e799e6349: Waiting
-2026-03-27T04:53:18.7419057Z 52caa5bd1d9d: Waiting
-2026-03-27T04:53:19.5134562Z fb832ce3bda9: Layer already exists
-2026-03-27T04:53:19.5279467Z d5490efc9ac7: Layer already exists
-2026-03-27T04:53:19.5290702Z f199a719a5a3: Layer already exists
-2026-03-27T04:53:19.5320543Z 49a3cf4c6ec8: Layer already exists
-2026-03-27T04:53:19.5367699Z 2536ce74a7d0: Layer already exists
-2026-03-27T04:53:20.2794478Z 52caa5bd1d9d: Layer already exists
-2026-03-27T04:53:20.3075780Z 5906df279b58: Layer already exists
-2026-03-27T04:53:20.3169659Z 989e799e6349: Layer already exists
-2026-03-27T04:53:20.3176286Z 466f2827c5d1: Layer already exists
-2026-03-27T04:53:21.9658692Z latest: digest: sha256:f929fe78bc0f0a2f7bb757e4ca4fc34ec60e2ec8045f707310c38f0df51b377a size: 2203
-2026-03-27T04:53:21.9748334Z ##[group]Run appleboy/scp-action@v0.1.7
-2026-03-27T04:53:21.9748652Z with:
-2026-03-27T04:53:21.9748922Z   host: ***
-2026-03-27T04:53:21.9749139Z   username: ubuntu
-2026-03-27T04:53:21.9751318Z   key: ***
-2026-03-27T04:53:21.9751732Z   source: seed.sql,docker-compose.prod.yml,scripts/deploy.sh,nginx/nginx.conf
-2026-03-27T04:53:21.9752310Z   target: /home/ubuntu/hyrowod/
-2026-03-27T04:53:21.9752573Z   port: 22
-2026-03-27T04:53:21.9752778Z   timeout: 30s
-2026-03-27T04:53:21.9752990Z   command_timeout: 10m
-2026-03-27T04:53:21.9753237Z   use_insecure_cipher: false
-2026-03-27T04:53:21.9753710Z   rm: false
-2026-03-27T04:53:21.9753921Z   debug: false
-2026-03-27T04:53:21.9754138Z   strip_components: 0
-2026-03-27T04:53:21.9754366Z   overwrite: false
-2026-03-27T04:53:21.9754593Z   tar_dereference: false
-2026-03-27T04:53:21.9754825Z   tar_exec: tar
-2026-03-27T04:53:21.9755037Z   proxy_port: 22
-2026-03-27T04:53:21.9755251Z   proxy_timeout: 30s
-2026-03-27T04:53:21.9755527Z   proxy_use_insecure_cipher: false
-2026-03-27T04:53:21.9755788Z env:
-2026-03-27T04:53:21.9756004Z   AWS_DEFAULT_REGION: ap-northeast-2
-2026-03-27T04:53:21.9756282Z   AWS_REGION: ap-northeast-2
-2026-03-27T04:53:21.9756592Z   AWS_ACCESS_KEY_ID: ***
-2026-03-27T04:53:21.9756924Z   AWS_SECRET_ACCESS_KEY: ***
-2026-03-27T04:53:21.9757166Z ##[endgroup]
-2026-03-27T04:53:21.9878237Z ##[command]/usr/bin/docker run --name db6b78cf4b68a89894a92bcc7d872e170c45a_b6bee9 --label 0db6b7 --workdir /github/workspace --rm -e "AWS_DEFAULT_REGION" -e "AWS_REGION" -e "AWS_ACCESS_KEY_ID" -e "AWS_SECRET_ACCESS_KEY" -e "INPUT_HOST" -e "INPUT_USERNAME" -e "INPUT_KEY" -e "INPUT_SOURCE" -e "INPUT_TARGET" -e "INPUT_PORT" -e "INPUT_PASSWORD" -e "INPUT_TIMEOUT" -e "INPUT_COMMAND_TIMEOUT" -e "INPUT_KEY_PATH" -e "INPUT_PASSPHRASE" -e "INPUT_FINGERPRINT" -e "INPUT_USE_INSECURE_CIPHER" -e "INPUT_RM" -e "INPUT_DEBUG" -e "INPUT_STRIP_COMPONENTS" -e "INPUT_OVERWRITE" -e "INPUT_TAR_DEREFERENCE" -e "INPUT_TAR_TMP_PATH" -e "INPUT_TAR_EXEC" -e "INPUT_PROXY_HOST" -e "INPUT_PROXY_PORT" -e "INPUT_PROXY_USERNAME" -e "INPUT_PROXY_PASSWORD" -e "INPUT_PROXY_PASSPHRASE" -e "INPUT_PROXY_TIMEOUT" -e "INPUT_PROXY_KEY" -e "INPUT_PROXY_KEY_PATH" -e "INPUT_PROXY_FINGERPRINT" -e "INPUT_PROXY_USE_INSECURE_CIPHER" -e "HOME" -e "GITHUB_JOB" -e "GITHUB_REF" -e "GITHUB_SHA" -e "GITHUB_REPOSITORY" -e "GITHUB_REPOSITORY_OWNER" -e "GITHUB_REPOSITORY_OWNER_ID" -e "GITHUB_RUN_ID" -e "GITHUB_RUN_NUMBER" -e "GITHUB_RETENTION_DAYS" -e "GITHUB_RUN_ATTEMPT" -e "GITHUB_ACTOR_ID" -e "GITHUB_ACTOR" -e "GITHUB_WORKFLOW" -e "GITHUB_HEAD_REF" -e "GITHUB_BASE_REF" -e "GITHUB_EVENT_NAME" -e "GITHUB_SERVER_URL" -e "GITHUB_API_URL" -e "GITHUB_GRAPHQL_URL" -e "GITHUB_REF_NAME" -e "GITHUB_REF_PROTECTED" -e "GITHUB_REF_TYPE" -e "GITHUB_WORKFLOW_REF" -e "GITHUB_WORKFLOW_SHA" -e "GITHUB_REPOSITORY_ID" -e "GITHUB_TRIGGERING_ACTOR" -e "GITHUB_WORKSPACE" -e "GITHUB_ACTION" -e "GITHUB_EVENT_PATH" -e "GITHUB_ACTION_REPOSITORY" -e "GITHUB_ACTION_REF" -e "GITHUB_PATH" -e "GITHUB_ENV" -e "GITHUB_STEP_SUMMARY" -e "GITHUB_STATE" -e "GITHUB_OUTPUT" -e "RUNNER_OS" -e "RUNNER_ARCH" -e "RUNNER_NAME" -e "RUNNER_ENVIRONMENT" -e "RUNNER_TOOL_CACHE" -e "RUNNER_TEMP" -e "RUNNER_WORKSPACE" -e "ACTIONS_RUNTIME_URL" -e "ACTIONS_RUNTIME_TOKEN" -e "ACTIONS_CACHE_URL" -e "ACTIONS_RESULTS_URL" -e "ACTIONS_ORCHESTRATION_ID" -e GITHUB_ACTIONS=true -e CI=true -v "/var/run/docker.sock":"/var/run/docker.sock" -v "/home/runner/work/_temp":"/github/runner_temp" -v "/home/runner/work/_temp/_github_home":"/github/home" -v "/home/runner/work/_temp/_github_workflow":"/github/workflow" -v "/home/runner/work/_temp/_runner_file_commands":"/github/file_commands" -v "/home/runner/work/hyrowod/hyrowod":"/github/workspace" 0db6b7:8cf4b68a89894a92bcc7d872e170c45a
-2026-03-27T04:53:22.1404814Z drone-scp version: v1.6.14
-2026-03-27T04:53:22.1405200Z tar all files into /tmp/Fjyhvjrnca.tar.gz
-2026-03-27T04:53:24.7739525Z remote server os type is unix
-2026-03-27T04:53:24.7739872Z scp file to server.
-2026-03-27T04:53:29.2894342Z create folder /home/ubuntu/hyrowod/
-2026-03-27T04:53:31.3955178Z untar file Fjyhvjrnca.tar.gz
-2026-03-27T04:53:33.5256725Z remove file Fjyhvjrnca.tar.gz
-2026-03-27T04:53:35.6752357Z ===================================================
-2026-03-27T04:53:35.6753567Z ✅ Successfully executed transfer data to all host
-2026-03-27T04:53:35.6754304Z ===================================================
-2026-03-27T04:53:35.7570016Z ##[group]Run appleboy/ssh-action@v1.0.3
-2026-03-27T04:53:35.7570345Z with:
-2026-03-27T04:53:35.7570633Z   host: ***
-2026-03-27T04:53:35.7570849Z   username: ubuntu
-2026-03-27T04:53:35.7572937Z   key: ***
-2026-03-27T04:53:35.7573370Z   envs: GITHUB_SHA
-2026-03-27T04:53:35.7574011Z   script: export ECR_REGISTRY=***
+﻿2026-03-27T05:07:03.0624682Z Current runner version: '2.333.0'
+2026-03-27T05:07:03.0647723Z ##[group]Runner Image Provisioner
+2026-03-27T05:07:03.0648687Z Hosted Compute Agent
+2026-03-27T05:07:03.0649488Z Version: 20260213.493
+2026-03-27T05:07:03.0650282Z Commit: 5c115507f6dd24b8de37d8bbe0bb4509d0cc0fa3
+2026-03-27T05:07:03.0651176Z Build Date: 2026-02-13T00:28:41Z
+2026-03-27T05:07:03.0652029Z Worker ID: {d3287ca6-bc39-4cf9-b484-12053a0ebe67}
+2026-03-27T05:07:03.0652885Z Azure Region: westcentralus
+2026-03-27T05:07:03.0653624Z ##[endgroup]
+2026-03-27T05:07:03.0655965Z ##[group]Operating System
+2026-03-27T05:07:03.0656768Z Ubuntu
+2026-03-27T05:07:03.0657437Z 24.04.4
+2026-03-27T05:07:03.0658153Z LTS
+2026-03-27T05:07:03.0658835Z ##[endgroup]
+2026-03-27T05:07:03.0659625Z ##[group]Runner Image
+2026-03-27T05:07:03.0660340Z Image: ubuntu-24.04
+2026-03-27T05:07:03.0661036Z Version: 20260323.65.1
+2026-03-27T05:07:03.0662529Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260323.65/images/ubuntu/Ubuntu2404-Readme.md
+2026-03-27T05:07:03.0664331Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260323.65
+2026-03-27T05:07:03.0665643Z ##[endgroup]
+2026-03-27T05:07:03.0667072Z ##[group]GITHUB_TOKEN Permissions
+2026-03-27T05:07:03.0669333Z Contents: read
+2026-03-27T05:07:03.0670169Z Metadata: read
+2026-03-27T05:07:03.0670793Z Packages: read
+2026-03-27T05:07:03.0671551Z ##[endgroup]
+2026-03-27T05:07:03.0673956Z Secret source: Actions
+2026-03-27T05:07:03.0675206Z Prepare workflow directory
+2026-03-27T05:07:03.1015315Z Prepare all required actions
+2026-03-27T05:07:03.1053523Z Getting action download info
+2026-03-27T05:07:03.5824966Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+2026-03-27T05:07:03.6933028Z Download action repository 'aws-actions/configure-aws-credentials@v4' (SHA:7474bc4690e29a8392af63c5b98e7449536d5c3a)
+2026-03-27T05:07:04.5558369Z Download action repository 'aws-actions/amazon-ecr-login@v2' (SHA:183a1442edf41672e66566b7fc560e297a290896)
+2026-03-27T05:07:05.4342560Z Download action repository 'appleboy/scp-action@v0.1.7' (SHA:917f8b81dfc1ccd331fef9e2d61bdc6c8be94634)
+2026-03-27T05:07:06.0116901Z Download action repository 'appleboy/ssh-action@v1.0.3' (SHA:029f5b4aeeeb58fdfe1410a5d17f967dacf36262)
+2026-03-27T05:07:06.8170970Z Complete job name: Deploy
+2026-03-27T05:07:06.8609244Z ##[group]Build container for action use: '/home/runner/work/_actions/appleboy/scp-action/v0.1.7/Dockerfile'.
+2026-03-27T05:07:06.9032913Z ##[command]/usr/bin/docker build -t 461246:3cafd9c693204d63a999eded444c169d -f "/home/runner/work/_actions/appleboy/scp-action/v0.1.7/Dockerfile" "/home/runner/work/_actions/appleboy/scp-action/v0.1.7"
+2026-03-27T05:07:07.4675141Z #0 building with "default" instance using docker driver
+2026-03-27T05:07:07.4675589Z
+2026-03-27T05:07:07.4675763Z #1 [internal] load build definition from Dockerfile
+2026-03-27T05:07:07.4676176Z #1 transferring dockerfile: 150B done
+2026-03-27T05:07:07.4676511Z #1 DONE 0.0s
+2026-03-27T05:07:07.4676679Z
+2026-03-27T05:07:07.4676893Z #2 [internal] load metadata for ghcr.io/appleboy/drone-scp:1.6.14
+2026-03-27T05:07:08.2058023Z #2 DONE 0.9s
+2026-03-27T05:07:08.3230820Z
+2026-03-27T05:07:08.3231331Z #3 [internal] load .dockerignore
+2026-03-27T05:07:08.3232798Z #3 transferring context: 2B done
+2026-03-27T05:07:08.3233393Z #3 DONE 0.0s
+2026-03-27T05:07:08.3233624Z
+2026-03-27T05:07:08.3233817Z #4 [internal] load build context
+2026-03-27T05:07:08.3234306Z #4 transferring context: 187B done
+2026-03-27T05:07:08.3235079Z #4 DONE 0.0s
+2026-03-27T05:07:08.3235330Z
+2026-03-27T05:07:08.3236069Z #5 [1/2] FROM ghcr.io/appleboy/drone-scp:1.6.14@sha256:0e0597678b948b0aa09888c66ac75af904cce81baf6af955208527d259c61818
+2026-03-27T05:07:08.3237708Z #5 resolve ghcr.io/appleboy/drone-scp:1.6.14@sha256:0e0597678b948b0aa09888c66ac75af904cce81baf6af955208527d259c61818 done
+2026-03-27T05:07:08.3239043Z #5 sha256:b49e06fc857838320ee2682058d609a527fd05056650f6f6387b8a320d25aed5 1.24kB / 1.24kB done
+2026-03-27T05:07:08.3239752Z #5 sha256:6e1933d0a1a550dee7c2be05d0c681372d8661e12dec2bd66f028fd3f2e1eccb 3.65kB / 3.65kB done
+2026-03-27T05:07:08.3240778Z #5 sha256:1207c741d8c9b028d98c4006013f9de959da3c55f85b91ed5e4583438a0112ca 0B / 3.38MB 0.1s
+2026-03-27T05:07:08.3241476Z #5 sha256:57fce42a8fe3138af514e9b1be611ec437fe87def8a6946cad1d6b7608188ce2 0B / 284.84kB 0.1s
+2026-03-27T05:07:08.3242151Z #5 sha256:a7e706a435c2a53ff172ba5b50e2a06c2eaf63d2f764bdaabcca52d378beeb35 0B / 1.20kB 0.1s
+2026-03-27T05:07:08.3242832Z #5 sha256:0e0597678b948b0aa09888c66ac75af904cce81baf6af955208527d259c61818 2.38kB / 2.38kB done
+2026-03-27T05:07:08.5753473Z #5 sha256:1207c741d8c9b028d98c4006013f9de959da3c55f85b91ed5e4583438a0112ca 3.38MB / 3.38MB 0.3s done
+2026-03-27T05:07:08.5755486Z #5 sha256:57fce42a8fe3138af514e9b1be611ec437fe87def8a6946cad1d6b7608188ce2 284.84kB / 284.84kB 0.3s done
+2026-03-27T05:07:08.5756828Z #5 sha256:a7e706a435c2a53ff172ba5b50e2a06c2eaf63d2f764bdaabcca52d378beeb35 1.20kB / 1.20kB 0.2s done
+2026-03-27T05:07:08.5758012Z #5 extracting sha256:1207c741d8c9b028d98c4006013f9de959da3c55f85b91ed5e4583438a0112ca 0.1s done
+2026-03-27T05:07:08.5759008Z #5 sha256:c5ff66ca7e6bad6eb2c1b483c6c580ef147d04552f3bba4b13ac1b05cf474013 0B / 125B 0.3s
+2026-03-27T05:07:08.7225734Z #5 sha256:103b78775db928290fb85c370d3e47361a507a82b3b7c69c628783e018a9ffb8 0B / 2.49MB 0.3s
+2026-03-27T05:07:08.7227130Z #5 sha256:c5ff66ca7e6bad6eb2c1b483c6c580ef147d04552f3bba4b13ac1b05cf474013 125B / 125B 0.4s done
+2026-03-27T05:07:08.7228450Z #5 sha256:103b78775db928290fb85c370d3e47361a507a82b3b7c69c628783e018a9ffb8 2.49MB / 2.49MB 0.5s done
+2026-03-27T05:07:08.7229787Z #5 extracting sha256:57fce42a8fe3138af514e9b1be611ec437fe87def8a6946cad1d6b7608188ce2 0.0s done
+2026-03-27T05:07:11.0063878Z #5 extracting sha256:a7e706a435c2a53ff172ba5b50e2a06c2eaf63d2f764bdaabcca52d378beeb35
+2026-03-27T05:07:11.2464947Z #5 extracting sha256:a7e706a435c2a53ff172ba5b50e2a06c2eaf63d2f764bdaabcca52d378beeb35 done
+2026-03-27T05:07:11.2466549Z #5 extracting sha256:c5ff66ca7e6bad6eb2c1b483c6c580ef147d04552f3bba4b13ac1b05cf474013 done
+2026-03-27T05:07:11.2467591Z #5 extracting sha256:103b78775db928290fb85c370d3e47361a507a82b3b7c69c628783e018a9ffb8 0.0s done
+2026-03-27T05:07:11.2468290Z #5 DONE 2.9s
+2026-03-27T05:07:11.2468491Z
+2026-03-27T05:07:11.2468686Z #6 [2/2] COPY entrypoint.sh /bin/entrypoint.sh
+2026-03-27T05:07:11.2469447Z #6 DONE 0.0s
+2026-03-27T05:07:11.2469640Z
+2026-03-27T05:07:11.2469777Z #7 exporting to image
+2026-03-27T05:07:11.2470130Z #7 exporting layers
+2026-03-27T05:07:12.0040275Z #7 exporting layers 0.9s done
+2026-03-27T05:07:12.0245700Z #7 writing image sha256:f4494802da7fcb83b01a366e70b8de6e763edf3f7d9395b1d9a38fb60490e72a done
+2026-03-27T05:07:12.0247023Z #7 naming to docker.io/library/461246:3cafd9c693204d63a999eded444c169d done
+2026-03-27T05:07:12.0247800Z #7 DONE 0.9s
+2026-03-27T05:07:12.0309265Z ##[endgroup]
+2026-03-27T05:07:12.0340205Z ##[group]Build container for action use: '/home/runner/work/_actions/appleboy/ssh-action/v1.0.3/Dockerfile'.
+2026-03-27T05:07:12.0341606Z ##[command]/usr/bin/docker build -t 461246:ee552a206a7f4a4396e04e54c93a80e9 -f "/home/runner/work/_actions/appleboy/ssh-action/v1.0.3/Dockerfile" "/home/runner/work/_actions/appleboy/ssh-action/v1.0.3"
+2026-03-27T05:07:12.2879976Z #0 building with "default" instance using docker driver
+2026-03-27T05:07:12.2880550Z
+2026-03-27T05:07:12.2880891Z #1 [internal] load build definition from Dockerfile
+2026-03-27T05:07:12.2881630Z #1 transferring dockerfile: 149B done
+2026-03-27T05:07:12.2882363Z #1 DONE 0.0s
+2026-03-27T05:07:12.2882653Z
+2026-03-27T05:07:12.9875647Z #2 [internal] load metadata for ghcr.io/appleboy/drone-ssh:1.7.3
+2026-03-27T05:07:12.9876098Z #2 DONE 0.9s
+2026-03-27T05:07:13.1032442Z
+2026-03-27T05:07:13.1032848Z #3 [internal] load .dockerignore
+2026-03-27T05:07:13.1033576Z #3 transferring context: 2B done
+2026-03-27T05:07:13.1034305Z #3 DONE 0.0s
+2026-03-27T05:07:13.1034984Z
+2026-03-27T05:07:13.1035225Z #4 [internal] load build context
+2026-03-27T05:07:13.1035925Z #4 transferring context: 108B done
+2026-03-27T05:07:13.1037049Z #4 DONE 0.0s
+2026-03-27T05:07:13.1037395Z
+2026-03-27T05:07:13.1038166Z #5 [1/2] FROM ghcr.io/appleboy/drone-ssh:1.7.3@sha256:179cbd253771007f2ebcaf7a3860afe059207351de1f3378efafac93bd310158
+2026-03-27T05:07:13.1039987Z #5 resolve ghcr.io/appleboy/drone-ssh:1.7.3@sha256:179cbd253771007f2ebcaf7a3860afe059207351de1f3378efafac93bd310158 done
+2026-03-27T05:07:13.1041776Z #5 sha256:1a52f94820e830bc9734623deb03bbafa6a248fba19cdc2e5605c70d90d91441 1.24kB / 1.24kB done
+2026-03-27T05:07:13.1043363Z #5 sha256:c4781b8d012b16b6c7468dc9104fad0a63f2a8815b2af8b7176bb544253ea8c7 3.86kB / 3.86kB done
+2026-03-27T05:07:13.1107195Z #5 sha256:654aaee5654be60f81172539ecd74485cf8bbe2e9137bab0d429862c31c676f6 0B / 284.83kB 0.1s
+2026-03-27T05:07:13.1108591Z #5 sha256:7e20f48a19643465f486f59127b8f4e0f4114bedc8bd5260fb4f92d5fda95f1c 0B / 1.20kB 0.1s
+2026-03-27T05:07:13.1109955Z #5 sha256:066e5b821e26d8313055e0314c056e6c297847bcf963e5df10e7aa03107f2246 0B / 125B 0.1s
+2026-03-27T05:07:13.1111147Z #5 sha256:179cbd253771007f2ebcaf7a3860afe059207351de1f3378efafac93bd310158 2.38kB / 2.38kB done
+2026-03-27T05:07:13.2039138Z #5 sha256:7e20f48a19643465f486f59127b8f4e0f4114bedc8bd5260fb4f92d5fda95f1c 1.20kB / 1.20kB 0.1s done
+2026-03-27T05:07:13.2040058Z #5 sha256:47353a6f9201a145b687290e5ae0278ac269faf4bb61bee3e9246c37a8d74277 0B / 2.44MB 0.2s
+2026-03-27T05:07:13.3407324Z #5 sha256:654aaee5654be60f81172539ecd74485cf8bbe2e9137bab0d429862c31c676f6 284.83kB / 284.83kB 0.2s done
+2026-03-27T05:07:13.3410425Z #5 sha256:066e5b821e26d8313055e0314c056e6c297847bcf963e5df10e7aa03107f2246 125B / 125B 0.2s done
+2026-03-27T05:07:13.3411428Z #5 extracting sha256:654aaee5654be60f81172539ecd74485cf8bbe2e9137bab0d429862c31c676f6 0.0s done
+2026-03-27T05:07:13.3412132Z #5 extracting sha256:7e20f48a19643465f486f59127b8f4e0f4114bedc8bd5260fb4f92d5fda95f1c
+2026-03-27T05:07:13.4437058Z #5 sha256:47353a6f9201a145b687290e5ae0278ac269faf4bb61bee3e9246c37a8d74277 2.10MB / 2.44MB 0.4s
+2026-03-27T05:07:13.4438330Z #5 extracting sha256:7e20f48a19643465f486f59127b8f4e0f4114bedc8bd5260fb4f92d5fda95f1c done
+2026-03-27T05:07:13.4439509Z #5 extracting sha256:066e5b821e26d8313055e0314c056e6c297847bcf963e5df10e7aa03107f2246 done
+2026-03-27T05:07:13.4440663Z #5 extracting sha256:47353a6f9201a145b687290e5ae0278ac269faf4bb61bee3e9246c37a8d74277 0.0s done
+2026-03-27T05:07:13.6241378Z #5 sha256:47353a6f9201a145b687290e5ae0278ac269faf4bb61bee3e9246c37a8d74277 2.44MB / 2.44MB 0.4s done
+2026-03-27T05:07:13.6242078Z #5 DONE 0.5s
+2026-03-27T05:07:13.6242317Z
+2026-03-27T05:07:13.6242468Z #6 [2/2] COPY entrypoint.sh /bin/entrypoint.sh
+2026-03-27T05:07:13.6242840Z #6 DONE 0.0s
+2026-03-27T05:07:13.6242989Z
+2026-03-27T05:07:13.6243101Z #7 exporting to image
+2026-03-27T05:07:13.6243365Z #7 exporting layers
+2026-03-27T05:07:14.0041468Z #7 exporting layers 0.5s done
+2026-03-27T05:07:14.0223162Z #7 writing image sha256:dfcc48ba981a41027c18de5db06eda0736db03c6e294aa3e61b1ba42c4591ed5 done
+2026-03-27T05:07:14.0224307Z #7 naming to docker.io/library/461246:ee552a206a7f4a4396e04e54c93a80e9 done
+2026-03-27T05:07:14.0225291Z #7 DONE 0.5s
+2026-03-27T05:07:14.0277435Z ##[endgroup]
+2026-03-27T05:07:14.0539605Z ##[group]Run actions/checkout@v4
+2026-03-27T05:07:14.0540188Z with:
+2026-03-27T05:07:14.0540437Z   repository: baedongjun/hyrowod
+2026-03-27T05:07:14.0540884Z   token: ***
+2026-03-27T05:07:14.0541107Z   ssh-strict: true
+2026-03-27T05:07:14.0541335Z   ssh-user: git
+2026-03-27T05:07:14.0541571Z   persist-credentials: true
+2026-03-27T05:07:14.0541826Z   clean: true
+2026-03-27T05:07:14.0542067Z   sparse-checkout-cone-mode: true
+2026-03-27T05:07:14.0542344Z   fetch-depth: 1
+2026-03-27T05:07:14.0542568Z   fetch-tags: false
+2026-03-27T05:07:14.0542794Z   show-progress: true
+2026-03-27T05:07:14.0543027Z   lfs: false
+2026-03-27T05:07:14.0543236Z   submodules: false
+2026-03-27T05:07:14.0543470Z   set-safe-directory: true
+2026-03-27T05:07:14.0543922Z ##[endgroup]
+2026-03-27T05:07:14.1639135Z Syncing repository: baedongjun/hyrowod
+2026-03-27T05:07:14.1641159Z ##[group]Getting Git version info
+2026-03-27T05:07:14.1642235Z Working directory is '/home/runner/work/hyrowod/hyrowod'
+2026-03-27T05:07:14.1643405Z [command]/usr/bin/git version
+2026-03-27T05:07:14.1643949Z git version 2.53.0
+2026-03-27T05:07:14.1669739Z ##[endgroup]
+2026-03-27T05:07:14.1685516Z Temporarily overriding HOME='/home/runner/work/_temp/0d9ea199-289d-4bda-a517-cb96f42e3278' before making global git config changes
+2026-03-27T05:07:14.1687049Z Adding repository directory to the temporary git global config as a safe directory
+2026-03-27T05:07:14.1698730Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/hyrowod/hyrowod
+2026-03-27T05:07:14.1730146Z Deleting the contents of '/home/runner/work/hyrowod/hyrowod'
+2026-03-27T05:07:14.1733565Z ##[group]Initializing the repository
+2026-03-27T05:07:14.1737954Z [command]/usr/bin/git init /home/runner/work/hyrowod/hyrowod
+2026-03-27T05:07:14.1830001Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-03-27T05:07:14.1831026Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-03-27T05:07:14.1832008Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-03-27T05:07:14.1832578Z hint: call:
+2026-03-27T05:07:14.1832798Z hint:
+2026-03-27T05:07:14.1833149Z hint: 	git config --global init.defaultBranch <name>
+2026-03-27T05:07:14.1833502Z hint:
+2026-03-27T05:07:14.1833853Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-03-27T05:07:14.1834728Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-03-27T05:07:14.1835190Z hint:
+2026-03-27T05:07:14.1835429Z hint: 	git branch -m <name>
+2026-03-27T05:07:14.1835699Z hint:
+2026-03-27T05:07:14.1836061Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-03-27T05:07:14.1836655Z Initialized empty Git repository in /home/runner/work/hyrowod/hyrowod/.git/
+2026-03-27T05:07:14.1843610Z [command]/usr/bin/git remote add origin https://github.com/baedongjun/hyrowod
+2026-03-27T05:07:14.1871575Z ##[endgroup]
+2026-03-27T05:07:14.1872098Z ##[group]Disabling automatic garbage collection
+2026-03-27T05:07:14.1875764Z [command]/usr/bin/git config --local gc.auto 0
+2026-03-27T05:07:14.1902548Z ##[endgroup]
+2026-03-27T05:07:14.1903011Z ##[group]Setting up auth
+2026-03-27T05:07:14.1909663Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-03-27T05:07:14.1939006Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-03-27T05:07:14.2216727Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-03-27T05:07:14.2244106Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-03-27T05:07:14.2454146Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-03-27T05:07:14.2482357Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-03-27T05:07:14.2699737Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-03-27T05:07:14.2731432Z ##[endgroup]
+2026-03-27T05:07:14.2732014Z ##[group]Fetching the repository
+2026-03-27T05:07:14.2739796Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +7cd5205c6074cd54d1ea6e972fb3f8fabbb4e5e5:refs/remotes/origin/main
+2026-03-27T05:07:15.0661335Z From https://github.com/baedongjun/hyrowod
+2026-03-27T05:07:15.0662110Z  * [new ref]         7cd5205c6074cd54d1ea6e972fb3f8fabbb4e5e5 -> origin/main
+2026-03-27T05:07:15.0689640Z ##[endgroup]
+2026-03-27T05:07:15.0690078Z ##[group]Determining the checkout info
+2026-03-27T05:07:15.0692265Z ##[endgroup]
+2026-03-27T05:07:15.0697559Z [command]/usr/bin/git sparse-checkout disable
+2026-03-27T05:07:15.0733640Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-03-27T05:07:15.0758461Z ##[group]Checking out the ref
+2026-03-27T05:07:15.0762447Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2026-03-27T05:07:15.1147040Z Switched to a new branch 'main'
+2026-03-27T05:07:15.1150438Z branch 'main' set up to track 'origin/main'.
+2026-03-27T05:07:15.1158289Z ##[endgroup]
+2026-03-27T05:07:15.1193179Z [command]/usr/bin/git log -1 --format=%H
+2026-03-27T05:07:15.1216000Z 7cd5205c6074cd54d1ea6e972fb3f8fabbb4e5e5
+2026-03-27T05:07:15.1449258Z ##[group]Run aws-actions/configure-aws-credentials@v4
+2026-03-27T05:07:15.1449626Z with:
+2026-03-27T05:07:15.1449970Z   aws-access-key-id: ***
+2026-03-27T05:07:15.1450352Z   aws-secret-access-key: ***
+2026-03-27T05:07:15.1450636Z   aws-region: ap-northeast-2
+2026-03-27T05:07:15.1450908Z   audience: sts.amazonaws.com
+2026-03-27T05:07:15.1451184Z   output-env-credentials: true
+2026-03-27T05:07:15.1451468Z ##[endgroup]
+2026-03-27T05:07:15.9138662Z Proceeding with IAM user credentials
+2026-03-27T05:07:15.9243808Z ##[group]Run aws-actions/amazon-ecr-login@v2
+2026-03-27T05:07:15.9244146Z with:
+2026-03-27T05:07:15.9244680Z   mask-password: true
+2026-03-27T05:07:15.9245116Z   registry-type: private
+2026-03-27T05:07:15.9245408Z   skip-logout: false
+2026-03-27T05:07:15.9245630Z env:
+2026-03-27T05:07:15.9245847Z   AWS_DEFAULT_REGION: ap-northeast-2
+2026-03-27T05:07:15.9246134Z   AWS_REGION: ap-northeast-2
+2026-03-27T05:07:15.9246517Z   AWS_ACCESS_KEY_ID: ***
+2026-03-27T05:07:15.9246868Z   AWS_SECRET_ACCESS_KEY: ***
+2026-03-27T05:07:15.9247125Z ##[endgroup]
+2026-03-27T05:07:16.0292828Z Using environment variable credentials.
+2026-03-27T05:07:16.7152093Z Logging into registry ***
+2026-03-27T05:07:18.1843025Z ##[group]Run docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+2026-03-27T05:07:18.1843647Z [36;1mdocker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .[0m
+2026-03-27T05:07:18.1844151Z [36;1mdocker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG[0m
+2026-03-27T05:07:18.1845060Z [36;1mdocker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest[0m
+2026-03-27T05:07:18.1845629Z [36;1mdocker push $ECR_REGISTRY/$ECR_REPOSITORY:latest[0m
+2026-03-27T05:07:18.1874976Z shell: /usr/bin/bash -e {0}
+2026-03-27T05:07:18.1875261Z env:
+2026-03-27T05:07:18.1875503Z   AWS_DEFAULT_REGION: ap-northeast-2
+2026-03-27T05:07:18.1875825Z   AWS_REGION: ap-northeast-2
+2026-03-27T05:07:18.1876210Z   AWS_ACCESS_KEY_ID: ***
+2026-03-27T05:07:18.1876580Z   AWS_SECRET_ACCESS_KEY: ***
+2026-03-27T05:07:18.1876956Z   ECR_REGISTRY: ***
+2026-03-27T05:07:18.1877208Z   ECR_REPOSITORY: hyrowod-backend
+2026-03-27T05:07:18.1877572Z   IMAGE_TAG: 7cd5205c6074cd54d1ea6e972fb3f8fabbb4e5e5
+2026-03-27T05:07:18.1877899Z ##[endgroup]
+2026-03-27T05:07:18.4522554Z #0 building with "default" instance using docker driver
+2026-03-27T05:07:18.4522895Z
+2026-03-27T05:07:18.4523104Z #1 [internal] load build definition from Dockerfile
+2026-03-27T05:07:18.4523549Z #1 transferring dockerfile: 434B done
+2026-03-27T05:07:18.4523897Z #1 DONE 0.0s
+2026-03-27T05:07:18.4524050Z
+2026-03-27T05:07:18.4524604Z #2 [internal] load metadata for docker.io/library/eclipse-temurin:21-jdk
+2026-03-27T05:07:18.6060997Z #2 ...
+2026-03-27T05:07:18.6061240Z
+2026-03-27T05:07:18.6061607Z #3 [auth] library/eclipse-temurin:pull token for registry-1.docker.io
+2026-03-27T05:07:18.6062160Z #3 DONE 0.0s
+2026-03-27T05:07:18.7553360Z
+2026-03-27T05:07:18.7554121Z #4 [internal] load metadata for docker.io/library/eclipse-temurin:21-jre
+2026-03-27T05:07:19.0966139Z #4 DONE 0.8s
+2026-03-27T05:07:19.0966427Z
+2026-03-27T05:07:19.0966853Z #2 [internal] load metadata for docker.io/library/eclipse-temurin:21-jdk
+2026-03-27T05:07:19.2512015Z #2 DONE 0.8s
+2026-03-27T05:07:19.2512411Z
+2026-03-27T05:07:19.2512633Z #5 [internal] load .dockerignore
+2026-03-27T05:07:19.2513096Z #5 transferring context: 2B done
+2026-03-27T05:07:19.2513850Z #5 DONE 0.0s
+2026-03-27T05:07:19.2514050Z
+2026-03-27T05:07:19.2514219Z #6 [internal] load build context
+2026-03-27T05:07:19.2514959Z #6 transferring context: 566.37kB 0.0s done
+2026-03-27T05:07:19.2515450Z #6 DONE 0.0s
+2026-03-27T05:07:19.2515661Z
+2026-03-27T05:07:19.2516466Z #7 [stage-1 1/3] FROM docker.io/library/eclipse-temurin:21-jre@sha256:9d4453b48613404e1fa6e5e7eabc687ea57edfb8a1ad413956c5168f84b66af9
+2026-03-27T05:07:19.2518265Z #7 resolve docker.io/library/eclipse-temurin:21-jre@sha256:9d4453b48613404e1fa6e5e7eabc687ea57edfb8a1ad413956c5168f84b66af9 done
+2026-03-27T05:07:19.2519992Z #7 sha256:6502333748a9e5b5a7e8aaabb484e42b3cc861ca1dcf4d70331259c318eb596d 0B / 16.98MB 0.1s
+2026-03-27T05:07:19.2521385Z #7 sha256:92b331859550d0b667a6ab32159d398031b1c5ed2e351a645be1e3dcd633f6ab 0B / 52.99MB 0.1s
+2026-03-27T05:07:19.4508726Z #7 sha256:ded334408097f08dde9507428976abc2f844eae59856aecc45671fb699f88f74 0B / 159B 0.1s
+2026-03-27T05:07:19.4509863Z #7 sha256:9d4453b48613404e1fa6e5e7eabc687ea57edfb8a1ad413956c5168f84b66af9 7.18kB / 7.18kB done
+2026-03-27T05:07:19.4511062Z #7 sha256:be2ed5af8104188957a9f8ba1e440cc357f4d0f6f5a5628e84c9b9c5843214e6 1.94kB / 1.94kB done
+2026-03-27T05:07:19.4511839Z #7 sha256:dd76195e056190975fc0e795f6bf567787a191b4fc390cf9ea37ebf2249f58a1 5.82kB / 5.82kB done
+2026-03-27T05:07:19.4512593Z #7 sha256:6502333748a9e5b5a7e8aaabb484e42b3cc861ca1dcf4d70331259c318eb596d 7.34MB / 16.98MB 0.3s
+2026-03-27T05:07:19.4513356Z #7 sha256:ded334408097f08dde9507428976abc2f844eae59856aecc45671fb699f88f74 159B / 159B 0.1s done
+2026-03-27T05:07:19.4514151Z #7 sha256:bf6ab2a4ddd47ce46630077d0e137301e2294ad28cbbd10ed888d2782bc027be 2.28kB / 2.28kB 0.3s done
+2026-03-27T05:07:19.6261206Z #7 sha256:6502333748a9e5b5a7e8aaabb484e42b3cc861ca1dcf4d70331259c318eb596d 16.98MB / 16.98MB 0.3s done
+2026-03-27T05:07:19.6263115Z #7 sha256:92b331859550d0b667a6ab32159d398031b1c5ed2e351a645be1e3dcd633f6ab 13.63MB / 52.99MB 0.4s
+2026-03-27T05:07:19.6265280Z #7 extracting sha256:6502333748a9e5b5a7e8aaabb484e42b3cc861ca1dcf4d70331259c318eb596d 0.1s
+2026-03-27T05:07:19.7265630Z #7 sha256:92b331859550d0b667a6ab32159d398031b1c5ed2e351a645be1e3dcd633f6ab 42.99MB / 52.99MB 0.5s
+2026-03-27T05:07:19.8451437Z #7 sha256:92b331859550d0b667a6ab32159d398031b1c5ed2e351a645be1e3dcd633f6ab 52.99MB / 52.99MB 0.5s done
+2026-03-27T05:07:20.6119292Z #7 extracting sha256:6502333748a9e5b5a7e8aaabb484e42b3cc861ca1dcf4d70331259c318eb596d 1.0s done
+2026-03-27T05:07:20.7317774Z #7 extracting sha256:92b331859550d0b667a6ab32159d398031b1c5ed2e351a645be1e3dcd633f6ab
+2026-03-27T05:07:21.6457716Z #7 extracting sha256:92b331859550d0b667a6ab32159d398031b1c5ed2e351a645be1e3dcd633f6ab 0.9s done
+2026-03-27T05:07:21.8515778Z #7 extracting sha256:ded334408097f08dde9507428976abc2f844eae59856aecc45671fb699f88f74 done
+2026-03-27T05:07:21.9587400Z #7 extracting sha256:bf6ab2a4ddd47ce46630077d0e137301e2294ad28cbbd10ed888d2782bc027be done
+2026-03-27T05:07:22.0633809Z #7 DONE 2.8s
+2026-03-27T05:07:22.0634098Z
+2026-03-27T05:07:22.0634284Z #8 [stage-1 2/3] WORKDIR /app
+2026-03-27T05:07:22.0634986Z #8 DONE 0.0s
+2026-03-27T05:07:22.0635194Z
+2026-03-27T05:07:22.0635689Z #9 [build 1/9] FROM docker.io/library/eclipse-temurin:21-jdk@sha256:3b0a98dfbdf1067c20a7854cec159551777d2ee1381bc76cd4bd0719f543b148
+2026-03-27T05:07:22.0636701Z #9 resolve docker.io/library/eclipse-temurin:21-jdk@sha256:3b0a98dfbdf1067c20a7854cec159551777d2ee1381bc76cd4bd0719f543b148 done
+2026-03-27T05:07:22.0637528Z #9 sha256:3b0a98dfbdf1067c20a7854cec159551777d2ee1381bc76cd4bd0719f543b148 7.18kB / 7.18kB done
+2026-03-27T05:07:22.0638235Z #9 sha256:4be4245dd281acbc975d308746964a5fe8161c94e3ccdc47344c63a88e0a858e 1.94kB / 1.94kB done
+2026-03-27T05:07:22.0638901Z #9 sha256:774e91c1da134e2b2588ad02265c09f97b46b0e78ee3670dd9573ca1422a09e3 6.20kB / 6.20kB done
+2026-03-27T05:07:22.0639627Z #9 sha256:7e9e66015a4106ba6a33506aa8681e1e826f3acd628c6ef01dcc42970432c062 22.96MB / 22.96MB 0.6s done
+2026-03-27T05:07:22.0640378Z #9 sha256:c25811b013510224fb88be99e66652561dfb1e6878aced0885c7da14e1245164 157.87MB / 157.87MB 1.1s done
+2026-03-27T05:07:22.0641367Z #9 sha256:9b1a2f3bb5f3b740bf5ee456c4430e1f1cd3944bb8dfd30eddb42c39222cc651 158B / 158B 0.7s done
+2026-03-27T05:07:22.0642060Z #9 extracting sha256:7e9e66015a4106ba6a33506aa8681e1e826f3acd628c6ef01dcc42970432c062 1.0s done
+2026-03-27T05:07:22.0642773Z #9 sha256:91e1054453cc8ad0c2fc8f173ab87276807c498c0f9856f5ed9c62761776bf51 2.28kB / 2.28kB 0.7s done
+2026-03-27T05:07:22.0643456Z #9 extracting sha256:c25811b013510224fb88be99e66652561dfb1e6878aced0885c7da14e1245164 1.1s
+2026-03-27T05:07:22.6127000Z #9 extracting sha256:c25811b013510224fb88be99e66652561dfb1e6878aced0885c7da14e1245164 1.6s done
+2026-03-27T05:07:22.6128120Z #9 extracting sha256:9b1a2f3bb5f3b740bf5ee456c4430e1f1cd3944bb8dfd30eddb42c39222cc651
+2026-03-27T05:07:22.7564721Z #9 extracting sha256:9b1a2f3bb5f3b740bf5ee456c4430e1f1cd3944bb8dfd30eddb42c39222cc651 done
+2026-03-27T05:07:22.7566082Z #9 extracting sha256:91e1054453cc8ad0c2fc8f173ab87276807c498c0f9856f5ed9c62761776bf51 done
+2026-03-27T05:07:22.7566936Z #9 DONE 3.5s
+2026-03-27T05:07:22.7567196Z
+2026-03-27T05:07:22.7567389Z #10 [build 2/9] WORKDIR /app
+2026-03-27T05:07:22.7567860Z #10 DONE 0.0s
+2026-03-27T05:07:22.7568074Z
+2026-03-27T05:07:22.7568267Z #11 [build 3/9] COPY gradlew .
+2026-03-27T05:07:22.7568721Z #11 DONE 0.0s
+2026-03-27T05:07:22.7568953Z
+2026-03-27T05:07:22.7569140Z #12 [build 4/9] COPY gradle gradle
+2026-03-27T05:07:22.7569517Z #12 DONE 0.0s
+2026-03-27T05:07:22.7569662Z
+2026-03-27T05:07:22.7569779Z #13 [build 5/9] COPY build.gradle .
+2026-03-27T05:07:22.7570242Z #13 DONE 0.0s
+2026-03-27T05:07:22.7570473Z
+2026-03-27T05:07:22.7570658Z #14 [build 6/9] COPY settings.gradle .
+2026-03-27T05:07:22.7570948Z #14 DONE 0.0s
+2026-03-27T05:07:22.7571125Z
+2026-03-27T05:07:22.7571303Z #15 [build 7/9] COPY src src
+2026-03-27T05:07:22.7571776Z #15 DONE 0.0s
+2026-03-27T05:07:22.9080433Z
+2026-03-27T05:07:22.9080675Z #16 [build 8/9] RUN chmod +x gradlew
+2026-03-27T05:07:22.9179024Z #16 DONE 0.2s
+2026-03-27T05:07:23.0688341Z
+2026-03-27T05:07:23.0688970Z #17 [build 9/9] RUN ./gradlew build -x test --no-daemon
+2026-03-27T05:07:23.2417209Z #17 0.323 Downloading https://services.gradle.org/distributions/gradle-9.3.1-bin.zip
+2026-03-27T05:07:25.1088290Z #17 1.260 .............10%.............20%.............30%.............40%.............50%.............60%.............70%.............80%.............90%.............100%
+2026-03-27T05:07:26.2031003Z #17 3.284
+2026-03-27T05:07:26.3035014Z #17 3.285 Welcome to Gradle 9.3.1!
+2026-03-27T05:07:26.3035654Z #17 3.285
+2026-03-27T05:07:26.3036134Z #17 3.285 Here are the highlights of this release:
+2026-03-27T05:07:26.3036852Z #17 3.285  - Test reporting improvements
+2026-03-27T05:07:26.3037424Z #17 3.285  - Error and warning improvements
+2026-03-27T05:07:26.3038009Z #17 3.285  - Build authoring improvements
+2026-03-27T05:07:26.3038571Z #17 3.285
+2026-03-27T05:07:26.3039199Z #17 3.285 For more details see https://docs.gradle.org/9.3.1/release-notes.html
+2026-03-27T05:07:26.3039963Z #17 3.285
+2026-03-27T05:07:26.3041593Z #17 3.385 To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.3.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+2026-03-27T05:07:27.4035826Z #17 4.484 Daemon will be stopped at the end of the build
+2026-03-27T05:08:05.2031069Z #17 42.28
+2026-03-27T05:08:05.3556881Z #17 42.29 Note: /app/src/main/java/com/hyrowod/security/oauth2/HttpCookieOAuth2AuthorizationRequestRepository.java uses or overrides a deprecated API.
+2026-03-27T05:08:05.3558262Z #17 42.29 > Task :compileJava
+2026-03-27T05:08:05.3558896Z #17 42.29 Note: Recompile with -Xlint:deprecation for details.
+2026-03-27T05:08:13.4032990Z #17 50.48
+2026-03-27T05:08:13.5557884Z #17 50.49 > Task :processResources
+2026-03-27T05:08:13.5562517Z #17 50.49 > Task :classes
+2026-03-27T05:08:13.5563778Z #17 50.49 > Task :resolveMainClassName
+2026-03-27T05:08:17.2029326Z #17 54.18 > Task :bootJar
+2026-03-27T05:08:17.3570002Z #17 54.28 > Task :jar
+2026-03-27T05:08:17.3582062Z #17 54.29 > Task :assemble
+2026-03-27T05:08:17.3582529Z #17 54.29 > Task :check
+2026-03-27T05:08:17.3583200Z #17 54.29 > Task :build
+2026-03-27T05:08:17.3583591Z #17 54.29
+2026-03-27T05:08:17.3584574Z #17 54.29 [Incubating] Problems report is available at: file:///app/build/reports/problems/problems-report.html
+2026-03-27T05:08:17.3585822Z #17 54.29
+2026-03-27T05:08:17.3586390Z #17 54.29 BUILD SUCCESSFUL in 53s
+2026-03-27T05:08:17.3586902Z #17 54.29 5 actionable tasks: 5 executed
+2026-03-27T05:08:17.3588252Z #17 54.29 Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.3.1/userguide/configuration_cache_enabling.html
+2026-03-27T05:08:17.4049173Z #17 DONE 54.5s
+2026-03-27T05:08:17.9829094Z
+2026-03-27T05:08:17.9829991Z #18 [stage-1 3/3] COPY --from=build /app/build/libs/*.jar app.jar
+2026-03-27T05:08:18.1994175Z #18 DONE 0.1s
+2026-03-27T05:08:18.1994674Z
+2026-03-27T05:08:18.1994844Z #19 exporting to image
+2026-03-27T05:08:18.1995291Z #19 exporting layers
+2026-03-27T05:08:19.0061801Z #19 exporting layers 1.0s done
+2026-03-27T05:08:19.0267841Z #19 writing image sha256:97b5dfdc26baab186a8f26c06c7aa9ddf7cb81a9c0fbf03e3142ad177c9dcad7 done
+2026-03-27T05:08:19.0270025Z #19 naming to ***/hyrowod-backend:7cd5205c6074cd54d1ea6e972fb3f8fabbb4e5e5 done
+2026-03-27T05:08:19.0270720Z #19 DONE 1.0s
+2026-03-27T05:08:19.1133388Z The push refers to repository [***/hyrowod-backend]
+2026-03-27T05:08:19.7032222Z 795f70392868: Preparing
+2026-03-27T05:08:19.7032719Z 3b508eac3e72: Preparing
+2026-03-27T05:08:19.7033147Z 893a46e3a22c: Preparing
+2026-03-27T05:08:19.7033565Z 0f99089255e7: Preparing
+2026-03-27T05:08:19.7033916Z 2e2ba023e037: Preparing
+2026-03-27T05:08:19.7034183Z c4e3850aa7d4: Preparing
+2026-03-27T05:08:19.7034779Z f2a7f0726353: Preparing
+2026-03-27T05:08:19.7035703Z c4e3850aa7d4: Waiting
+2026-03-27T05:08:19.7036177Z f2a7f0726353: Waiting
+2026-03-27T05:08:20.3195213Z 0f99089255e7: Layer already exists
+2026-03-27T05:08:20.3236496Z 893a46e3a22c: Layer already exists
+2026-03-27T05:08:20.3250033Z 2e2ba023e037: Layer already exists
+2026-03-27T05:08:20.9385000Z c4e3850aa7d4: Layer already exists
+2026-03-27T05:08:21.5772864Z f2a7f0726353: Layer already exists
+2026-03-27T05:08:22.5988384Z 3b508eac3e72: Pushed
+2026-03-27T05:08:27.9417410Z 795f70392868: Pushed
+2026-03-27T05:08:32.1740689Z 7cd5205c6074cd54d1ea6e972fb3f8fabbb4e5e5: digest: sha256:800d9f19b2246aa8b05c6bcc2f6c44af08c4e9cae35828ae4cbb1b439c2e053f size: 1786
+2026-03-27T05:08:32.2079012Z The push refers to repository [***/hyrowod-backend]
+2026-03-27T05:08:32.7978116Z 795f70392868: Preparing
+2026-03-27T05:08:32.7978627Z 3b508eac3e72: Preparing
+2026-03-27T05:08:32.7979090Z 893a46e3a22c: Preparing
+2026-03-27T05:08:32.7979565Z 0f99089255e7: Preparing
+2026-03-27T05:08:32.7980011Z 2e2ba023e037: Preparing
+2026-03-27T05:08:32.7980518Z c4e3850aa7d4: Preparing
+2026-03-27T05:08:32.7980946Z f2a7f0726353: Preparing
+2026-03-27T05:08:32.7981388Z c4e3850aa7d4: Waiting
+2026-03-27T05:08:32.7981835Z f2a7f0726353: Waiting
+2026-03-27T05:08:33.4026092Z 2e2ba023e037: Layer already exists
+2026-03-27T05:08:33.4065739Z 893a46e3a22c: Layer already exists
+2026-03-27T05:08:33.4136041Z 3b508eac3e72: Layer already exists
+2026-03-27T05:08:33.4178564Z 795f70392868: Layer already exists
+2026-03-27T05:08:33.4179689Z 0f99089255e7: Layer already exists
+2026-03-27T05:08:34.0067243Z c4e3850aa7d4: Layer already exists
+2026-03-27T05:08:34.0179564Z f2a7f0726353: Layer already exists
+2026-03-27T05:08:35.3169116Z latest: digest: sha256:800d9f19b2246aa8b05c6bcc2f6c44af08c4e9cae35828ae4cbb1b439c2e053f size: 1786
+2026-03-27T05:08:35.3238996Z ##[group]Run docker build \
+2026-03-27T05:08:35.3239340Z [36;1mdocker build \[0m
+2026-03-27T05:08:35.3239731Z [36;1m  --build-arg NEXT_PUBLIC_API_URL=https://hyrowod.com \[0m
+2026-03-27T05:08:35.3240333Z [36;1m  --build-arg NEXT_PUBLIC_KAKAO_MAP_KEY=*** \[0m
+2026-03-27T05:08:35.3240717Z [36;1m  -f Dockerfile.frontend \[0m
+2026-03-27T05:08:35.3241078Z [36;1m  -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \[0m
+2026-03-27T05:08:35.3241610Z [36;1m  frontend/[0m
+2026-03-27T05:08:35.3241928Z [36;1mdocker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG[0m
+2026-03-27T05:08:35.3242475Z [36;1mdocker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest[0m
+2026-03-27T05:08:35.3243005Z [36;1mdocker push $ECR_REGISTRY/$ECR_REPOSITORY:latest[0m
+2026-03-27T05:08:35.3269253Z shell: /usr/bin/bash -e {0}
+2026-03-27T05:08:35.3269536Z env:
+2026-03-27T05:08:35.3269764Z   AWS_DEFAULT_REGION: ap-northeast-2
+2026-03-27T05:08:35.3270104Z   AWS_REGION: ap-northeast-2
+2026-03-27T05:08:35.3270435Z   AWS_ACCESS_KEY_ID: ***
+2026-03-27T05:08:35.3270786Z   AWS_SECRET_ACCESS_KEY: ***
+2026-03-27T05:08:35.3271139Z   ECR_REGISTRY: ***
+2026-03-27T05:08:35.3271383Z   ECR_REPOSITORY: hyrowod-frontend
+2026-03-27T05:08:35.3271705Z   IMAGE_TAG: 7cd5205c6074cd54d1ea6e972fb3f8fabbb4e5e5
+2026-03-27T05:08:35.3272021Z ##[endgroup]
+2026-03-27T05:08:35.5932804Z #0 building with "default" instance using docker driver
+2026-03-27T05:08:35.5933472Z
+2026-03-27T05:08:35.5933896Z #1 [internal] load build definition from Dockerfile.frontend
+2026-03-27T05:08:35.5935370Z #1 transferring dockerfile: 1.06kB done
+2026-03-27T05:08:35.5936034Z #1 DONE 0.0s
+2026-03-27T05:08:35.5936281Z
+2026-03-27T05:08:35.5936643Z #2 [internal] load metadata for docker.io/library/node:20-alpine
+2026-03-27T05:08:35.7460108Z #2 ...
+2026-03-27T05:08:35.7460271Z
+2026-03-27T05:08:35.7460473Z #3 [auth] library/node:pull token for registry-1.docker.io
+2026-03-27T05:08:35.7460942Z #3 DONE 0.0s
+2026-03-27T05:08:35.8963029Z
+2026-03-27T05:08:35.8963442Z #2 [internal] load metadata for docker.io/library/node:20-alpine
+2026-03-27T05:08:36.2206505Z #2 DONE 0.8s
+2026-03-27T05:08:36.3354806Z
+2026-03-27T05:08:36.3355438Z #4 [internal] load .dockerignore
+2026-03-27T05:08:36.3356119Z #4 transferring context: 2B done
+2026-03-27T05:08:36.3356438Z #4 DONE 0.0s
+2026-03-27T05:08:36.3356584Z
+2026-03-27T05:08:36.3356707Z #5 [internal] load build context
+2026-03-27T05:08:36.3357044Z #5 transferring context: 1.89MB 0.0s done
+2026-03-27T05:08:36.3357516Z #5 DONE 0.0s
+2026-03-27T05:08:36.3357763Z
+2026-03-27T05:08:36.3358249Z #6 [deps 1/4] FROM docker.io/library/node:20-alpine@sha256:f598378b5240225e6beab68fa9f356db1fb8efe55173e6d4d8153113bb8f333c
+2026-03-27T05:08:36.3359489Z #6 resolve docker.io/library/node:20-alpine@sha256:f598378b5240225e6beab68fa9f356db1fb8efe55173e6d4d8153113bb8f333c done
+2026-03-27T05:08:36.3360368Z #6 sha256:f598378b5240225e6beab68fa9f356db1fb8efe55173e6d4d8153113bb8f333c 7.67kB / 7.67kB done
+2026-03-27T05:08:36.3361091Z #6 sha256:42d1d5b07c84257b55d409f4e6e3be3b55d42867afce975a5648a3f231bf7e81 1.72kB / 1.72kB done
+2026-03-27T05:08:36.3361794Z #6 sha256:ccfb9f0dc7ac7e788325fd0b8eb985ed6a16db60914c61245ddee06acb16e029 6.52kB / 6.52kB done
+2026-03-27T05:08:36.3362473Z #6 sha256:d7f6aca05b78f475975eeac3898b7ef0a618937174c469650e05e81cbf8c5f46 0B / 43.23MB 0.1s
+2026-03-27T05:08:36.3363144Z #6 sha256:62e0e1181d88da8ed0e2fda221e9446ad0f09a004a375193ad7a38e31ec4eab4 0B / 1.26MB 0.1s
+2026-03-27T05:08:36.3363801Z #6 sha256:c7734204880fafbd6297ce1844e07c137d82ee814ac8b5fa6ac1a3659101d503 0B / 446B 0.1s
+2026-03-27T05:08:36.5356736Z #6 sha256:d7f6aca05b78f475975eeac3898b7ef0a618937174c469650e05e81cbf8c5f46 9.44MB / 43.23MB 0.3s
+2026-03-27T05:08:36.5357578Z #6 sha256:c7734204880fafbd6297ce1844e07c137d82ee814ac8b5fa6ac1a3659101d503 446B / 446B 0.3s done
+2026-03-27T05:08:36.6376269Z #6 sha256:d7f6aca05b78f475975eeac3898b7ef0a618937174c469650e05e81cbf8c5f46 42.99MB / 43.23MB 0.4s
+2026-03-27T05:08:36.6377913Z #6 sha256:62e0e1181d88da8ed0e2fda221e9446ad0f09a004a375193ad7a38e31ec4eab4 1.26MB / 1.26MB 0.3s done
+2026-03-27T05:08:36.7772650Z #6 sha256:d7f6aca05b78f475975eeac3898b7ef0a618937174c469650e05e81cbf8c5f46 43.23MB / 43.23MB 0.4s done
+2026-03-27T05:08:36.7773699Z #6 extracting sha256:d7f6aca05b78f475975eeac3898b7ef0a618937174c469650e05e81cbf8c5f46 0.1s
+2026-03-27T05:08:37.8851150Z #6 extracting sha256:d7f6aca05b78f475975eeac3898b7ef0a618937174c469650e05e81cbf8c5f46 1.1s done
+2026-03-27T05:08:37.8852787Z #6 extracting sha256:62e0e1181d88da8ed0e2fda221e9446ad0f09a004a375193ad7a38e31ec4eab4
+2026-03-27T05:08:37.9905181Z #6 extracting sha256:62e0e1181d88da8ed0e2fda221e9446ad0f09a004a375193ad7a38e31ec4eab4 0.0s done
+2026-03-27T05:08:37.9909307Z #6 extracting sha256:c7734204880fafbd6297ce1844e07c137d82ee814ac8b5fa6ac1a3659101d503 done
+2026-03-27T05:08:37.9911401Z #6 DONE 1.7s
+2026-03-27T05:08:37.9912730Z
+2026-03-27T05:08:37.9913098Z #7 [deps 2/4] WORKDIR /app
+2026-03-27T05:08:37.9913549Z #7 DONE 0.0s
+2026-03-27T05:08:37.9913783Z
+2026-03-27T05:08:37.9914090Z #8 [deps 3/4] COPY package.json package-lock.json ./
+2026-03-27T05:08:37.9916474Z #8 DONE 0.0s
+2026-03-27T05:08:37.9916744Z
+2026-03-27T05:08:37.9916935Z #9 [deps 4/4] RUN npm ci
+2026-03-27T05:08:38.1096208Z #9 ...
+2026-03-27T05:08:38.1097042Z
+2026-03-27T05:08:38.1098681Z #10 [runner 3/6] RUN addgroup --system --gid 1001 nodejs &&     adduser  --system --uid 1001 nextjs
+2026-03-27T05:08:38.1100160Z #10 DONE 0.2s
+2026-03-27T05:08:38.2599963Z
+2026-03-27T05:08:38.2600603Z #9 [deps 4/4] RUN npm ci
+2026-03-27T05:08:40.3665614Z #9 2.381 npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+2026-03-27T05:08:40.8859889Z #9 2.901 npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+2026-03-27T05:08:41.1127243Z #9 2.977 npm warn deprecated glob@7.2.3: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+2026-03-27T05:08:41.7666244Z #9 3.782 npm warn deprecated @humanwhocodes/config-array@0.13.0: Use @eslint/config-array instead
+2026-03-27T05:08:41.9177580Z #9 3.782 npm warn deprecated @humanwhocodes/object-schema@2.0.3: Use @eslint/object-schema instead
+2026-03-27T05:08:43.8866507Z #9 5.901 npm warn deprecated eslint@8.57.1: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+2026-03-27T05:08:52.6213192Z #9 14.64 npm warn deprecated next@15.2.1: This version has a security vulnerability. Please upgrade to a patched version. See https://nextjs.org/blog/CVE-2025-66478 for more details.
+2026-03-27T05:08:52.8529240Z #9 14.87
+2026-03-27T05:08:52.8530980Z #9 14.87 added 422 packages, and audited 423 packages in 15s
+2026-03-27T05:08:52.8531799Z #9 14.87
+2026-03-27T05:08:52.9884077Z #9 14.87 156 packages are looking for funding
+2026-03-27T05:08:52.9887521Z #9 14.87   run `npm fund` for details
+2026-03-27T05:08:52.9888265Z #9 15.00
+2026-03-27T05:08:52.9888823Z #9 15.00 16 vulnerabilities (13 moderate, 2 high, 1 critical)
+2026-03-27T05:08:52.9889476Z #9 15.00
+2026-03-27T05:08:52.9889961Z #9 15.00 To address issues that do not require attention, run:
+2026-03-27T05:08:52.9890638Z #9 15.00   npm audit fix
+2026-03-27T05:08:52.9891083Z #9 15.00
+2026-03-27T05:08:52.9891588Z #9 15.00 To address all issues (including breaking changes), run:
+2026-03-27T05:08:52.9892207Z #9 15.00   npm audit fix --force
+2026-03-27T05:08:52.9892683Z #9 15.00
+2026-03-27T05:08:52.9893163Z #9 15.00 Run `npm audit` for details.
+2026-03-27T05:08:53.1407526Z #9 15.01 npm notice
+2026-03-27T05:08:53.1408086Z #9 15.01 npm notice New major version of npm available! 10.8.2 -> 11.12.1
+2026-03-27T05:08:53.1408815Z #9 15.01 npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.12.1
+2026-03-27T05:08:53.1409836Z #9 15.01 npm notice To update run: npm install -g npm@11.12.1
+2026-03-27T05:08:53.1410315Z #9 15.01 npm notice
+2026-03-27T05:08:54.1219513Z #9 DONE 16.1s
+2026-03-27T05:08:55.9950056Z
+2026-03-27T05:08:55.9950782Z #11 [builder 3/5] COPY --from=deps /app/node_modules ./node_modules
+2026-03-27T05:09:00.5733426Z #11 DONE 4.6s
+2026-03-27T05:09:00.7776961Z
+2026-03-27T05:09:00.7777488Z #12 [builder 4/5] COPY . .
+2026-03-27T05:09:00.7778174Z #12 DONE 0.1s
+2026-03-27T05:09:00.7778325Z
+2026-03-27T05:09:00.7778442Z #13 [builder 5/5] RUN npm run build
+2026-03-27T05:09:01.1547567Z #13 0.528
+2026-03-27T05:09:01.1548072Z #13 0.528 > hyrowod-frontend@0.1.0 build
+2026-03-27T05:09:01.1548632Z #13 0.528 > next build
+2026-03-27T05:09:01.1549064Z #13 0.528
+2026-03-27T05:09:01.9179137Z #13 1.291    ▲ Next.js 15.2.1
+2026-03-27T05:09:02.0991178Z #13 1.292
+2026-03-27T05:09:02.0991815Z #13 1.322    Creating an optimized production build ...
+2026-03-27T05:09:29.9666322Z #13 29.34  ✓ Compiled successfully
+2026-03-27T05:09:30.1183898Z #13 29.34    Linting and checking validity of types ...
+2026-03-27T05:09:38.0128277Z #13 37.39
+2026-03-27T05:09:38.0128747Z #13 37.39 ./app/boxes/[id]/page.tsx
+2026-03-27T05:09:38.0131008Z #13 37.39 766:25  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-27T05:09:38.0133035Z #13 37.39
+2026-03-27T05:09:38.0133295Z #13 37.39 ./app/challenges/[id]/page.tsx
+2026-03-27T05:09:38.0140000Z #13 37.39 216:13  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-27T05:09:38.0143211Z #13 37.39 274:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-27T05:09:38.0145697Z #13 37.39 345:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-27T05:09:38.0147913Z #13 37.39 392:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-27T05:09:38.0150082Z #13 37.39 415:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-27T05:09:38.0151309Z #13 37.39
+2026-03-27T05:09:38.0151546Z #13 37.39 ./app/challenges/page.tsx
+2026-03-27T05:09:38.0152764Z #13 37.39 42:9  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-27T05:09:38.0153991Z #13 37.39
+2026-03-27T05:09:38.0154223Z #13 37.39 ./app/community/[id]/page.tsx
+2026-03-27T05:09:38.0156208Z #13 37.39 329:17  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-27T05:09:38.0157422Z #13 37.39
+2026-03-27T05:09:38.0157650Z #13 37.39 ./app/competitions/[id]/page.tsx
+2026-03-27T05:09:38.0159022Z #13 37.39 313:27  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-27T05:09:38.0160210Z #13 37.39
+2026-03-27T05:09:38.0160425Z #13 37.39 ./app/feed/page.tsx
+2026-03-27T05:09:38.0161611Z #13 37.39 69:9  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-27T05:09:38.0163715Z #13 37.39 103:9  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-27T05:09:38.0167663Z #13 37.39 155:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-27T05:09:38.0169788Z #13 37.39
+2026-03-27T05:09:38.0170163Z #13 37.39 ./app/layout.tsx
+2026-03-27T05:09:38.0171594Z #13 37.39 52:9  Warning: Custom fonts not added in `pages/_document.js` will only load for a single page. This is discouraged. See: https://nextjs.org/docs/messages/no-page-custom-font  @next/next/no-page-custom-font
+2026-03-27T05:09:38.0173036Z #13 37.39
+2026-03-27T05:09:38.0173386Z #13 37.39 ./app/ranking/page.tsx
+2026-03-27T05:09:38.0175102Z #13 37.39 255:37  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-27T05:09:38.0176354Z #13 37.39
+2026-03-27T05:09:38.0176570Z #13 37.39 ./app/search/page.tsx
+2026-03-27T05:09:38.0177787Z #13 37.39 302:33  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-27T05:09:38.0178984Z #13 37.39
+2026-03-27T05:09:38.0179193Z #13 37.39 ./app/users/page.tsx
+2026-03-27T05:09:38.0180382Z #13 37.39 83:21  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-27T05:09:38.0181571Z #13 37.39
+2026-03-27T05:09:38.0181809Z #13 37.39 ./components/common/InstallPwa.tsx
+2026-03-27T05:09:38.0183247Z #13 37.39 56:11  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+2026-03-27T05:09:38.0184695Z #13 37.39
+2026-03-27T05:09:38.0185275Z #13 37.39 info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
+2026-03-27T05:09:44.5593117Z #13 43.93    Collecting page data ...
+2026-03-27T05:09:45.3086105Z #13 44.68  ⚠ Using edge runtime on a page currently disables static generation for that page
+2026-03-27T05:09:47.6467097Z #13 47.02    Generating static pages (0/67) ...
+2026-03-27T05:09:49.1416725Z #13 48.51    Generating static pages (16/67)
+2026-03-27T05:09:49.6537865Z #13 49.03    Generating static pages (33/67)
+2026-03-27T05:09:49.8164049Z #13 49.04    Generating static pages (50/67)
+2026-03-27T05:09:51.5190099Z #13 50.89  ✓ Generating static pages (67/67)
+2026-03-27T05:09:52.2724633Z #13 51.65    Finalizing page optimization ...
+2026-03-27T05:09:52.2725271Z #13 51.65    Collecting build traces ...
+2026-03-27T05:10:03.1988846Z #13 62.57
+2026-03-27T05:10:03.3323949Z #13 62.58 Route (app)                                 Size  First Load JS  Revalidate  Expire
+2026-03-27T05:10:03.3325369Z #13 62.58 ┌ ○ /                                     8.8 kB         146 kB
+2026-03-27T05:10:03.3333069Z #13 62.58 ├ ○ /_not-found                            178 B         102 kB
+2026-03-27T05:10:03.3334008Z #13 62.58 ├ ○ /admin                                7.5 kB         145 kB
+2026-03-27T05:10:03.3335081Z #13 62.58 ├ ○ /admin/advertisements                4.74 kB         139 kB
+2026-03-27T05:10:03.3336008Z #13 62.58 ├ ○ /admin/badges                        7.78 kB         148 kB
+2026-03-27T05:10:03.3336878Z #13 62.58 ├ ○ /admin/boxes                         8.83 kB         149 kB
+2026-03-27T05:10:03.3337779Z #13 62.58 ├ ○ /admin/challenges                    7.07 kB         148 kB
+2026-03-27T05:10:03.3338664Z #13 62.58 ├ ○ /admin/competitions                  8.76 kB         149 kB
+2026-03-27T05:10:03.3339565Z #13 62.58 ├ ○ /admin/posts                         7.69 kB         151 kB
+2026-03-27T05:10:03.3340344Z #13 62.58 ├ ○ /admin/posts/reported                7.64 kB         151 kB
+2026-03-27T05:10:03.3340841Z #13 62.58 ├ ○ /admin/ranking                       6.13 kB         147 kB
+2026-03-27T05:10:03.3341524Z #13 62.58 ├ ○ /admin/reports                       6.51 kB         150 kB
+2026-03-27T05:10:03.3342041Z #13 62.58 ├ ○ /admin/reviews                       7.02 kB         147 kB
+2026-03-27T05:10:03.3342701Z #13 62.58 ├ ○ /admin/users                         4.61 kB         145 kB
+2026-03-27T05:10:03.3343177Z #13 62.58 ├ ○ /admin/wod                           7.14 kB         148 kB
+2026-03-27T05:10:03.3343785Z #13 62.58 ├ ○ /advertise                             667 B         102 kB
+2026-03-27T05:10:03.3344244Z #13 62.58 ├ ○ /boxes                               8.29 kB         151 kB
+2026-03-27T05:10:03.3345104Z #13 62.58 ├ ƒ /boxes/[id]                          17.5 kB         166 kB
+2026-03-27T05:10:03.3345587Z #13 62.58 ├ ƒ /boxes/[id]/checkin                  10.7 kB         148 kB
+2026-03-27T05:10:03.3346246Z #13 62.58 ├ ƒ /boxes/[id]/edit                     5.81 kB         155 kB
+2026-03-27T05:10:03.3346716Z #13 62.58 ├ ƒ /boxes/[id]/scan                     3.75 kB         141 kB
+2026-03-27T05:10:03.3347332Z #13 62.58 ├ ○ /boxes/create                        5.86 kB         150 kB
+2026-03-27T05:10:03.3347815Z #13 62.58 ├ ○ /challenges                          5.28 kB         142 kB
+2026-03-27T05:10:03.3348420Z #13 62.58 ├ ƒ /challenges/[id]                     9.73 kB         153 kB
+2026-03-27T05:10:03.3348926Z #13 62.58 ├ ○ /community                           8.49 kB         151 kB
+2026-03-27T05:10:03.3349433Z #13 62.58 ├ ƒ /community/[id]                        11 kB         160 kB
+2026-03-27T05:10:03.3350019Z #13 62.58 ├ ƒ /community/[id]/edit                 4.87 kB         154 kB
+2026-03-27T05:10:03.3350499Z #13 62.58 ├ ○ /community/write                     4.83 kB         149 kB
+2026-03-27T05:10:03.3351452Z #13 62.58 ├ ○ /competitions                        7.84 kB         145 kB
+2026-03-27T05:10:03.3352187Z #13 62.58 ├ ƒ /competitions/[id]                   12.5 kB         161 kB
+2026-03-27T05:10:03.3352669Z #13 62.58 ├ ○ /feed                                10.4 kB         154 kB
+2026-03-27T05:10:03.3353261Z #13 62.58 ├ ƒ /feed.xml                              178 B         102 kB
+2026-03-27T05:10:03.3353763Z #13 62.58 ├ ○ /forgot-password                     1.68 kB         131 kB
+2026-03-27T05:10:03.3385614Z #13 62.58 ├ ○ /icon.svg                                0 B            0 B
+2026-03-27T05:10:03.3386540Z #13 62.58 ├ ○ /login                               2.43 kB         159 kB
+2026-03-27T05:10:03.3387434Z #13 62.58 ├ ○ /manifest.webmanifest                  178 B         102 kB
+2026-03-27T05:10:03.3388315Z #13 62.58 ├ ○ /my                                    12 kB         161 kB
+2026-03-27T05:10:03.3389141Z #13 62.58 ├ ○ /my/activity                         6.82 kB         144 kB
+2026-03-27T05:10:03.3390026Z #13 62.58 ├ ○ /my/attendance                       6.79 kB         144 kB
+2026-03-27T05:10:03.3390930Z #13 62.58 ├ ○ /my/bookmarks                        5.62 kB         143 kB
+2026-03-27T05:10:03.3391759Z #13 62.58 ├ ○ /my/box                              14.9 kB         164 kB
+2026-03-27T05:10:03.3392570Z #13 62.58 ├ ○ /my/claim-box                        4.79 kB         148 kB
+2026-03-27T05:10:03.3393436Z #13 62.58 ├ ○ /my/comments                         7.35 kB         151 kB
+2026-03-27T05:10:03.3394268Z #13 62.58 ├ ○ /my/competitions                      7.3 kB         156 kB
+2026-03-27T05:10:03.3395390Z #13 62.58 ├ ○ /my/favorites                        4.24 kB         153 kB
+2026-03-27T05:10:03.3396266Z #13 62.58 ├ ○ /my/goals                            8.34 kB         152 kB
+2026-03-27T05:10:03.3397160Z #13 62.58 ├ ○ /my/notification-settings            2.41 kB         113 kB
+2026-03-27T05:10:03.3398063Z #13 62.58 ├ ○ /my/password                         3.58 kB         142 kB
+2026-03-27T05:10:03.3398916Z #13 62.58 ├ ○ /my/performance                      9.04 kB         150 kB
+2026-03-27T05:10:03.3399681Z #13 62.58 ├ ○ /my/profile                          4.38 kB         153 kB
+2026-03-27T05:10:03.3400456Z #13 62.58 ├ ○ /my/reservations                     6.81 kB         150 kB
+2026-03-27T05:10:03.3401229Z #13 62.58 ├ ○ /my/reviews                          7.53 kB         151 kB
+2026-03-27T05:10:03.3402040Z #13 62.58 ├ ○ /notifications                       8.49 kB         149 kB
+2026-03-27T05:10:03.3402842Z #13 62.58 ├ ○ /oauth2/callback                     1.26 kB         133 kB
+2026-03-27T05:10:03.3403645Z #13 62.58 ├ ○ /oauth2/register                      2.5 kB         135 kB
+2026-03-27T05:10:03.3404720Z #13 62.58 ├ ○ /offline                               717 B         102 kB
+2026-03-27T05:10:03.3405539Z #13 62.58 ├ ƒ /opengraph-image                       178 B         102 kB
+2026-03-27T05:10:03.3406349Z #13 62.58 ├ ○ /payment/fail                        1.03 kB         105 kB
+2026-03-27T05:10:03.3407155Z #13 62.58 ├ ○ /payment/success                     1.38 kB         130 kB
+2026-03-27T05:10:03.3407952Z #13 62.58 ├ ○ /privacy                               363 B         102 kB
+2026-03-27T05:10:03.3408717Z #13 62.58 ├ ○ /ranking                                6 kB         143 kB
+2026-03-27T05:10:03.3409489Z #13 62.58 ├ ƒ /ranking/[id]                        6.03 kB         140 kB
+2026-03-27T05:10:03.3410255Z #13 62.58 ├ ○ /robots.txt                            178 B         102 kB
+2026-03-27T05:10:03.3411024Z #13 62.58 ├ ○ /search                              8.62 kB         146 kB
+2026-03-27T05:10:03.3411896Z #13 62.58 ├ ○ /signup                              2.09 kB         159 kB
+2026-03-27T05:10:03.3412751Z #13 62.58 ├ ○ /sitemap.xml                           178 B         102 kB          1d      1y
+2026-03-27T05:10:03.3413587Z #13 62.58 ├ ○ /terms                                 363 B         102 kB
+2026-03-27T05:10:03.3414796Z #13 62.58 ├ ○ /tools                               1.65 kB         106 kB
+2026-03-27T05:10:03.3415616Z #13 62.58 ├ ○ /users                               1.71 kB         139 kB
+2026-03-27T05:10:03.3416380Z #13 62.58 ├ ƒ /users/[id]                           9.7 kB         159 kB
+2026-03-27T05:10:03.3417160Z #13 62.58 ├ ○ /wod                                 11.8 kB         161 kB
+2026-03-27T05:10:03.3417919Z #13 62.58 ├ ○ /wod/box-ranking                     5.39 kB         143 kB
+2026-03-27T05:10:03.3418907Z #13 62.58 ├ ○ /wod/history                         6.62 kB         144 kB
+2026-03-27T05:10:03.3419703Z #13 62.58 ├ ○ /wod/leaderboard                     5.13 kB         142 kB
+2026-03-27T05:10:03.3420510Z #13 62.58 ├ ○ /wod/records                           13 kB         156 kB
+2026-03-27T05:10:03.3421294Z #13 62.58 └ ○ /wod/timer                           3.18 kB         105 kB
+2026-03-27T05:10:03.3421950Z #13 62.58 + First Load JS shared by all             101 kB
+2026-03-27T05:10:03.3422653Z #13 62.58   ├ chunks/1684-99162278881cb6a3.js      45.8 kB
+2026-03-27T05:10:03.3423340Z #13 62.58   ├ chunks/4bd1b696-46372af164b2af1b.js  53.3 kB
+2026-03-27T05:10:03.3424026Z #13 62.58   └ other shared chunks (total)          2.35 kB
+2026-03-27T05:10:03.3424729Z #13 62.58
+2026-03-27T05:10:03.3425056Z #13 62.58
+2026-03-27T05:10:03.3425561Z #13 62.58 ○  (Static)   prerendered as static content
+2026-03-27T05:10:03.3426058Z #13 62.58 ƒ  (Dynamic)  server-rendered on demand
+2026-03-27T05:10:03.3426364Z #13 62.58
+2026-03-27T05:10:03.3426586Z #13 62.63 npm notice
+2026-03-27T05:10:03.3427181Z #13 62.63 npm notice New major version of npm available! 10.8.2 -> 11.12.1
+2026-03-27T05:10:03.3427995Z #13 62.63 npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.12.1
+2026-03-27T05:10:03.3428763Z #13 62.63 npm notice To update run: npm install -g npm@11.12.1
+2026-03-27T05:10:03.3429295Z #13 62.63 npm notice
+2026-03-27T05:10:03.3429645Z #13 DONE 62.7s
+2026-03-27T05:10:04.0967297Z
+2026-03-27T05:10:04.0968495Z #14 [runner 4/6] COPY --from=builder /app/public ./public
+2026-03-27T05:10:04.2600239Z #14 DONE 0.0s
+2026-03-27T05:10:04.2600549Z
+2026-03-27T05:10:04.2600999Z #15 [runner 5/6] COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+2026-03-27T05:10:04.4883615Z #15 DONE 0.4s
+2026-03-27T05:10:04.6866939Z
+2026-03-27T05:10:04.6868467Z #16 [runner 6/6] COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+2026-03-27T05:10:04.6871107Z #16 DONE 0.0s
+2026-03-27T05:10:04.6871900Z
+2026-03-27T05:10:04.6873716Z #17 exporting to image
+2026-03-27T05:10:04.6874187Z #17 exporting layers
+2026-03-27T05:10:05.2159214Z #17 exporting layers 0.7s done
+2026-03-27T05:10:05.2374964Z #17 writing image sha256:afb1f6128d510cc96f55a900856cea0808d49c0a1939f8b22ca5d9d02b4d31c6 done
+2026-03-27T05:10:05.2376910Z #17 naming to ***/hyrowod-frontend:7cd5205c6074cd54d1ea6e972fb3f8fabbb4e5e5 done
+2026-03-27T05:10:05.2377921Z #17 DONE 0.7s
+2026-03-27T05:10:05.2844789Z The push refers to repository [***/hyrowod-frontend]
+2026-03-27T05:10:05.8723729Z 4155b77ead04: Preparing
+2026-03-27T05:10:05.8724330Z 61fdbec28026: Preparing
+2026-03-27T05:10:05.8725757Z a4b245d7620b: Preparing
+2026-03-27T05:10:05.8726232Z bd6ed37ad228: Preparing
+2026-03-27T05:10:05.8726542Z ffc7a13e0f80: Preparing
+2026-03-27T05:10:05.8726805Z 52caa5bd1d9d: Preparing
+2026-03-27T05:10:05.8727049Z 5906df279b58: Preparing
+2026-03-27T05:10:05.8727282Z 466f2827c5d1: Preparing
+2026-03-27T05:10:05.8727515Z 989e799e6349: Preparing
+2026-03-27T05:10:05.8727778Z 52caa5bd1d9d: Waiting
+2026-03-27T05:10:05.8728013Z 5906df279b58: Waiting
+2026-03-27T05:10:05.8728247Z 466f2827c5d1: Waiting
+2026-03-27T05:10:05.8728472Z 989e799e6349: Waiting
+2026-03-27T05:10:08.6326599Z bd6ed37ad228: Pushed
+2026-03-27T05:10:08.6631741Z ffc7a13e0f80: Pushed
+2026-03-27T05:10:09.0618898Z a4b245d7620b: Pushed
+2026-03-27T05:10:09.2432369Z 52caa5bd1d9d: Layer already exists
+2026-03-27T05:10:09.2902572Z 5906df279b58: Layer already exists
+2026-03-27T05:10:09.3557379Z 4155b77ead04: Pushed
+2026-03-27T05:10:09.6720127Z 466f2827c5d1: Layer already exists
+2026-03-27T05:10:09.8533289Z 989e799e6349: Layer already exists
+2026-03-27T05:10:11.7487448Z 61fdbec28026: Pushed
+2026-03-27T05:10:16.1498749Z 7cd5205c6074cd54d1ea6e972fb3f8fabbb4e5e5: digest: sha256:ba1753787364c396e264e8eaaaa7535164f047bb1e85c2b679fdaf97afca3ad8 size: 2203
+2026-03-27T05:10:16.1812574Z The push refers to repository [***/hyrowod-frontend]
+2026-03-27T05:10:16.7688775Z 4155b77ead04: Preparing
+2026-03-27T05:10:16.7689296Z 61fdbec28026: Preparing
+2026-03-27T05:10:16.7690316Z a4b245d7620b: Preparing
+2026-03-27T05:10:16.7690737Z bd6ed37ad228: Preparing
+2026-03-27T05:10:16.7691201Z ffc7a13e0f80: Preparing
+2026-03-27T05:10:16.7691626Z 52caa5bd1d9d: Preparing
+2026-03-27T05:10:16.7691888Z 5906df279b58: Preparing
+2026-03-27T05:10:16.7692145Z 466f2827c5d1: Preparing
+2026-03-27T05:10:16.7692401Z 989e799e6349: Preparing
+2026-03-27T05:10:16.7692647Z 5906df279b58: Waiting
+2026-03-27T05:10:16.7692894Z 466f2827c5d1: Waiting
+2026-03-27T05:10:16.7693134Z 989e799e6349: Waiting
+2026-03-27T05:10:16.7693390Z 52caa5bd1d9d: Waiting
+2026-03-27T05:10:17.3793275Z 61fdbec28026: Layer already exists
+2026-03-27T05:10:17.3831460Z ffc7a13e0f80: Layer already exists
+2026-03-27T05:10:17.3868195Z 4155b77ead04: Layer already exists
+2026-03-27T05:10:17.3888057Z a4b245d7620b: Layer already exists
+2026-03-27T05:10:17.3900621Z bd6ed37ad228: Layer already exists
+2026-03-27T05:10:17.9869682Z 52caa5bd1d9d: Layer already exists
+2026-03-27T05:10:17.9901282Z 5906df279b58: Layer already exists
+2026-03-27T05:10:18.0009831Z 466f2827c5d1: Layer already exists
+2026-03-27T05:10:18.0024336Z 989e799e6349: Layer already exists
+2026-03-27T05:10:19.2818359Z latest: digest: sha256:ba1753787364c396e264e8eaaaa7535164f047bb1e85c2b679fdaf97afca3ad8 size: 2203
+2026-03-27T05:10:19.2911247Z ##[group]Run appleboy/scp-action@v0.1.7
+2026-03-27T05:10:19.2911576Z with:
+2026-03-27T05:10:19.2911854Z   host: ***
+2026-03-27T05:10:19.2912066Z   username: ubuntu
+2026-03-27T05:10:19.2913925Z   key: ***
+2026-03-27T05:10:19.2914285Z   source: seed.sql,docker-compose.prod.yml,scripts/deploy.sh,nginx/nginx.conf
+2026-03-27T05:10:19.2915185Z   target: /home/ubuntu/hyrowod/
+2026-03-27T05:10:19.2915456Z   port: 22
+2026-03-27T05:10:19.2915667Z   timeout: 30s
+2026-03-27T05:10:19.2915886Z   command_timeout: 10m
+2026-03-27T05:10:19.2916141Z   use_insecure_cipher: false
+2026-03-27T05:10:19.2916391Z   rm: false
+2026-03-27T05:10:19.2916596Z   debug: false
+2026-03-27T05:10:19.2916814Z   strip_components: 0
+2026-03-27T05:10:19.2917071Z   overwrite: false
+2026-03-27T05:10:19.2917303Z   tar_dereference: false
+2026-03-27T05:10:19.2917540Z   tar_exec: tar
+2026-03-27T05:10:19.2917758Z   proxy_port: 22
+2026-03-27T05:10:19.2917977Z   proxy_timeout: 30s
+2026-03-27T05:10:19.2918264Z   proxy_use_insecure_cipher: false
+2026-03-27T05:10:19.2918534Z env:
+2026-03-27T05:10:19.2918754Z   AWS_DEFAULT_REGION: ap-northeast-2
+2026-03-27T05:10:19.2919044Z   AWS_REGION: ap-northeast-2
+2026-03-27T05:10:19.2919383Z   AWS_ACCESS_KEY_ID: ***
+2026-03-27T05:10:19.2919727Z   AWS_SECRET_ACCESS_KEY: ***
+2026-03-27T05:10:19.2919978Z ##[endgroup]
+2026-03-27T05:10:19.3028830Z ##[command]/usr/bin/docker run --name cafd9c693204d63a999eded444c169d_24692f --label 461246 --workdir /github/workspace --rm -e "AWS_DEFAULT_REGION" -e "AWS_REGION" -e "AWS_ACCESS_KEY_ID" -e "AWS_SECRET_ACCESS_KEY" -e "INPUT_HOST" -e "INPUT_USERNAME" -e "INPUT_KEY" -e "INPUT_SOURCE" -e "INPUT_TARGET" -e "INPUT_PORT" -e "INPUT_PASSWORD" -e "INPUT_TIMEOUT" -e "INPUT_COMMAND_TIMEOUT" -e "INPUT_KEY_PATH" -e "INPUT_PASSPHRASE" -e "INPUT_FINGERPRINT" -e "INPUT_USE_INSECURE_CIPHER" -e "INPUT_RM" -e "INPUT_DEBUG" -e "INPUT_STRIP_COMPONENTS" -e "INPUT_OVERWRITE" -e "INPUT_TAR_DEREFERENCE" -e "INPUT_TAR_TMP_PATH" -e "INPUT_TAR_EXEC" -e "INPUT_PROXY_HOST" -e "INPUT_PROXY_PORT" -e "INPUT_PROXY_USERNAME" -e "INPUT_PROXY_PASSWORD" -e "INPUT_PROXY_PASSPHRASE" -e "INPUT_PROXY_TIMEOUT" -e "INPUT_PROXY_KEY" -e "INPUT_PROXY_KEY_PATH" -e "INPUT_PROXY_FINGERPRINT" -e "INPUT_PROXY_USE_INSECURE_CIPHER" -e "HOME" -e "GITHUB_JOB" -e "GITHUB_REF" -e "GITHUB_SHA" -e "GITHUB_REPOSITORY" -e "GITHUB_REPOSITORY_OWNER" -e "GITHUB_REPOSITORY_OWNER_ID" -e "GITHUB_RUN_ID" -e "GITHUB_RUN_NUMBER" -e "GITHUB_RETENTION_DAYS" -e "GITHUB_RUN_ATTEMPT" -e "GITHUB_ACTOR_ID" -e "GITHUB_ACTOR" -e "GITHUB_WORKFLOW" -e "GITHUB_HEAD_REF" -e "GITHUB_BASE_REF" -e "GITHUB_EVENT_NAME" -e "GITHUB_SERVER_URL" -e "GITHUB_API_URL" -e "GITHUB_GRAPHQL_URL" -e "GITHUB_REF_NAME" -e "GITHUB_REF_PROTECTED" -e "GITHUB_REF_TYPE" -e "GITHUB_WORKFLOW_REF" -e "GITHUB_WORKFLOW_SHA" -e "GITHUB_REPOSITORY_ID" -e "GITHUB_TRIGGERING_ACTOR" -e "GITHUB_WORKSPACE" -e "GITHUB_ACTION" -e "GITHUB_EVENT_PATH" -e "GITHUB_ACTION_REPOSITORY" -e "GITHUB_ACTION_REF" -e "GITHUB_PATH" -e "GITHUB_ENV" -e "GITHUB_STEP_SUMMARY" -e "GITHUB_STATE" -e "GITHUB_OUTPUT" -e "RUNNER_OS" -e "RUNNER_ARCH" -e "RUNNER_NAME" -e "RUNNER_ENVIRONMENT" -e "RUNNER_TOOL_CACHE" -e "RUNNER_TEMP" -e "RUNNER_WORKSPACE" -e "ACTIONS_RUNTIME_URL" -e "ACTIONS_RUNTIME_TOKEN" -e "ACTIONS_CACHE_URL" -e "ACTIONS_RESULTS_URL" -e "ACTIONS_ORCHESTRATION_ID" -e GITHUB_ACTIONS=true -e CI=true -v "/var/run/docker.sock":"/var/run/docker.sock" -v "/home/runner/work/_temp":"/github/runner_temp" -v "/home/runner/work/_temp/_github_home":"/github/home" -v "/home/runner/work/_temp/_github_workflow":"/github/workflow" -v "/home/runner/work/_temp/_runner_file_commands":"/github/file_commands" -v "/home/runner/work/hyrowod/hyrowod":"/github/workspace" 461246:3cafd9c693204d63a999eded444c169d
+2026-03-27T05:10:19.4565655Z drone-scp version: v1.6.14
+2026-03-27T05:10:19.4566116Z tar all files into /tmp/nCtwNldEhq.tar.gz
+2026-03-27T05:10:21.1582219Z remote server os type is unix
+2026-03-27T05:10:21.1582571Z scp file to server.
+2026-03-27T05:10:24.6923756Z create folder /home/ubuntu/hyrowod/
+2026-03-27T05:10:26.3888952Z untar file nCtwNldEhq.tar.gz
+2026-03-27T05:10:28.1395499Z remove file nCtwNldEhq.tar.gz
+2026-03-27T05:10:29.8479369Z ===================================================
+2026-03-27T05:10:29.8480390Z ✅ Successfully executed transfer data to all host
+2026-03-27T05:10:29.8480826Z ===================================================
+2026-03-27T05:10:29.9324929Z ##[group]Run appleboy/ssh-action@v1.0.3
+2026-03-27T05:10:29.9325286Z with:
+2026-03-27T05:10:29.9325574Z   host: ***
+2026-03-27T05:10:29.9325784Z   username: ubuntu
+2026-03-27T05:10:29.9327584Z   key: ***
+2026-03-27T05:10:29.9327795Z   envs: GITHUB_SHA
+2026-03-27T05:10:29.9328430Z   script: export ECR_REGISTRY=***
 export IMAGE_TAG=$GITHUB_SHA
 bash /home/ubuntu/hyrowod/scripts/deploy.sh
 
-2026-03-27T04:53:35.7574505Z   port: 22
-2026-03-27T04:53:35.7574714Z   timeout: 30s
-2026-03-27T04:53:35.7574941Z   command_timeout: 10m
-2026-03-27T04:53:35.7575176Z   proxy_port: 22
-2026-03-27T04:53:35.7575402Z   proxy_timeout: 30s
-2026-03-27T04:53:35.7575623Z env:
-2026-03-27T04:53:35.7575840Z   AWS_DEFAULT_REGION: ap-northeast-2
-2026-03-27T04:53:35.7576132Z   AWS_REGION: ap-northeast-2
-2026-03-27T04:53:35.7576448Z   AWS_ACCESS_KEY_ID: ***
-2026-03-27T04:53:35.7576792Z   AWS_SECRET_ACCESS_KEY: ***
-2026-03-27T04:53:35.7577038Z ##[endgroup]
-2026-03-27T04:53:35.7594858Z ##[command]/usr/bin/docker run --name db6b7a414ca42890341c09dbf5faba6b6fb79_158727 --label 0db6b7 --workdir /github/workspace --rm -e "AWS_DEFAULT_REGION" -e "AWS_REGION" -e "AWS_ACCESS_KEY_ID" -e "AWS_SECRET_ACCESS_KEY" -e "INPUT_HOST" -e "INPUT_USERNAME" -e "INPUT_KEY" -e "INPUT_ENVS" -e "INPUT_SCRIPT" -e "INPUT_PORT" -e "INPUT_PASSPHRASE" -e "INPUT_PASSWORD" -e "INPUT_SYNC" -e "INPUT_USE_INSECURE_CIPHER" -e "INPUT_CIPHER" -e "INPUT_TIMEOUT" -e "INPUT_COMMAND_TIMEOUT" -e "INPUT_KEY_PATH" -e "INPUT_FINGERPRINT" -e "INPUT_PROXY_HOST" -e "INPUT_PROXY_PORT" -e "INPUT_PROXY_USERNAME" -e "INPUT_PROXY_PASSWORD" -e "INPUT_PROXY_PASSPHRASE" -e "INPUT_PROXY_TIMEOUT" -e "INPUT_PROXY_KEY" -e "INPUT_PROXY_KEY_PATH" -e "INPUT_PROXY_FINGERPRINT" -e "INPUT_PROXY_CIPHER" -e "INPUT_PROXY_USE_INSECURE_CIPHER" -e "INPUT_SCRIPT_STOP" -e "INPUT_ENVS_FORMAT" -e "INPUT_DEBUG" -e "INPUT_ALLENVS" -e "INPUT_REQUEST_PTY" -e "HOME" -e "GITHUB_JOB" -e "GITHUB_REF" -e "GITHUB_SHA" -e "GITHUB_REPOSITORY" -e "GITHUB_REPOSITORY_OWNER" -e "GITHUB_REPOSITORY_OWNER_ID" -e "GITHUB_RUN_ID" -e "GITHUB_RUN_NUMBER" -e "GITHUB_RETENTION_DAYS" -e "GITHUB_RUN_ATTEMPT" -e "GITHUB_ACTOR_ID" -e "GITHUB_ACTOR" -e "GITHUB_WORKFLOW" -e "GITHUB_HEAD_REF" -e "GITHUB_BASE_REF" -e "GITHUB_EVENT_NAME" -e "GITHUB_SERVER_URL" -e "GITHUB_API_URL" -e "GITHUB_GRAPHQL_URL" -e "GITHUB_REF_NAME" -e "GITHUB_REF_PROTECTED" -e "GITHUB_REF_TYPE" -e "GITHUB_WORKFLOW_REF" -e "GITHUB_WORKFLOW_SHA" -e "GITHUB_REPOSITORY_ID" -e "GITHUB_TRIGGERING_ACTOR" -e "GITHUB_WORKSPACE" -e "GITHUB_ACTION" -e "GITHUB_EVENT_PATH" -e "GITHUB_ACTION_REPOSITORY" -e "GITHUB_ACTION_REF" -e "GITHUB_PATH" -e "GITHUB_ENV" -e "GITHUB_STEP_SUMMARY" -e "GITHUB_STATE" -e "GITHUB_OUTPUT" -e "RUNNER_OS" -e "RUNNER_ARCH" -e "RUNNER_NAME" -e "RUNNER_ENVIRONMENT" -e "RUNNER_TOOL_CACHE" -e "RUNNER_TEMP" -e "RUNNER_WORKSPACE" -e "ACTIONS_RUNTIME_URL" -e "ACTIONS_RUNTIME_TOKEN" -e "ACTIONS_CACHE_URL" -e "ACTIONS_RESULTS_URL" -e "ACTIONS_ORCHESTRATION_ID" -e GITHUB_ACTIONS=true -e CI=true -v "/var/run/docker.sock":"/var/run/docker.sock" -v "/home/runner/work/_temp":"/github/runner_temp" -v "/home/runner/work/_temp/_github_home":"/github/home" -v "/home/runner/work/_temp/_github_workflow":"/github/workflow" -v "/home/runner/work/_temp/_runner_file_commands":"/github/file_commands" -v "/home/runner/work/hyrowod/hyrowod":"/github/workspace" 0db6b7:a414ca42890341c09dbf5faba6b6fb79
-2026-03-27T04:53:35.8927971Z ======CMD======
-2026-03-27T04:53:35.8928572Z export ECR_REGISTRY=***
-2026-03-27T04:53:35.8928851Z export IMAGE_TAG=$GITHUB_SHA
-2026-03-27T04:53:35.8929273Z bash /home/ubuntu/hyrowod/scripts/deploy.sh
-2026-03-27T04:53:35.8929609Z
-2026-03-27T04:53:35.8929705Z ======END======
-2026-03-27T04:53:38.1017158Z out: ===== HyroWOD 배포 시작 =====
-2026-03-27T04:53:38.1017599Z out: [1/4] ECR 로그인...
-2026-03-27T04:53:39.7513784Z err: WARNING! Your credentials are stored unencrypted in '/home/ubuntu/.docker/config.json'.
-2026-03-27T04:53:39.7514566Z err: Configure a credential helper to remove this warning. See
-2026-03-27T04:53:39.7515539Z err: https://docs.docker.com/go/credential-store/
-2026-03-27T04:53:39.7515980Z out: Login Succeeded
-2026-03-27T04:53:39.7527742Z out: [2/4] 이미지 pull...
-2026-03-27T04:53:39.9116823Z out: caa907fe37bf2626589a2fc5a0e96af43c9764d9: Pulling from hyrowod-backend
-2026-03-27T04:53:40.1245876Z out: d08d64f6270b: Pulling fs layer
-2026-03-27T04:53:40.1246330Z out: 234167e685d2: Pulling fs layer
-2026-03-27T04:53:40.3040247Z out: 234167e685d2: Download complete
-2026-03-27T04:53:40.3057795Z out: 234167e685d2: Pull complete
-2026-03-27T04:53:41.4029209Z out: d08d64f6270b: Download complete
-2026-03-27T04:53:42.2660445Z out: d08d64f6270b: Pull complete
-2026-03-27T04:53:42.2661077Z out: Digest: sha256:4ec7d033287fc751166dfe2490002aef066cb410fa0dca8b3fbfa0c403a3bc13
-2026-03-27T04:53:42.2662572Z out: Status: Downloaded newer image for ***/hyrowod-backend:caa907fe37bf2626589a2fc5a0e96af43c9764d9
-2026-03-27T04:53:42.2717672Z out: ***/hyrowod-backend:caa907fe37bf2626589a2fc5a0e96af43c9764d9
-2026-03-27T04:53:42.4560645Z out: caa907fe37bf2626589a2fc5a0e96af43c9764d9: Pulling from hyrowod-frontend
-2026-03-27T04:53:42.6897781Z out: 0a485b9572a9: Pulling fs layer
-2026-03-27T04:53:42.6898397Z out: ac1c5d16f61a: Pulling fs layer
-2026-03-27T04:53:42.6898929Z out: 2d2df8a55f55: Pulling fs layer
-2026-03-27T04:53:42.6899657Z out: eef4593d7b76: Pulling fs layer
-2026-03-27T04:53:42.6901182Z out: e7228c8d1118: Pulling fs layer
-2026-03-27T04:53:42.8447326Z out: ac1c5d16f61a: Download complete
-2026-03-27T04:53:42.8450757Z out: 2d2df8a55f55: Download complete
-2026-03-27T04:53:42.8454355Z out: eef4593d7b76: Download complete
-2026-03-27T04:53:42.8468204Z out: ac1c5d16f61a: Pull complete
-2026-03-27T04:53:42.8519666Z out: eef4593d7b76: Pull complete
-2026-03-27T04:53:42.9448928Z out: 0a485b9572a9: Download complete
-2026-03-27T04:53:42.9465107Z out: 2d2df8a55f55: Pull complete
-2026-03-27T04:53:43.1437583Z out: e7228c8d1118: Download complete
-2026-03-27T04:53:44.2455775Z out: 0a485b9572a9: Pull complete
-2026-03-27T04:53:44.2502894Z out: 0a485b9572a9: Pull complete
-2026-03-27T04:53:44.2526006Z out: e7228c8d1118: Pull complete
-2026-03-27T04:53:44.2526570Z out: Digest: sha256:f929fe78bc0f0a2f7bb757e4ca4fc34ec60e2ec8045f707310c38f0df51b377a
-2026-03-27T04:53:44.2527673Z out: Status: Downloaded newer image for ***/hyrowod-frontend:caa907fe37bf2626589a2fc5a0e96af43c9764d9
-2026-03-27T04:53:44.2584325Z out: ***/hyrowod-frontend:caa907fe37bf2626589a2fc5a0e96af43c9764d9
-2026-03-27T04:53:44.2611632Z out: [3/4] 서비스 재시작...
-2026-03-27T04:53:45.0194902Z err: time="2026-03-27T04:53:44Z" level=warning msg="The \"DB_PASSWORD\" variable is not set. Defaulting to a blank string."
-2026-03-27T04:53:45.0196341Z err: time="2026-03-27T04:53:44Z" level=warning msg="The \"KAKAO_REST_API_KEY\" variable is not set. Defaulting to a blank string."
-2026-03-27T04:53:45.0197714Z err: time="2026-03-27T04:53:44Z" level=warning msg="The \"KAKAO_CLIENT_ID\" variable is not set. Defaulting to a blank string."
-2026-03-27T04:53:45.0199055Z err: time="2026-03-27T04:53:44Z" level=warning msg="The \"GOOGLE_CLIENT_ID\" variable is not set. Defaulting to a blank string."
-2026-03-27T04:53:45.0200399Z err: time="2026-03-27T04:53:44Z" level=warning msg="The \"TOSS_PAYMENTS_SECRET_KEY\" variable is not set. Defaulting to a blank string."
-2026-03-27T04:53:45.0201679Z err: time="2026-03-27T04:53:44Z" level=warning msg="The \"JWT_SECRET\" variable is not set. Defaulting to a blank string."
-2026-03-27T04:53:45.0202898Z err: time="2026-03-27T04:53:44Z" level=warning msg="The \"AWS_ACCESS_KEY\" variable is not set. Defaulting to a blank string."
-2026-03-27T04:53:45.0203871Z err: time="2026-03-27T04:53:44Z" level=warning msg="The \"AWS_SECRET_KEY\" variable is not set. Defaulting to a blank string."
-2026-03-27T04:53:45.0204815Z err: time="2026-03-27T04:53:44Z" level=warning msg="The \"AWS_S3_BUCKET\" variable is not set. Defaulting to a blank string."
-2026-03-27T04:53:45.0205716Z err: time="2026-03-27T04:53:44Z" level=warning msg="The \"DB_HOST\" variable is not set. Defaulting to a blank string."
-2026-03-27T04:53:45.2135257Z err: time="2026-03-27T04:53:44Z" level=warning msg="The \"DB_NAME\" variable is not set. Defaulting to a blank string."
-2026-03-27T04:53:45.2136202Z err: time="2026-03-27T04:53:44Z" level=warning msg="The \"DB_USERNAME\" variable is not set. Defaulting to a blank string."
-2026-03-27T04:53:45.2137276Z err: time="2026-03-27T04:53:44Z" level=warning msg="The \"GOOGLE_CLIENT_SECRET\" variable is not set. Defaulting to a blank string."
-2026-03-27T04:53:45.2138214Z err: time="2026-03-27T04:53:44Z" level=warning msg="The \"KAKAO_CLIENT_SECRET\" variable is not set. Defaulting to a blank string."
-2026-03-27T04:53:45.2139178Z err: time="2026-03-27T04:53:44Z" level=warning msg="The \"NEXT_PUBLIC_KAKAO_MAP_KEY\" variable is not set. Defaulting to a blank string."
-2026-03-27T04:53:45.2140154Z err: time="2026-03-27T04:53:44Z" level=warning msg="The \"NEXT_PUBLIC_TOSS_CLIENT_KEY\" variable is not set. Defaulting to a blank string."
-2026-03-27T04:53:45.2141406Z err: time="2026-03-27T04:53:44Z" level=warning msg="/home/ubuntu/hyrowod/docker-compose.prod.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
-2026-03-27T04:53:45.2142550Z err:  Network hyrowod_hyrowod-net Creating
-2026-03-27T04:53:45.2142912Z err:  Network hyrowod_hyrowod-net Created
-2026-03-27T04:53:45.2143259Z err:  Container hyrowod-redis Creating
-2026-03-27T04:53:45.3294070Z err:  Container hyrowod-redis Created
-2026-03-27T04:53:45.3294604Z err:  Container hyrowod-backend Creating
-2026-03-27T04:53:45.3870486Z err:  Container hyrowod-backend Created
-2026-03-27T04:53:45.3871029Z err:  Container hyrowod-frontend Creating
-2026-03-27T04:53:45.4459696Z err:  Container hyrowod-frontend Created
-2026-03-27T04:53:45.4460312Z err:  Container hyrowod-nginx Creating
-2026-03-27T04:53:45.5291819Z err:  Container hyrowod-nginx Created
-2026-03-27T04:53:45.5644413Z err:  Container hyrowod-redis Starting
-2026-03-27T04:53:45.7442210Z err:  Container hyrowod-redis Started
-2026-03-27T04:53:45.7443253Z err:  Container hyrowod-backend Starting
-2026-03-27T04:53:45.9444728Z err:  Container hyrowod-backend Started
-2026-03-27T04:53:45.9445545Z err:  Container hyrowod-backend Waiting
-2026-03-27T04:54:02.6473310Z err:  Container hyrowod-backend Error dependency backend failed to start
-2026-03-27T04:54:02.6474131Z err: dependency failed to start: container hyrowod-backend is unhealthy
-2026-03-27T04:54:02.6569435Z 2026/03/27 04:54:02 Process exited with status 1
-2026-03-27T04:54:02.7311734Z Post job cleanup.
-2026-03-27T04:54:02.7925713Z Logging out of registry ***
-2026-03-27T04:54:02.8221489Z Post job cleanup.
-2026-03-27T04:54:02.9500396Z Post job cleanup.
-2026-03-27T04:54:03.0437731Z [command]/usr/bin/git version
-2026-03-27T04:54:03.0473712Z git version 2.53.0
-2026-03-27T04:54:03.0518128Z Temporarily overriding HOME='/home/runner/work/_temp/71d304f5-4f68-433b-a6fd-5643327d41de' before making global git config changes
-2026-03-27T04:54:03.0519521Z Adding repository directory to the temporary git global config as a safe directory
-2026-03-27T04:54:03.0524911Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/hyrowod/hyrowod
-2026-03-27T04:54:03.0560132Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
-2026-03-27T04:54:03.0592896Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
-2026-03-27T04:54:03.0810990Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
-2026-03-27T04:54:03.0831508Z http.https://github.com/.extraheader
-2026-03-27T04:54:03.0844107Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
-2026-03-27T04:54:03.0873066Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
-2026-03-27T04:54:03.1083430Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
-2026-03-27T04:54:03.1113590Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
-2026-03-27T04:54:03.1435019Z Cleaning up orphan processes
-2026-03-27T04:54:03.1835971Z ##[warning]Node.js 20 actions are deprecated. The following actions are running on Node.js 20 and may not work as expected: actions/checkout@v4, aws-actions/configure-aws-credentials@v4. Actions will be forced to run with Node.js 24 by default starting June 2nd, 2026. Node.js 20 will be removed from the runner on September 16th, 2026. Please check if updated versions of these actions are available that support Node.js 24. To opt into Node.js 24 now, set the FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true environment variable on the runner or in your workflow file. Once Node.js 24 becomes the default, you can temporarily opt out by setting ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+2026-03-27T05:10:29.9328955Z   port: 22
+2026-03-27T05:10:29.9329166Z   timeout: 30s
+2026-03-27T05:10:29.9329392Z   command_timeout: 10m
+2026-03-27T05:10:29.9329633Z   proxy_port: 22
+2026-03-27T05:10:29.9329858Z   proxy_timeout: 30s
+2026-03-27T05:10:29.9330084Z env:
+2026-03-27T05:10:29.9330301Z   AWS_DEFAULT_REGION: ap-northeast-2
+2026-03-27T05:10:29.9330597Z   AWS_REGION: ap-northeast-2
+2026-03-27T05:10:29.9330890Z   AWS_ACCESS_KEY_ID: ***
+2026-03-27T05:10:29.9331231Z   AWS_SECRET_ACCESS_KEY: ***
+2026-03-27T05:10:29.9331486Z ##[endgroup]
+2026-03-27T05:10:29.9349260Z ##[command]/usr/bin/docker run --name ee552a206a7f4a4396e04e54c93a80e9_f7e113 --label 461246 --workdir /github/workspace --rm -e "AWS_DEFAULT_REGION" -e "AWS_REGION" -e "AWS_ACCESS_KEY_ID" -e "AWS_SECRET_ACCESS_KEY" -e "INPUT_HOST" -e "INPUT_USERNAME" -e "INPUT_KEY" -e "INPUT_ENVS" -e "INPUT_SCRIPT" -e "INPUT_PORT" -e "INPUT_PASSPHRASE" -e "INPUT_PASSWORD" -e "INPUT_SYNC" -e "INPUT_USE_INSECURE_CIPHER" -e "INPUT_CIPHER" -e "INPUT_TIMEOUT" -e "INPUT_COMMAND_TIMEOUT" -e "INPUT_KEY_PATH" -e "INPUT_FINGERPRINT" -e "INPUT_PROXY_HOST" -e "INPUT_PROXY_PORT" -e "INPUT_PROXY_USERNAME" -e "INPUT_PROXY_PASSWORD" -e "INPUT_PROXY_PASSPHRASE" -e "INPUT_PROXY_TIMEOUT" -e "INPUT_PROXY_KEY" -e "INPUT_PROXY_KEY_PATH" -e "INPUT_PROXY_FINGERPRINT" -e "INPUT_PROXY_CIPHER" -e "INPUT_PROXY_USE_INSECURE_CIPHER" -e "INPUT_SCRIPT_STOP" -e "INPUT_ENVS_FORMAT" -e "INPUT_DEBUG" -e "INPUT_ALLENVS" -e "INPUT_REQUEST_PTY" -e "HOME" -e "GITHUB_JOB" -e "GITHUB_REF" -e "GITHUB_SHA" -e "GITHUB_REPOSITORY" -e "GITHUB_REPOSITORY_OWNER" -e "GITHUB_REPOSITORY_OWNER_ID" -e "GITHUB_RUN_ID" -e "GITHUB_RUN_NUMBER" -e "GITHUB_RETENTION_DAYS" -e "GITHUB_RUN_ATTEMPT" -e "GITHUB_ACTOR_ID" -e "GITHUB_ACTOR" -e "GITHUB_WORKFLOW" -e "GITHUB_HEAD_REF" -e "GITHUB_BASE_REF" -e "GITHUB_EVENT_NAME" -e "GITHUB_SERVER_URL" -e "GITHUB_API_URL" -e "GITHUB_GRAPHQL_URL" -e "GITHUB_REF_NAME" -e "GITHUB_REF_PROTECTED" -e "GITHUB_REF_TYPE" -e "GITHUB_WORKFLOW_REF" -e "GITHUB_WORKFLOW_SHA" -e "GITHUB_REPOSITORY_ID" -e "GITHUB_TRIGGERING_ACTOR" -e "GITHUB_WORKSPACE" -e "GITHUB_ACTION" -e "GITHUB_EVENT_PATH" -e "GITHUB_ACTION_REPOSITORY" -e "GITHUB_ACTION_REF" -e "GITHUB_PATH" -e "GITHUB_ENV" -e "GITHUB_STEP_SUMMARY" -e "GITHUB_STATE" -e "GITHUB_OUTPUT" -e "RUNNER_OS" -e "RUNNER_ARCH" -e "RUNNER_NAME" -e "RUNNER_ENVIRONMENT" -e "RUNNER_TOOL_CACHE" -e "RUNNER_TEMP" -e "RUNNER_WORKSPACE" -e "ACTIONS_RUNTIME_URL" -e "ACTIONS_RUNTIME_TOKEN" -e "ACTIONS_CACHE_URL" -e "ACTIONS_RESULTS_URL" -e "ACTIONS_ORCHESTRATION_ID" -e GITHUB_ACTIONS=true -e CI=true -v "/var/run/docker.sock":"/var/run/docker.sock" -v "/home/runner/work/_temp":"/github/runner_temp" -v "/home/runner/work/_temp/_github_home":"/github/home" -v "/home/runner/work/_temp/_github_workflow":"/github/workflow" -v "/home/runner/work/_temp/_runner_file_commands":"/github/file_commands" -v "/home/runner/work/hyrowod/hyrowod":"/github/workspace" 461246:ee552a206a7f4a4396e04e54c93a80e9
+2026-03-27T05:10:30.0613972Z ======CMD======
+2026-03-27T05:10:30.0615176Z export ECR_REGISTRY=***
+2026-03-27T05:10:30.0615656Z export IMAGE_TAG=$GITHUB_SHA
+2026-03-27T05:10:30.0616151Z bash /home/ubuntu/hyrowod/scripts/deploy.sh
+2026-03-27T05:10:30.0616506Z
+2026-03-27T05:10:30.0616714Z ======END======
+2026-03-27T05:10:31.7457208Z out: ===== HyroWOD 배포 시작 =====
+2026-03-27T05:10:31.7462732Z out: [1/4] ECR 로그인...
+2026-03-27T05:10:34.2199459Z err: WARNING! Your credentials are stored unencrypted in '/home/ubuntu/.docker/config.json'.
+2026-03-27T05:10:34.2200244Z out: Login Succeeded
+2026-03-27T05:10:34.2200727Z err: Configure a credential helper to remove this warning. See
+2026-03-27T05:10:34.2201738Z err: https://docs.docker.com/go/credential-store/
+2026-03-27T05:10:34.2278849Z out: [2/4] 이미지 pull...
+2026-03-27T05:10:34.4424715Z out: latest: Pulling from hyrowod-backend
+2026-03-27T05:10:34.7010719Z out: 40100a2a4d5e: Pulling fs layer
+2026-03-27T05:10:34.7012473Z out: bb267bc53954: Pulling fs layer
+2026-03-27T05:10:34.8377580Z out: 40100a2a4d5e: Download complete
+2026-03-27T05:10:34.8414023Z out: 40100a2a4d5e: Pull complete
+2026-03-27T05:10:36.2536711Z out: bb267bc53954: Download complete
+2026-03-27T05:10:37.2112136Z out: bb267bc53954: Pull complete
+2026-03-27T05:10:37.2118414Z out: Digest: sha256:800d9f19b2246aa8b05c6bcc2f6c44af08c4e9cae35828ae4cbb1b439c2e053f
+2026-03-27T05:10:37.2119623Z out: Status: Downloaded newer image for ***/hyrowod-backend:latest
+2026-03-27T05:10:37.2135374Z out: ***/hyrowod-backend:latest
+2026-03-27T05:10:37.3667805Z out: latest: Pulling from hyrowod-frontend
+2026-03-27T05:10:37.5899690Z out: f80cbe13ddd1: Pulling fs layer
+2026-03-27T05:10:37.5900435Z out: 68c5a33992e4: Pulling fs layer
+2026-03-27T05:10:37.5901540Z out: 6d52ee7ecf8e: Pulling fs layer
+2026-03-27T05:10:37.5905200Z out: da0bdda988f5: Pulling fs layer
+2026-03-27T05:10:37.5906460Z out: e8df58f2954e: Pulling fs layer
+2026-03-27T05:10:37.7621595Z out: e8df58f2954e: Download complete
+2026-03-27T05:10:37.7641914Z out: da0bdda988f5: Download complete
+2026-03-27T05:10:37.7700783Z out: e8df58f2954e: Pull complete
+2026-03-27T05:10:37.7852955Z out: da0bdda988f5: Pull complete
+2026-03-27T05:10:37.8477079Z out: 68c5a33992e4: Download complete
+2026-03-27T05:10:37.8486916Z out: f80cbe13ddd1: Download complete
+2026-03-27T05:10:37.8559664Z out: 68c5a33992e4: Pull complete
+2026-03-27T05:10:38.1486820Z out: 6d52ee7ecf8e: Download complete
+2026-03-27T05:10:39.5532524Z out: 6d52ee7ecf8e: Pull complete
+2026-03-27T05:10:39.6423372Z out: f80cbe13ddd1: Pull complete
+2026-03-27T05:10:39.6424117Z out: Digest: sha256:ba1753787364c396e264e8eaaaa7535164f047bb1e85c2b679fdaf97afca3ad8
+2026-03-27T05:10:39.6425623Z out: Status: Downloaded newer image for ***/hyrowod-frontend:latest
+2026-03-27T05:10:39.6454252Z out: ***/hyrowod-frontend:latest
+2026-03-27T05:10:39.6688232Z out: [3/4] 서비스 재시작...
+2026-03-27T05:10:41.1246681Z err: time="2026-03-27T05:10:41Z" level=warning msg="The \"NEXT_PUBLIC_TOSS_CLIENT_KEY\" variable is not set. Defaulting to a blank string."
+2026-03-27T05:10:41.1379223Z err: time="2026-03-27T05:10:41Z" level=warning msg="/home/ubuntu/hyrowod/docker-compose.prod.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+2026-03-27T05:10:41.2393755Z err:  Network hyrowod_hyrowod-net Creating
+2026-03-27T05:10:41.2926421Z err:  Network hyrowod_hyrowod-net Created
+2026-03-27T05:10:41.2954455Z err:  Container hyrowod-redis Creating
+2026-03-27T05:10:41.4081379Z err:  Container hyrowod-redis Created
+2026-03-27T05:10:41.4082104Z err:  Container hyrowod-backend Creating
+2026-03-27T05:10:41.4699024Z err:  Container hyrowod-backend Created
+2026-03-27T05:10:41.4699792Z err:  Container hyrowod-frontend Creating
+2026-03-27T05:10:41.5313011Z err:  Container hyrowod-frontend Created
+2026-03-27T05:10:41.5313780Z err:  Container hyrowod-nginx Creating
+2026-03-27T05:10:41.6130548Z err:  Container hyrowod-nginx Created
+2026-03-27T05:10:41.6484154Z err:  Container hyrowod-redis Starting
+2026-03-27T05:10:41.8125174Z err:  Container hyrowod-redis Started
+2026-03-27T05:10:41.8126155Z err:  Container hyrowod-backend Starting
+2026-03-27T05:10:42.0258092Z err:  Container hyrowod-backend Started
+2026-03-27T05:10:42.0258701Z err:  Container hyrowod-backend Waiting
+2026-03-27T05:15:50.0470904Z err:  Container hyrowod-backend Error dependency backend failed to start
+2026-03-27T05:15:50.0471678Z err: dependency failed to start: container hyrowod-backend is unhealthy
+2026-03-27T05:15:50.0530952Z 2026/03/27 05:15:50 Process exited with status 1
+2026-03-27T05:15:50.1229656Z Post job cleanup.
+2026-03-27T05:15:50.1853191Z Logging out of registry ***
+2026-03-27T05:15:50.2163012Z Post job cleanup.
+2026-03-27T05:15:50.3571236Z Post job cleanup.
+2026-03-27T05:15:50.4647735Z [command]/usr/bin/git version
+2026-03-27T05:15:50.4688512Z git version 2.53.0
+2026-03-27T05:15:50.4732625Z Temporarily overriding HOME='/home/runner/work/_temp/95064f4a-ebb1-4820-837e-86d217784fd8' before making global git config changes
+2026-03-27T05:15:50.4735348Z Adding repository directory to the temporary git global config as a safe directory
+2026-03-27T05:15:50.4739175Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/hyrowod/hyrowod
+2026-03-27T05:15:50.4784728Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-03-27T05:15:50.4819495Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-03-27T05:15:50.5047417Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-03-27T05:15:50.5067208Z http.https://github.com/.extraheader
+2026-03-27T05:15:50.5079596Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-03-27T05:15:50.5110517Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-03-27T05:15:50.5324728Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-03-27T05:15:50.5354187Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-03-27T05:15:50.5691471Z Cleaning up orphan processes
+2026-03-27T05:15:50.6135310Z ##[warning]Node.js 20 actions are deprecated. The following actions are running on Node.js 20 and may not work as expected: actions/checkout@v4, aws-actions/configure-aws-credentials@v4. Actions will be forced to run with Node.js 24 by default starting June 2nd, 2026. Node.js 20 will be removed from the runner on September 16th, 2026. Please check if updated versions of these actions are available that support Node.js 24. To opt into Node.js 24 now, set the FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true environment variable on the runner or in your workflow file. Once Node.js 24 becomes the default, you can temporarily opt out by setting ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

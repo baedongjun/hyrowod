@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "crossfitkorea-bucket.s3.ap-northeast-2.amazonaws.com",
+        hostname: "hyrowod-bucket.s3.ap-northeast-2.amazonaws.com",
       },
       {
         protocol: "https",

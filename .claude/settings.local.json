@@ -106,7 +106,15 @@
       "Bash(grep -rn \"crossfitkorea\\\\.com\\\\|CrossFit Korea\\\\|CrossFitKorea\\\\|cfkorea-app-icon\" frontend/app/ frontend/components/ frontend/public/ --include=*.ts --include=*.tsx --include=*.json)",
       "Bash(find /d/gitWorkspace/workspace/crossfitkorea -name *.conf -o -name nginx*)",
       "Bash(grep -r crossfitkorea /d/gitWorkspace/workspace/crossfitkorea/ --include=*.java --include=*.properties --include=*.yml --include=*.yaml --include=*.ts --include=*.tsx --include=*.js --include=*.json --include=*.xml --include=*.conf --include=*.sh --include=*.gradle --include=*.md --include=*.html)",
-      "Bash(grep -ri crossfitkorea /d/gitWorkspace/workspace/crossfitkorea/ --include=*.java --include=*.properties --include=*.yml --include=*.yaml --include=*.ts --include=*.tsx --include=*.js --include=*.json --include=*.conf --include=*.sh --include=*.gradle --include=*.html)"
+      "Bash(grep -ri crossfitkorea /d/gitWorkspace/workspace/crossfitkorea/ --include=*.java --include=*.properties --include=*.yml --include=*.yaml --include=*.ts --include=*.tsx --include=*.js --include=*.json --include=*.conf --include=*.sh --include=*.gradle --include=*.html)",
+      "Bash(grep -ri crossfitkorea /d/gitWorkspace/workspace/crossfitkorea/ --include=*.java --include=*.properties --include=*.yml --include=*.yaml --include=*.ts --include=*.tsx --include=*.js --include=*.json --include=*.xml --include=*.conf --include=*.sh --include=*.gradle --include=*.md --include=*.html --include=*.txt --include=*.sql)",
+      "Bash(sed -i 's/user1@crossfitkorea\\\\.com/user1@hyrowod.com/g' /d/gitWorkspace/workspace/crossfitkorea/seed.sql)",
+      "Bash(sed -i 's|https://crossfitkorea\\\\.com/register|https://hyrowod.com/register|g' /d/gitWorkspace/workspace/crossfitkorea/seed.sql)",
+      "Bash(sed -i 's|https://crossfitkorea\\\\.com/online-open|https://hyrowod.com/online-open|g' /d/gitWorkspace/workspace/crossfitkorea/seed.sql)",
+      "Bash(sed -i \"s/''CrossFit Korea''/''HyroWOD''/g\" /d/gitWorkspace/workspace/crossfitkorea/seed.sql)",
+      "Bash(sed -i \"s/CrossFit Korea Spring Open/HyroWOD Spring Open/g\" /d/gitWorkspace/workspace/crossfitkorea/seed.sql)",
+      "Bash(sed -i \"s/CrossFit Korea Open \\(온라인\\)/HyroWOD Open \\(온라인\\)/g\" /d/gitWorkspace/workspace/crossfitkorea/seed.sql)",
+      "Bash(sed -i \"s/CrossFit Korea 전국 대회/HyroWOD 전국 대회/g\" /d/gitWorkspace/workspace/crossfitkorea/seed.sql)"
     ]
   }
 }
