@@ -25,7 +25,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
 
-    @Value("${app.frontend-url:https://crossfitkorea.com}")
+    @Value("${app.frontend-url:https://hyrowod.com}")
     private String frontendUrl;
 
     @Override

@@ -10,11 +10,11 @@ import java.util.TimeZone;
 @SpringBootApplication
 @EnableScheduling
 @EnableAsync
-public class CrossfitkoreaApplication {
+public class HyrowodApplication {
 
     public static void main(String[] args) {
         TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
-        SpringApplication.run(CrossfitkoreaApplication.class, args);
+        SpringApplication.run(HyrowodApplication.class, args);
     }
 
 }

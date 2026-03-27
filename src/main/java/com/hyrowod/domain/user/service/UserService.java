@@ -195,7 +195,7 @@ public class UserService {
 
         String finalEmail = (email != null && !email.isBlank())
             ? email
-            : provider.toLowerCase() + "_" + providerId + "@oauth.crossfitkorea.com";
+            : provider.toLowerCase() + "_" + providerId + "@oauth.hyrowod.com";
 
         if (userRepository.existsByEmail(finalEmail)) {
             throw new BusinessException(ErrorCode.EMAIL_ALREADY_EXISTS);

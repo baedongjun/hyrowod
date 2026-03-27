@@ -3,15 +3,15 @@ version: '3.8'
 services:
   app:
     build: .
-    container_name: crossfitkorea-app
+    container_name: hyrowod-app
     ports:
       - "8080:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=local
       - DB_HOST=postgres
       - DB_PORT=5432
-      - DB_NAME=crossfitkorea
-      - DB_USERNAME=crossfitkorea
+      - DB_NAME=hyrowod
+      - DB_USERNAME=hyrowod
       - DB_PASSWORD=password
       - REDIS_HOST=redis
       - REDIS_PORT=6379
@@ -22,33 +22,33 @@ services:
       redis:
         condition: service_healthy
     networks:
-      - crossfitkorea-net
+      - hyrowod-net
     restart: on-failure
     mem_limit: 600m
     memswap_limit: 600m
 
   postgres:
     image: postgres:16-alpine
-    container_name: crossfitkorea-postgres
+    container_name: hyrowod-postgres
     environment:
-      POSTGRES_DB: crossfitkorea
-      POSTGRES_USER: crossfitkorea
+      POSTGRES_DB: hyrowod
+      POSTGRES_USER: hyrowod
       POSTGRES_PASSWORD: password
     ports:
       - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U crossfitkorea"]
+      test: ["CMD-SHELL", "pg_isready -U hyrowod"]
       interval: 10s
       timeout: 5s
       retries: 5
     networks:
-      - crossfitkorea-net
+      - hyrowod-net
 
   redis:
     image: redis:7-alpine
-    container_name: crossfitkorea-redis
+    container_name: hyrowod-redis
     ports:
       - "6379:6379"
     volumes:
@@ -59,12 +59,12 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - crossfitkorea-net
+      - hyrowod-net
 
 volumes:
   postgres-data:
   redis-data:
 
 networks:
-  crossfitkorea-net:
+  hyrowod-net:
     driver: bridge

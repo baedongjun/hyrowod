@@ -38,7 +38,7 @@ public class DataInitializer implements CommandLineRunner {
             // 이미 nullable이거나 컬럼 없으면 무시
         }
 
-        String adminEmail = "admin@crossfitkorea.com";
+        String adminEmail = "admin@hyrowod.com";
         if (!userRepository.existsByEmail(adminEmail)) {
             User admin = User.builder()
                 .email(adminEmail)

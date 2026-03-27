@@ -17,10 +17,10 @@ public class EmailService {
 
     private final JavaMailSender mailSender;
 
-    @Value("${spring.mail.username:noreply@crossfitkorea.com}")
+    @Value("${spring.mail.username:noreply@hyrowod.com}")
     private String fromEmail;
 
-    @Value("${app.frontend-url:https://crossfitkorea.com}")
+    @Value("${app.frontend-url:https://hyrowod.com}")
     private String frontendUrl;
 
     @Async

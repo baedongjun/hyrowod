@@ -2,14 +2,14 @@
 # 로컬에서 실행 - EC2에 설정 파일 업로드
 # 사용법: ./scripts/upload-configs.sh <EC2_IP> <PEM_KEY_PATH>
 #
-# 예시: ./scripts/upload-configs.sh 54.123.45.67 ~/.ssh/crossfitkorea.pem
+# 예시: ./scripts/upload-configs.sh 54.123.45.67 ~/.ssh/hyrowod.pem
 
 set -e
 
 EC2_IP="${1:?EC2 IP를 첫 번째 인자로 입력하세요}"
 PEM_KEY="${2:?PEM 키 경로를 두 번째 인자로 입력하세요}"
 EC2_USER="ubuntu"
-REMOTE_DIR="/home/ubuntu/crossfitkorea"
+REMOTE_DIR="/home/ubuntu/hyrowod"
 SSH_OPTS="-i $PEM_KEY -o StrictHostKeyChecking=no"
 
 echo "EC2($EC2_IP)에 설정 파일 업로드 중..."
