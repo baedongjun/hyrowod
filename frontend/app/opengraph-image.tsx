@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "CrossFit Korea - 대한민국 크로스핏 커뮤니티 플랫폼";
+export const alt = "HyroWOD - 대한민국 크로스핏 커뮤니티 플랫폼";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -204,7 +204,7 @@ export default function OgImage() {
                 opacity: 0.7,
               }}
             >
-              crossfitkorea.com
+              hyrowod.com
             </div>
           </div>
         </div>

@@ -18,8 +18,8 @@ jobs:
       postgres:
         image: postgres:16-alpine
         env:
-          POSTGRES_DB: crossfitkorea_test
-          POSTGRES_USER: crossfitkorea
+          POSTGRES_DB: hyrowod_test
+          POSTGRES_USER: hyrowod
           POSTGRES_PASSWORD: password
         ports:
           - 5432:5432
@@ -57,8 +57,8 @@ jobs:
         env:
           DB_HOST: localhost
           DB_PORT: 5432
-          DB_NAME: crossfitkorea_test
-          DB_USERNAME: crossfitkorea
+          DB_NAME: hyrowod_test
+          DB_USERNAME: hyrowod
           DB_PASSWORD: password
           JWT_SECRET: test-secret-key-must-be-at-least-256-bits-long-for-hs256
           REDIS_HOST: localhost
@@ -128,7 +128,7 @@ jobs:
       - name: Build and push backend Docker image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: crossfitkorea-backend
+          ECR_REPOSITORY: hyrowod-backend
           IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
@@ -139,11 +139,11 @@ jobs:
       - name: Build and push frontend Docker image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: crossfitkorea-frontend
+          ECR_REPOSITORY: hyrowod-frontend
           IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build \
-            --build-arg NEXT_PUBLIC_API_URL=https://crossfitkorea.com \
+            --build-arg NEXT_PUBLIC_API_URL=https://hyrowod.com \
             --build-arg NEXT_PUBLIC_KAKAO_MAP_KEY=${{ secrets.NEXT_PUBLIC_KAKAO_MAP_KEY }} \
             -f Dockerfile.frontend \
             -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \
@@ -159,7 +159,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           source: "seed.sql,docker-compose.prod.yml,scripts/deploy.sh,nginx/nginx.conf"
-          target: "/home/ubuntu/crossfitkorea/"
+          target: "/home/ubuntu/hyrowod/"
 
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v1.0.3
@@ -171,4 +171,4 @@ jobs:
           script: |
             export ECR_REGISTRY=${{ secrets.ECR_REGISTRY }}
             export IMAGE_TAG=$GITHUB_SHA
-            bash /home/ubuntu/crossfitkorea/scripts/deploy.sh
+            bash /home/ubuntu/hyrowod/scripts/deploy.sh

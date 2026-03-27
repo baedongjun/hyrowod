@@ -53,9 +53,9 @@ export default function InstallPwa() {
     <>
       <div className={s.banner}>
         <div className={s.bannerInner}>
-          <img src="/cfkorea-app-icon.png" className={s.icon} alt="CrossFit Korea" />
+          <img src="/hyrowod-icon.png" className={s.icon} alt="HyroWOD" />
           <div className={s.text}>
-            <strong className={s.title}>CrossFit Korea</strong>
+            <strong className={s.title}>HyroWOD</strong>
             <span className={s.sub}>홈화면에 추가하고 앱처럼 사용하세요</span>
           </div>
           <button className={s.installBtn} onClick={handleInstall}>

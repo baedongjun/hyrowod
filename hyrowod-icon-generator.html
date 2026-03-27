@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>HyroWOD 아이콘 생성기</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #111;
+      color: #f5f0e8;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 32px;
+      padding: 48px 24px;
+      min-height: 100vh;
+    }
+    h1 { font-size: 22px; letter-spacing: 2px; color: #e8220a; }
+    .canvases {
+      display: flex;
+      gap: 40px;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: flex-end;
+    }
+    .canvas-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .label { font-size: 13px; color: #888; }
+    canvas { border-radius: 22%; display: block; }
+    .btn-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    button {
+      background: #e8220a;
+      color: #fff;
+      border: none;
+      padding: 14px 32px;
+      font-size: 15px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      cursor: pointer;
+    }
+    button:hover { background: #c41a07; }
+    .note { font-size: 13px; color: #666; text-align: center; line-height: 1.8; }
+  </style>
+</head>
+<body>
+  <h1>HYROWOD ICON GENERATOR</h1>
+
+  <div class="canvases">
+    <div class="canvas-wrap">
+      <canvas id="c512" width="512" height="512"></canvas>
+      <span class="label">512 × 512</span>
+    </div>
+    <div class="canvas-wrap">
+      <canvas id="c192" width="192" height="192"></canvas>
+      <span class="label">192 × 192</span>
+    </div>
+    <div class="canvas-wrap">
+      <canvas id="c64" width="64" height="64"></canvas>
+      <span class="label">64 × 64 (preview)</span>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button onclick="download('c512', 'hyrowod-icon-512.png')">512px 다운로드</button>
+    <button onclick="download('c192', 'hyrowod-icon-192.png')">192px 다운로드</button>
+  </div>
+
+  <div class="note">
+    다운로드된 파일 중 아무 사이즈나 하나를<br />
+    <strong>frontend/public/hyrowod-icon.png</strong> 로 저장하면 됩니다.<br />
+    (manifest.json이 두 사이즈 모두 같은 파일을 참조하므로 512px 권장)
+  </div>
+
+  <script>
+    function drawIcon(canvas) {
+      const s = canvas.width;
+      const ctx = canvas.getContext('2d');
+      const cx = s / 2;
+      const cy = s / 2;
+
+      // ── 배경 ──────────────────────────────────────────────
+      ctx.fillStyle = '#111111';
+      ctx.fillRect(0, 0, s, s);
+
+      // ── 붉은 원형 그라데이션 배경 글로우 ─────────────────
+      const glow = ctx.createRadialGradient(cx, cy * 0.9, 0, cx, cy * 0.9, s * 0.55);
+      glow.addColorStop(0, 'rgba(232,34,10,0.28)');
+      glow.addColorStop(1, 'rgba(232,34,10,0)');
+      ctx.fillStyle = glow;
+      ctx.fillRect(0, 0, s, s);
+
+      // ── 바벨 (가로 막대) ──────────────────────────────────
+      const barY      = cy * 1.06;
+      const barH      = s * 0.055;
+      const barW      = s * 0.52;
+      const plateW    = s * 0.062;
+      const plateH    = s * 0.19;
+      const plateGap  = s * 0.01;
+      const barR      = barH / 2;
+
+      // 중앙 봉
+      ctx.fillStyle = '#cccccc';
+      roundRect(ctx, cx - barW / 2, barY - barH / 2, barW, barH, barR);
+      ctx.fill();
+
+      // 왼쪽 원판
+      const lx = cx - barW / 2 - plateGap - plateW;
+      ctx.fillStyle = '#e8220a';
+      roundRect(ctx, lx, barY - plateH / 2, plateW, plateH, plateW * 0.25);
+      ctx.fill();
+
+      // 오른쪽 원판
+      const rx = cx + barW / 2 + plateGap;
+      ctx.fillStyle = '#e8220a';
+      roundRect(ctx, rx, barY - plateH / 2, plateW, plateH, plateW * 0.25);
+      ctx.fill();
+
+      // ── 텍스트 "HYRO" ────────────────────────────────────
+      const topY = cy * 0.72;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = `bold ${s * 0.235}px 'Arial Black', 'Arial', sans-serif`;
+      ctx.letterSpacing = `${s * 0.01}px`;
+      ctx.fillText('HYRO', cx, topY);
+
+      // ── 텍스트 "WOD" ─────────────────────────────────────
+      const bottomY = cy * 1.48;
+      const grad = ctx.createLinearGradient(cx - s * 0.2, 0, cx + s * 0.2, 0);
+      grad.addColorStop(0, '#ff6b1a');
+      grad.addColorStop(1, '#e8220a');
+      ctx.fillStyle = grad;
+      ctx.font = `bold ${s * 0.195}px 'Arial Black', 'Arial', sans-serif`;
+      ctx.fillText('WOD', cx, bottomY);
+
+      // ── 하단 얇은 라인 ───────────────────────────────────
+      const lineY = cy * 1.72;
+      const lineW = s * 0.38;
+      ctx.strokeStyle = '#e8220a';
+      ctx.lineWidth = s * 0.012;
+      ctx.beginPath();
+      ctx.moveTo(cx - lineW / 2, lineY);
+      ctx.lineTo(cx + lineW / 2, lineY);
+      ctx.stroke();
+    }
+
+    function roundRect(ctx, x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.lineTo(x + w, y + h - r);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      ctx.lineTo(x + r, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
+    }
+
+    function download(canvasId, filename) {
+      const canvas = document.getElementById(canvasId);
+      const link = document.createElement('a');
+      link.download = filename;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+
+    // 모든 캔버스 그리기
+    ['c512', 'c192', 'c64'].forEach(id => drawIcon(document.getElementById(id)));
+  </script>
+</body>
+</html>

@@ -12,7 +12,7 @@
 | `EC2_HOST` | EC2 인스턴스 퍼블릭 IP 또는 도메인 |
 | `EC2_USER` | EC2 SSH 사용자 (예: ec2-user, ubuntu) |
 | `EC2_SSH_KEY` | EC2 SSH 프라이빗 키 (PEM 파일 내용 전체) |
-| `DB_URL` | PostgreSQL JDBC URL (예: jdbc:postgresql://rds-endpoint:5432/crossfitkorea) |
+| `DB_URL` | PostgreSQL JDBC URL (예: jdbc:postgresql://rds-endpoint:5432/hyrowod) |
 | `DB_USERNAME` | 데이터베이스 사용자명 |
 | `DB_PASSWORD` | 데이터베이스 비밀번호 |
 | `JWT_SECRET` | JWT 서명 시크릿 키 (32자 이상) |

@@ -6,7 +6,7 @@ services:
   # ──────────────────────────────────────────
   nginx:
     image: nginx:alpine
-    container_name: crossfitkorea-nginx
+    container_name: hyrowod-nginx
     ports:
       - "80:80"
       - "443:443"
@@ -19,7 +19,7 @@ services:
       - frontend
       - backend
     networks:
-      - crossfitkorea-net
+      - hyrowod-net
     restart: unless-stopped
 
   # ──────────────────────────────────────────
@@ -27,9 +27,9 @@ services:
   # ──────────────────────────────────────────
   redis:
     image: redis:7-alpine
-    container_name: crossfitkorea-redis
+    container_name: hyrowod-redis
     networks:
-      - crossfitkorea-net
+      - hyrowod-net
     restart: unless-stopped
     command: redis-server --maxmemory 64mb --maxmemory-policy allkeys-lru
 
@@ -37,8 +37,8 @@ services:
   # Spring Boot 백엔드 (ECR 이미지)
   # ──────────────────────────────────────────
   backend:
-    image: ${ECR_REGISTRY}/crossfitkorea-backend:${IMAGE_TAG:-latest}
-    container_name: crossfitkorea-backend
+    image: ${ECR_REGISTRY}/hyrowod-backend:${IMAGE_TAG:-latest}
+    container_name: hyrowod-backend
     ports:
       - "8080:8080"
     environment:
@@ -64,7 +64,7 @@ services:
       KAKAO_CLIENT_SECRET: ${KAKAO_CLIENT_SECRET}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
-      BASE_URL: ${BASE_URL:-https://crossfitkorea.com}
+      BASE_URL: ${BASE_URL:-https://hyrowod.com}
       TOSS_PAYMENTS_SECRET_KEY: ${TOSS_PAYMENTS_SECRET_KEY}
       JAVA_OPTS: -Xms128m -Xmx384m -XX:MetaspaceSize=96m -XX:MaxMetaspaceSize=192m -XX:+UseG1GC -XX:+ExitOnOutOfMemoryError
     mem_limit: 600m
@@ -72,7 +72,7 @@ services:
     depends_on:
       - redis
     networks:
-      - crossfitkorea-net
+      - hyrowod-net
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8080/actuator/health || exit 1"]
@@ -85,23 +85,23 @@ services:
   # Next.js 프론트엔드 (ECR 이미지)
   # ──────────────────────────────────────────
   frontend:
-    image: ${ECR_REGISTRY}/crossfitkorea-frontend:${IMAGE_TAG:-latest}
-    container_name: crossfitkorea-frontend
+    image: ${ECR_REGISTRY}/hyrowod-frontend:${IMAGE_TAG:-latest}
+    container_name: hyrowod-frontend
     environment:
       NODE_ENV: production
-      NEXT_PUBLIC_API_URL: https://crossfitkorea.com
+      NEXT_PUBLIC_API_URL: https://hyrowod.com
       NEXT_PUBLIC_KAKAO_MAP_KEY: ${NEXT_PUBLIC_KAKAO_MAP_KEY}
       NEXT_PUBLIC_TOSS_CLIENT_KEY: ${NEXT_PUBLIC_TOSS_CLIENT_KEY}
     depends_on:
       backend:
         condition: service_healthy
     networks:
-      - crossfitkorea-net
+      - hyrowod-net
     restart: unless-stopped
 
 volumes:
   nginx-logs:
 
 networks:
-  crossfitkorea-net:
+  hyrowod-net:
     driver: bridge

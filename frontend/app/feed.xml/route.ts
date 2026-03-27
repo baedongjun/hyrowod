@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { Post } from "@/types";
 
-const BASE_URL = "https://crossfitkorea.com";
+const BASE_URL = "https://hyrowod.com";
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
 
 const CATEGORY_LABEL: Record<string, string> = {
@@ -51,15 +51,15 @@ export async function GET() {
   xmlns:atom="http://www.w3.org/2005/Atom"
   xmlns:dc="http://purl.org/dc/elements/1.1/">
   <channel>
-    <title>CrossFit Korea 커뮤니티</title>
+    <title>HyroWOD 커뮤니티</title>
     <link>${BASE_URL}/community</link>
     <description>전국 크로스핏 커뮤니티 최신 게시글 — 자유, Q&amp;A, 기록, 장터</description>
     <language>ko</language>
     <ttl>60</ttl>
     <atom:link href="${BASE_URL}/feed.xml" rel="self" type="application/rss+xml"/>
     <image>
-      <url>${BASE_URL}/cfkorea-app-icon.png</url>
-      <title>CrossFit Korea</title>
+      <url>${BASE_URL}/hyrowod-icon.png</url>
+      <title>HyroWOD</title>
       <link>${BASE_URL}</link>
     </image>${items}
   </channel>

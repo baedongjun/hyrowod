@@ -22,7 +22,7 @@ export default function BoxCheckinPage() {
 
   const checkinUrl = typeof window !== "undefined"
     ? `${window.location.origin}/boxes/${boxId}/scan`
-    : `https://crossfitkorea.com/boxes/${boxId}/scan`;
+    : `https://hyrowod.com/boxes/${boxId}/scan`;
 
   useEffect(() => {
     if (!canvasRef.current) return;

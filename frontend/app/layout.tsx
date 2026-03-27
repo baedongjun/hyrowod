@@ -14,32 +14,32 @@ const SITE_DESCRIPTION =
 
 export const metadata: Metadata = {
   title: {
-    default: "CrossFit Korea | 대한민국 크로스핏 커뮤니티 플랫폼",
-    template: "%s | CrossFit Korea",
+    default: "HyroWOD | 대한민국 크로스핏 커뮤니티 플랫폼",
+    template: "%s | HyroWOD",
   },
   description: SITE_DESCRIPTION,
   keywords: [
     "크로스핏", "CrossFit", "크로스핏 박스", "WOD", "크로스핏 대회",
     "한국 크로스핏", "크로스핏 커뮤니티", "크로스핏 챌린지", "운동 기록",
-    "박스 찾기", "크로스핏 시간표", "CrossFit Korea",
+    "박스 찾기", "크로스핏 시간표", "HyroWOD",
   ],
-  metadataBase: new URL("https://crossfitkorea.com"),
+  metadataBase: new URL("https://hyrowod.com"),
   icons: {
-    icon: "/cfkorea-app-icon.png",
-    apple: "/cfkorea-app-icon.png",
+    icon: "/hyrowod-icon.png",
+    apple: "/hyrowod-icon.png",
   },
   openGraph: {
-    title: "CrossFit Korea | 대한민국 크로스핏 커뮤니티 플랫폼",
+    title: "HyroWOD | 대한민국 크로스핏 커뮤니티 플랫폼",
     description: SITE_DESCRIPTION,
-    siteName: "CrossFit Korea",
-    url: "https://crossfitkorea.com",
+    siteName: "HyroWOD",
+    url: "https://hyrowod.com",
     locale: "ko_KR",
     type: "website",
     // images: opengraph-image.tsx 파일에서 자동 생성 (Next.js 파일 기반 메타데이터)
   },
   twitter: {
     card: "summary_large_image",
-    title: "CrossFit Korea | 대한민국 크로스핏 커뮤니티 플랫폼",
+    title: "HyroWOD | 대한민국 크로스핏 커뮤니티 플랫폼",
     description: SITE_DESCRIPTION,
     // images: opengraph-image.tsx 파일에서 자동 생성
   },
@@ -54,7 +54,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel="stylesheet"
         />
         <link rel="manifest" href="/manifest.json" />
-        <link rel="alternate" type="application/rss+xml" title="CrossFit Korea 커뮤니티" href="/feed.xml" />
+        <link rel="alternate" type="application/rss+xml" title="HyroWOD 커뮤니티" href="/feed.xml" />
         <meta name="theme-color" content="#e8220a" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />

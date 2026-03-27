@@ -6,8 +6,8 @@ on:
 
 env:
   AWS_REGION: ap-northeast-2
-  ECR_BACKEND_REPOSITORY: crossfitkorea-backend
-  ECR_FRONTEND_REPOSITORY: crossfitkorea-frontend
+  ECR_BACKEND_REPOSITORY: hyrowod-backend
+  ECR_FRONTEND_REPOSITORY: hyrowod-frontend
 
 jobs:
   deploy-backend:
@@ -60,11 +60,11 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
-            docker pull ${{ secrets.ECR_REGISTRY }}/crossfitkorea-backend:latest
-            docker stop crossfitkorea-backend || true
-            docker rm crossfitkorea-backend || true
+            docker pull ${{ secrets.ECR_REGISTRY }}/hyrowod-backend:latest
+            docker stop hyrowod-backend || true
+            docker rm hyrowod-backend || true
             docker run -d \
-              --name crossfitkorea-backend \
+              --name hyrowod-backend \
               --restart unless-stopped \
               -p 8080:8080 \
               -e SPRING_PROFILES_ACTIVE=prod \
@@ -75,7 +75,7 @@ jobs:
               -e AWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY_ID }} \
               -e AWS_SECRET_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
               -e S3_BUCKET=${{ secrets.S3_BUCKET }} \
-              ${{ secrets.ECR_REGISTRY }}/crossfitkorea-backend:latest
+              ${{ secrets.ECR_REGISTRY }}/hyrowod-backend:latest
 
   deploy-frontend:
     name: Deploy Frontend
@@ -135,11 +135,11 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
-            docker pull ${{ secrets.ECR_REGISTRY }}/crossfitkorea-frontend:latest
-            docker stop crossfitkorea-frontend || true
-            docker rm crossfitkorea-frontend || true
+            docker pull ${{ secrets.ECR_REGISTRY }}/hyrowod-frontend:latest
+            docker stop hyrowod-frontend || true
+            docker rm hyrowod-frontend || true
             docker run -d \
-              --name crossfitkorea-frontend \
+              --name hyrowod-frontend \
               --restart unless-stopped \
               -p 3000:3000 \
-              ${{ secrets.ECR_REGISTRY }}/crossfitkorea-frontend:latest
+              ${{ secrets.ECR_REGISTRY }}/hyrowod-frontend:latest

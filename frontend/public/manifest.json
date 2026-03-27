@@ -1,5 +1,5 @@
 {
-  "name": "CrossFit Korea",
+  "name": "HyroWOD",
   "short_name": "CF Korea",
   "description": "전국 크로스핏 박스 검색·WOD 기록·대회 신청·커뮤니티·챌린지 올인원 플랫폼",
   "start_url": "/",
@@ -9,13 +9,13 @@
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "/cfkorea-app-icon.png",
+      "src": "/hyrowod-icon.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/cfkorea-app-icon.png",
+      "src": "/hyrowod-icon.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"

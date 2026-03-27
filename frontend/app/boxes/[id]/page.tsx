@@ -906,7 +906,7 @@ export default function BoxDetailPage() {
                     className="btn-secondary"
                     style={{ fontSize: 12, padding: "8px 16px" }}
                     onClick={() => {
-                      const lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//CrossFitKorea//Schedule//KO"];
+                      const lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//HyroWOD//Schedule//KO"];
                       const dayMap: Record<string, string> = { MONDAY: "MO", TUESDAY: "TU", WEDNESDAY: "WE", THURSDAY: "TH", FRIDAY: "FR", SATURDAY: "SA", SUNDAY: "SU" };
                       schedules.forEach((sc) => {
                         lines.push("BEGIN:VEVENT");

@@ -13,7 +13,7 @@ export default function PrivacyPage() {
         <div className={s.body}>
           <div className={s.section}>
             <h2 className={s.sectionTitle}>1. 개인정보의 처리 목적</h2>
-            <p>CrossFit Korea(이하 &quot;회사&quot;)는 다음의 목적을 위하여 개인정보를 처리합니다. 처리하고 있는 개인정보는 다음의 목적 이외의 용도로는 이용되지 않으며, 이용 목적이 변경되는 경우에는 별도의 동의를 받는 등 필요한 조치를 이행합니다.</p>
+            <p>HyroWOD(이하 &quot;회사&quot;)는 다음의 목적을 위하여 개인정보를 처리합니다. 처리하고 있는 개인정보는 다음의 목적 이외의 용도로는 이용되지 않으며, 이용 목적이 변경되는 경우에는 별도의 동의를 받는 등 필요한 조치를 이행합니다.</p>
             <ul>
               <li><strong>회원 가입 및 관리:</strong> 회원제 서비스 이용에 따른 본인 확인, 개인 식별, 비밀번호 재설정</li>
               <li><strong>서비스 제공:</strong> 박스 검색, WOD 기록, 대회 신청, 커뮤니티, 챌린지 등 서비스 운영</li>
@@ -113,7 +113,7 @@ export default function PrivacyPage() {
             <h2 className={s.sectionTitle}>10. 개인정보 보호책임자</h2>
             <p>회사는 개인정보 처리에 관한 업무를 총괄하고, 이용자의 불만처리 및 피해구제를 위하여 아래와 같이 개인정보 보호책임자를 지정하고 있습니다.</p>
             <ul>
-              <li><strong>성명:</strong> CrossFit Korea 운영팀</li>
+              <li><strong>성명:</strong> HyroWOD 운영팀</li>
               <li><strong>이메일:</strong> qoehd0@gmail.com</li>
             </ul>
             <p>개인정보 침해에 관한 신고·상담은 아래 기관에도 문의하실 수 있습니다:</p>

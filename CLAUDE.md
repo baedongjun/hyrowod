@@ -1,4 +1,4 @@
-# CrossFitKorea — 프로젝트 전체 가이드
+# HyroWOD — 프로젝트 전체 가이드
 
 > **이 파일은 AI 어시스턴트가 처음 대화를 시작할 때 반드시 먼저 읽어야 하는 컨텍스트 파일입니다.**
 > 이미 구현된 내용을 재구현하거나, 구현된 API를 다시 만드는 비효율을 방지합니다.
@@ -35,8 +35,8 @@
 ## 3. 프로젝트 구조
 
 ```
-crossfitkorea/                        ← Spring Boot 루트
-├── src/main/java/com/crossfitkorea/
+hyrowod/                        ← Spring Boot 루트
+├── src/main/java/com/hyrowod/
 │   ├── common/
 │   │   ├── BaseEntity.java           ← createdAt/updatedAt (모든 엔티티 상속)
 │   │   ├── ApiResponse.java          ← 공통 응답 래퍼 { success, message, data }

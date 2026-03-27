@@ -23,14 +23,14 @@ export async function generateMetadata(
       title,
       description,
       openGraph: {
-        title: `${title} | CrossFit Korea`,
+        title: `${title} | HyroWOD`,
         description,
-        url: `https://crossfitkorea.com/boxes/${id}`,
+        url: `https://hyrowod.com/boxes/${id}`,
         images: [{ url: imageUrl, width: 1200, height: 630, alt: title }],
       },
       twitter: {
         card: "summary_large_image",
-        title: `${title} | CrossFit Korea`,
+        title: `${title} | HyroWOD`,
         description,
         images: [imageUrl],
       },
@@ -38,7 +38,7 @@ export async function generateMetadata(
   } catch {
     return {
       title: "크로스핏 박스",
-      description: "CrossFit Korea에서 크로스핏 박스 정보를 확인하세요.",
+      description: "HyroWOD에서 크로스핏 박스 정보를 확인하세요.",
     };
   }
 }

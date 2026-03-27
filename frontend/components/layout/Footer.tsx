@@ -44,7 +44,7 @@ export default function Footer() {
         </div>
 
         <div className={s.bottom}>
-          <p className={s.copyright}>© 2025 CrossFit Korea. All rights reserved.</p>
+          <p className={s.copyright}>© 2025 HyroWOD. All rights reserved.</p>
           <p className={s.trademark}>CrossFit is a registered trademark of CrossFit, LLC.</p>
         </div>
       </div>

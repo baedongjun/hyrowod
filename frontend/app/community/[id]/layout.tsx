@@ -16,22 +16,22 @@ export async function generateMetadata(
     const title = post.title ?? "커뮤니티 게시글";
     const description = post.content
       ? post.content.replace(/\n/g, " ").slice(0, 120)
-      : "CrossFit Korea 커뮤니티 게시글입니다.";
+      : "HyroWOD 커뮤니티 게시글입니다.";
     const author = post.authorName ? `${post.authorName} 작성` : "";
 
     return {
       title,
       description: author ? `${author} · ${description}` : description,
       openGraph: {
-        title: `${title} | CrossFit Korea`,
+        title: `${title} | HyroWOD`,
         description: author ? `${author} · ${description}` : description,
-        url: `https://crossfitkorea.com/community/${id}`,
+        url: `https://hyrowod.com/community/${id}`,
         type: "article",
         images: [{ url: "/og-image.png", width: 1200, height: 630, alt: title }],
       },
       twitter: {
         card: "summary_large_image",
-        title: `${title} | CrossFit Korea`,
+        title: `${title} | HyroWOD`,
         description: author ? `${author} · ${description}` : description,
         images: ["/og-image.png"],
       },
@@ -39,7 +39,7 @@ export async function generateMetadata(
   } catch {
     return {
       title: "커뮤니티",
-      description: "CrossFit Korea 커뮤니티에서 소통하세요.",
+      description: "HyroWOD 커뮤니티에서 소통하세요.",
     };
   }
 }

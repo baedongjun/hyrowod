@@ -13,7 +13,7 @@ export default function TermsPage() {
         <div className={s.body}>
           <div className={s.section}>
             <h2 className={s.sectionTitle}>제1조 (목적)</h2>
-            <p>이 약관은 CrossFit Korea(이하 &quot;회사&quot;)가 제공하는 웹사이트 및 관련 서비스(이하 &quot;서비스&quot;)의 이용과 관련하여 회사와 이용자 간의 권리, 의무 및 책임사항, 기타 필요한 사항을 규정함을 목적으로 합니다.</p>
+            <p>이 약관은 HyroWOD(이하 &quot;회사&quot;)가 제공하는 웹사이트 및 관련 서비스(이하 &quot;서비스&quot;)의 이용과 관련하여 회사와 이용자 간의 권리, 의무 및 책임사항, 기타 필요한 사항을 규정함을 목적으로 합니다.</p>
           </div>
 
           <div className={s.section}>

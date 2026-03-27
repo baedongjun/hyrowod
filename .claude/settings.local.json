@@ -92,7 +92,18 @@
       "Bash(for f:*)",
       "Bash(do echo:*)",
       "Read(//d/gitWorkspace/workspace/crossfitkorea/**)",
-      "Bash(done)"
+      "Bash(done)",
+      "Bash(cd:*)",
+      "Bash(sed -i 's|CrossFit Korea\\\\|crossfitkorea|HyroWOD|g' app/boxes/[id]/page.tsx app/wod/records/page.tsx)",
+      "Bash(sed -i 's|CrossFitKorea|HyroWOD|g' app/boxes/[id]/page.tsx app/wod/records/page.tsx)",
+      "Bash(sed -i 's|jdbc:postgresql://rds-endpoint:5432/crossfitkorea|jdbc:postgresql://rds-endpoint:5432/hyrowod|g' .github/SECRETS_GUIDE.md)",
+      "Bash(sed -i 's|CrossFitKorea — |HyroWOD — |g; s|# CrossFitKorea|# HyroWOD|g; s|crossfitkorea/|hyrowod/|g' CLAUDE.md)",
+      "Bash(sed -i 's|CrossFit Korea에 무료로 등록하고|HyroWOD에 무료로 등록하고|g' app/boxes/page.tsx)",
+      "Bash(sed -i 's|\"\"CrossFit Korea\"\"|\"\"HyroWOD\"\"|g' public/manifest.json)",
+      "Bash(cp -r src/main/java/com/crossfitkorea src/main/java/com/hyrowod)",
+      "Bash(cp -r src/test/java/com/crossfitkorea src/test/java/com/hyrowod)",
+      "Bash(find src:*)",
+      "Bash(grep -rn \"crossfitkorea\\\\.com\\\\|CrossFit Korea\\\\|CrossFitKorea\\\\|cfkorea-app-icon\" frontend/app/ frontend/components/ frontend/public/ --include=*.ts --include=*.tsx --include=*.json)"
     ]
   }
 }

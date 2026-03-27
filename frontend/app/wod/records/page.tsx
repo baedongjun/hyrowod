@@ -13,13 +13,13 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/ko";
 import s from "./records.module.css";
 
-const SHARE_URL = "https://crossfitkorea.com/wod/records";
+const SHARE_URL = "https://hyrowod.com/wod/records";
 
 function buildShareText(rec: WodRecord): string {
   const datePart = dayjs(rec.wodDate).format("YYYY-MM-DD");
   const scorePart = rec.score ? `기록: ${rec.score}` : "";
   const notesPart = rec.notes ? ` - ${rec.notes}` : "";
-  return `[CrossFit Korea] ${datePart} WOD ${scorePart}${notesPart} #크로스핏 #CrossFitKorea`;
+  return `[HyroWOD] ${datePart} WOD ${scorePart}${notesPart} #크로스핏 #HyroWOD`;
 }
 
 function ShareDropdown({ rec, onClose }: { rec: WodRecord; onClose: () => void }) {
@@ -47,7 +47,7 @@ function ShareDropdown({ rec, onClose }: { rec: WodRecord; onClose: () => void }
   const handleWebShare = async () => {
     if (navigator.share) {
       try {
-        await navigator.share({ title: "CrossFit Korea WOD 기록", text, url: SHARE_URL });
+        await navigator.share({ title: "HyroWOD WOD 기록", text, url: SHARE_URL });
       } catch {
         // user cancelled — do nothing
       }

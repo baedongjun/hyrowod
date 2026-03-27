@@ -171,11 +171,11 @@ export default function AdminCompetitionsPage() {
           <form onSubmit={handleSubmit} className={s.form}>
             <div className={s.field}>
               <label className={s.label}>대회명</label>
-              <input type="text" className="input-field" placeholder="2026 CrossFit Korea Open" value={form.name} onChange={(e) => set("name", e.target.value)} />
+              <input type="text" className="input-field" placeholder="2026 HyroWOD Open" value={form.name} onChange={(e) => set("name", e.target.value)} />
             </div>
             <div className={s.field}>
               <label className={s.label}>주최</label>
-              <input type="text" className="input-field" placeholder="CrossFit Korea" value={form.organizer} onChange={(e) => set("organizer", e.target.value)} />
+              <input type="text" className="input-field" placeholder="HyroWOD" value={form.organizer} onChange={(e) => set("organizer", e.target.value)} />
             </div>
             <div className={s.field}>
               <label className={s.label}>대표 이미지 URL (선택)</label>

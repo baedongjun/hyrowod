@@ -27,7 +27,7 @@ const PLANS = [
       "월간 통계 리포트 (예정)",
     ],
     cta: "프리미엄 신청",
-    href: "mailto:contact@crossfitkorea.com?subject=프리미엄 광고 문의",
+    href: "mailto:contact@hyrowod.com?subject=프리미엄 광고 문의",
     highlight: true,
   },
   {
@@ -42,7 +42,7 @@ const PLANS = [
       "맞춤형 패키지 협의",
     ],
     cta: "문의하기",
-    href: "mailto:contact@crossfitkorea.com?subject=스폰서 문의",
+    href: "mailto:contact@hyrowod.com?subject=스폰서 문의",
     highlight: false,
   },
 ];
@@ -73,7 +73,7 @@ export default function AdvertisePage() {
       <div className={s.hero}>
         <p className={s.tag}>PARTNERSHIP</p>
         <h1 className={s.title}>더 많은 회원과<br />연결되세요</h1>
-        <p className={s.desc}>CrossFit Korea와 함께 박스를 성장시키세요.<br />전국 크로스피터들에게 직접 노출됩니다.</p>
+        <p className={s.desc}>HyroWOD와 함께 박스를 성장시키세요.<br />전국 크로스피터들에게 직접 노출됩니다.</p>
       </div>
 
       {/* Plans */}
@@ -159,11 +159,11 @@ export default function AdvertisePage() {
           <h2 className={s.contactTitle}>문의하기</h2>
           <p className={s.contactDesc}>궁금한 점이 있으시면 이메일로 연락해 주세요.</p>
           <a
-            href="mailto:contact@crossfitkorea.com?subject=광고 문의"
+            href="mailto:contact@hyrowod.com?subject=광고 문의"
             className="btn-primary"
             style={{ display: "inline-block", marginTop: 24 }}
           >
-            contact@crossfitkorea.com
+            contact@hyrowod.com
           </a>
         </div>
       </div>

@@ -433,7 +433,7 @@ export default function HomePage() {
             박스를 운영하고<br />계신가요?
           </h2>
           <p className={s.ctaDesc}>
-            CrossFit Korea에 박스를 등록하고<br />
+            HyroWOD에 박스를 등록하고<br />
             더 많은 회원과 연결되세요.
           </p>
           <Link href={boxRegisterHref} className="btn-primary">무료 박스 등록</Link>

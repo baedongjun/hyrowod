@@ -22,24 +22,24 @@ export async function generateMetadata(
 
     return {
       title,
-      description: description || "CrossFit Korea에서 대회 정보를 확인하세요.",
+      description: description || "HyroWOD에서 대회 정보를 확인하세요.",
       openGraph: {
-        title: `${title} | CrossFit Korea`,
-        description: description || "CrossFit Korea에서 대회 정보를 확인하세요.",
-        url: `https://crossfitkorea.com/competitions/${id}`,
+        title: `${title} | HyroWOD`,
+        description: description || "HyroWOD에서 대회 정보를 확인하세요.",
+        url: `https://hyrowod.com/competitions/${id}`,
         images: [{ url: "/og-image.png", width: 1200, height: 630, alt: title }],
       },
       twitter: {
         card: "summary_large_image",
-        title: `${title} | CrossFit Korea`,
-        description: description || "CrossFit Korea에서 대회 정보를 확인하세요.",
+        title: `${title} | HyroWOD`,
+        description: description || "HyroWOD에서 대회 정보를 확인하세요.",
         images: ["/og-image.png"],
       },
     };
   } catch {
     return {
       title: "대회 정보",
-      description: "CrossFit Korea에서 크로스핏 대회 정보를 확인하세요.",
+      description: "HyroWOD에서 크로스핏 대회 정보를 확인하세요.",
     };
   }
 }
