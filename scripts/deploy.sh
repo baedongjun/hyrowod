@@ -32,10 +32,13 @@ cd "$APP_DIR"
 COMPOSE_CMD="docker compose"
 command -v docker-compose &>/dev/null && COMPOSE_CMD="docker-compose"
 
-$COMPOSE_CMD -p hyrowod -f docker-compose.prod.yml down --remove-orphans 2>/dev/null || true
+# 구 프로젝트명 컨테이너 정리 (마이그레이션 대비)
+$COMPOSE_CMD -p crossfitkorea -f docker-compose.prod.yml down --remove-orphans 2>/dev/null || true
+$COMPOSE_CMD -p hyrowod --env-file "$APP_DIR/.env.prod" -f docker-compose.prod.yml down --remove-orphans 2>/dev/null || true
 sudo fuser -k 80/tcp 2>/dev/null || true
 sudo fuser -k 443/tcp 2>/dev/null || true
-IMAGE_TAG=$IMAGE_TAG $COMPOSE_CMD -p hyrowod -f docker-compose.prod.yml up -d --no-build
+sudo fuser -k 8080/tcp 2>/dev/null || true
+IMAGE_TAG=$IMAGE_TAG $COMPOSE_CMD -p hyrowod --env-file "$APP_DIR/.env.prod" -f docker-compose.prod.yml up -d --no-build
 
 # 헬스체크
 echo "[4/4] 헬스체크..."
