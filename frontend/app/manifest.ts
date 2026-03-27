@@ -3,8 +3,8 @@ import { MetadataRoute } from "next";
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "HyroWOD",
-    short_name: "CF Korea",
-    description: "전국 크로스핏 박스를 지도로 검색하고, 시간표와 후기, 코치 정보를 한눈에 확인하세요.",
+    short_name: "HyroWOD",
+    description: "크로스핏·하이록스 박스를 지도로 검색하고, 시간표와 후기, 코치 정보를 한눈에 확인하세요.",
     start_url: "/",
     display: "standalone",
     background_color: "#0a0a0a",

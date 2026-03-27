@@ -7,9 +7,9 @@ export default function Footer() {
       <div className={s.inner}>
         <div className={s.grid}>
           <div>
-            <span className={s.logo}>CF<span>KOREA</span></span>
+            <span className={s.logo}>HYRO<span>WOD</span></span>
             <p className={s.desc}>
-              전국 크로스핏 박스를 한눈에 찾아보세요.<br />
+              전국 크로스핏·하이록스 박스를 한눈에 찾아보세요.<br />
               시간표, 후기, 코치 정보까지 제공합니다.
             </p>
           </div>

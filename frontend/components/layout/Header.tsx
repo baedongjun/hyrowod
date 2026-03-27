@@ -114,7 +114,7 @@ export default function Header() {
       <header className={s.header}>
         <div className={s.inner}>
           <Link href="/" className={s.logo}>
-            CF<span>KOREA</span>
+            HYRO<span>WOD</span>
           </Link>
 
           <nav className={s.nav}>

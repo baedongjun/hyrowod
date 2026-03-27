@@ -10,17 +10,17 @@ import ServiceWorkerRegistrar from "@/components/common/ServiceWorkerRegistrar";
 import InstallPwa from "@/components/common/InstallPwa";
 
 const SITE_DESCRIPTION =
-  "전국 크로스핏 박스 검색·WOD 기록·대회 신청·커뮤니티·챌린지까지. 대한민국 크로스핏 올인원 플랫폼.";
+  "크로스핏·하이록스 박스 검색·WOD 기록·대회 신청·커뮤니티·챌린지까지. 대한민국 기능성 피트니스 올인원 플랫폼.";
 
 export const metadata: Metadata = {
   title: {
-    default: "HyroWOD | 대한민국 크로스핏 커뮤니티 플랫폼",
+    default: "HyroWOD | 대한민국 기능성 피트니스 커뮤니티 플랫폼",
     template: "%s | HyroWOD",
   },
   description: SITE_DESCRIPTION,
   keywords: [
-    "크로스핏", "CrossFit", "크로스핏 박스", "WOD", "크로스핏 대회",
-    "한국 크로스핏", "크로스핏 커뮤니티", "크로스핏 챌린지", "운동 기록",
+    "크로스핏", "CrossFit", "하이록스", "HYROX", "크로스핏 박스", "WOD", "크로스핏 대회",
+    "하이록스 대회", "기능성 피트니스", "한국 크로스핏", "크로스핏 커뮤니티", "운동 기록",
     "박스 찾기", "크로스핏 시간표", "HyroWOD",
   ],
   metadataBase: new URL("https://hyrowod.com"),
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     apple: "/hyrowod-icon.png",
   },
   openGraph: {
-    title: "HyroWOD | 대한민국 크로스핏 커뮤니티 플랫폼",
+    title: "HyroWOD | 대한민국 기능성 피트니스 커뮤니티 플랫폼",
     description: SITE_DESCRIPTION,
     siteName: "HyroWOD",
     url: "https://hyrowod.com",
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "HyroWOD | 대한민국 크로스핏 커뮤니티 플랫폼",
+    title: "HyroWOD | 대한민국 기능성 피트니스 커뮤니티 플랫폼",
     description: SITE_DESCRIPTION,
     // images: opengraph-image.tsx 파일에서 자동 생성
   },

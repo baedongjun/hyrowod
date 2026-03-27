@@ -53,7 +53,7 @@ export async function GET() {
   <channel>
     <title>HyroWOD 커뮤니티</title>
     <link>${BASE_URL}/community</link>
-    <description>전국 크로스핏 커뮤니티 최신 게시글 — 자유, Q&amp;A, 기록, 장터</description>
+    <description>전국 크로스핏·하이록스 커뮤니티 최신 게시글 — 자유, Q&amp;A, 기록, 장터</description>
     <language>ko</language>
     <ttl>60</ttl>
     <atom:link href="${BASE_URL}/feed.xml" rel="self" type="application/rss+xml"/>

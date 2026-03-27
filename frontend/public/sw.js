@@ -1,4 +1,4 @@
-const CACHE_NAME = "cfkorea-v1";
+const CACHE_NAME = "hyrowod-v1";
 const STATIC_ASSETS = ["/", "/offline"];
 
 self.addEventListener("install", (event) => {
@@ -42,12 +42,12 @@ self.addEventListener("push", (event) => {
   if (!event.data) return;
   const data = event.data.json();
   event.waitUntil(
-    self.registration.showNotification(data.title || "CrossFit Korea", {
+    self.registration.showNotification(data.title || "HyroWOD", {
       body: data.message || "",
       icon: "/icons/icon-192.png",
       badge: "/icons/icon-192.png",
       data: { link: data.link || "/" },
-      tag: "cfkorea-notification",
+      tag: "hyrowod-notification",
     })
   );
 });

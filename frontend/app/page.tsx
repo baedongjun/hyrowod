@@ -151,16 +151,16 @@ export default function HomePage() {
         <div className={s.heroContent}>
           <div className={s.heroEyebrow}>
             <span className={s.heroDot} />
-            <span className={s.heroEyebrowText}>Korea&apos;s #1 CrossFit Platform</span>
+            <span className={s.heroEyebrowText}>Korea&apos;s #1 Fitness Community</span>
           </div>
           <h1 className={s.heroTitle}>
-            CROSSFIT
-            <span className={s.heroTitleRed}>KOREA</span>
+            HYRO
+            <span className={s.heroTitleRed}>WOD</span>
           </h1>
-          <p className={s.heroSub}>대한민국 크로스핏 올인원 플랫폼</p>
+          <p className={s.heroSub}>대한민국 기능성 피트니스 올인원 플랫폼</p>
           <p className={s.heroDesc}>
             전국 박스 검색부터 WOD 기록·대회 신청·챌린지·커뮤니티까지,<br />
-            크로스핏의 모든 것을 한 곳에서.
+            크로스핏과 하이록스의 모든 것을 한 곳에서.
           </p>
           <div className={s.heroFeatures}>
             <span className={s.heroFeatureItem}>박스 찾기</span>
