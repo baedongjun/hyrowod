@@ -22,11 +22,15 @@ public interface UserRepository extends JpaRepository<User, Long> {
         "OR LOWER(u.email) LIKE LOWER(CONCAT('%', :keyword, '%')))")
     Page<User> searchUsers(@Param("keyword") String keyword, Pageable pageable);
 
-    @Query("SELECT u FROM User u WHERE " +
-        "(:keyword IS NULL OR LOWER(u.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(u.email) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
+    @Query(value = "SELECT u FROM User u WHERE " +
+        "(COALESCE(:keyword, '') = '' OR LOWER(u.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(u.email) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
         "AND (:role IS NULL OR u.role = :role) " +
         "AND (:active IS NULL OR u.active = :active) " +
-        "ORDER BY u.createdAt DESC")
+        "ORDER BY u.createdAt DESC",
+        countQuery = "SELECT count(u) FROM User u WHERE " +
+        "(COALESCE(:keyword, '') = '' OR LOWER(u.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(u.email) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
+        "AND (:role IS NULL OR u.role = :role) " +
+        "AND (:active IS NULL OR u.active = :active)")
     Page<User> searchUsersAdmin(
         @Param("keyword") String keyword,
         @Param("role") UserRole role,
